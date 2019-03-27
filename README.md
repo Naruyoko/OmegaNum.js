@@ -15,4 +15,12 @@ If you are not planning to make something to the scale of [Incremental Unlimited
 * [magna_numerus.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/magna_numerus.js) by Aarex Tiaokhiao - ?
 * [break_eternity.js](https://github.com/Patashu/break_infinity.js) by Patashu - 10^^1.8e308
 
+Future ideas:
+
+* ExpantaNum.js - f<sub>ω+1</sub>, index-value format with index of itself.
+* OmegaExpantaNum.js - f<sub>ω2</sub>
+* MegotaNum.js - f<sub>ω<sup>2</sup></sub>
+* PowiainaNum.js - f<sub>ω<sup>3</sup></sub>
+* break_line.js - f<sub>ω<sup>ω</sup></sub>
+
 number library, big number, big num, bignumber, bignum, big integer, biginteger, bigint, incremental games, idle games, large numbers, huge numbers, googology, javascript
