@@ -422,7 +422,7 @@
       if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
       if (other.eq(0)) return ONE;
       if (other.eq(1)) return this.clone();
-      if (arrows.gte(1e3)){
+      if (arrows.gte(OmegaNum.maxArrow)){
         console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
         return OmegaNum(Infinity);
       }
@@ -570,7 +570,7 @@
             var n=Number(s.substring(1,w-1));
             if (isNaN(n)) x=OmegaNum(NaN);
             if (n<=0) x=OmegaNum(NaN);
-            if (n>=1e3){
+            if (n>=OmegaNum.maxArrow){
               console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
               x=OmegaNum(Infinity);
             }
