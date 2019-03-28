@@ -475,6 +475,7 @@
   P.standarlize=function (){
   	var b;
     var x=this;
+    if (OmegaNum.debug) console.log(x.toString());
     if (!x.array.length) x.array=[0];
     for (var i=0;i<x.array.length;i++){
       if (x.array[i]==null){
@@ -490,6 +491,7 @@
       }
     }
     do{
+      if (OmegaNum.debug) console.log(x.toString());
       b=false;
       while (x.array[x.array.length-1]===0){
       	x.array.pop();
@@ -506,7 +508,7 @@
         x.array[1]--;
         b=true;
       }
-      if ((x.array[0]<MAX_SAFE_INTEGER)&&(!x.array[1])&&(x.array.length>=2)){
+      if ((x.array[0]<MAX_SAFE_INTEGER)&&(!x.array[1])&&(x.array.length>2)){
         for (var i=2;!(this.array[i])&&(i<this.array.length);i++) continue;
         x.array[i-1]=x.array[0];
         x.array[0]=10;
