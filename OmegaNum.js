@@ -32,6 +32,10 @@
       // 1000 means operation above {1000} is disallowed.
       // `OmegaNum.maxArrow = 1000;`
       maxArrow: 1e3,
+      
+      // Whether or not to print calculation steps on console.
+      // `OmegaNum.debug = true;`
+      debug: false
     },
 
 
@@ -227,8 +231,9 @@
   P.plus=P.add=function (other){
     var x=this.clone();
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"+"+other);
     if (x.sign==-1) return x.neg().add(other.neg()).neg();
-    if (other.sign==-1) return x.sub(other);
+    if (other.sign==-1) return x.sub(other.neg());
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)) return x.max(other);
     var y=x.min(other);
     x=x.max(other);
@@ -248,6 +253,7 @@
   P.minus=P.sub=function (other){
     var x=this.clone();
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"-"+other);
     if (x.sign==-1) return x.neg().sub(other.neg()).neg();
     if (other.sign==-1) return x.add(other.neg());
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)){
@@ -272,19 +278,21 @@
   }
   P.times=P.mul=function (other){
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"*"+other);
     if (this.sign*other.sign==-1) return this.abs().mul(other.abs()).neg();
     if (this.sign==-1) return this.abs().mul(other.abs());
     if (other.eq(0)) return OmegaNum(0);
     if (other.eq(1)) return this.clone();
     if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
     if (this*other<=MAX_SAFE_INTEGER) return OmegaNum(this*other);
-    return OmegaNum.pow(10,this.log10().add(OmegaNum.log10(other)));
+    return OmegaNum.pow(10,this.log10().add(other.log10()));
   }
   Q.times=Q.mul=function (x,y){
     return OmegaNum(x).mul(y);
   }
   P.divide=P.div=function (other){
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"/"+other);
     if (this.sign*other.sign==-1) return this.abs().div(other.abs()).neg();
     if (this.sign==-1) return this.abs().div(other.abs());
     if (this.eq(other)) return ONE;
@@ -296,6 +304,7 @@
     return OmegaNum(x).div(y);
   }
   P.reciprocate=P.rec=function (){
+    if (OmegaNum.debug) console.log(this+"^-1");
     if (this.isNaN()||this.eq(0)) return OmegaNum(NaN);
     if (this.abs().gt(Number.MAX_VALUE)) return OmegaNum(0);
     return OmegaNum(1/this);
@@ -311,6 +320,9 @@
   }
   P.toPower=P.pow=function (other){
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"^"+other);
+    if (other.eq(0)) return ONE;
+    if (other.eq(1)) return this.clone;
     if (other.lt(0)) return this.pow(other.neg()).rec();
     if (other.lt(1)) return this.root(other.rec());
     if (this.lt(0)&&other.isint()){
@@ -350,6 +362,8 @@
   }
   P.root=function (other){
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"root"+other);
+    if (other.eq(1)) return this.clone;
     if (other.lt(0)) return this.root(other.neg()).rec();
     if (other.lt(1)) return this.pow(other.rec());
     if (this.lt(0)) return OmegaNum(NaN);
@@ -363,6 +377,7 @@
   }
   P.generalLogarithm=P.log10=function (){
     var x=this.clone();
+    if (OmegaNum.debug) console.log("log"+this);
     if (x.lt(0)) return OmegaNum(NaN);
     if (x.eq(0)) return OmegaNum(-Infinity);
     if (x.lt(MAX_SAFE_INTEGER)) return OmegaNum(Math.log10(x.toString()));
@@ -387,6 +402,7 @@
   }
   P.tetrate=P.tetr=function (other){
     var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"^^"+other);
     if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
     if (this.eq(0)&&other.eq(0)) return OmegaNum(NaN);
     if (this.eq(0)) return OmegaNum(0);
@@ -403,8 +419,12 @@
       return other;
     }
     var r=this.pow(this.pow(this));
-    r.array[1]=(r.array[1]+other.sub(3).toNumber())||other.sub(3).toNumber();
-    console.log(r.array)
+    other=other.sub(3);
+    while (other.gt(0)&&r.lt("e"+MAX_SAFE_INTEGER)){
+      r=this.pow(r);
+      other=other.sub(1);
+    }
+    r.array[1]=(r.array[1]+other.toNumber())||other.toNumber();
     r.standarlize();
     return r;
   }
@@ -419,6 +439,7 @@
     if (arrows.eq(2)) return other=>this.tetr(other);
     return other=>{
       var other=OmegaNum(other);
+    if (OmegaNum.debug) console.log(this+"{"+arrows+"}"+other);
       if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
       if (other.eq(0)) return ONE;
       if (other.eq(1)) return this.clone();
