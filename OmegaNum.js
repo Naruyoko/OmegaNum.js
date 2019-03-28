@@ -402,8 +402,8 @@
       other.standarlize();
       return other;
     }
-    var r=this.mul(this.log10()).add(this.log10().log10());
-    r.array[1]=(r.array[1]+other.sub(1).toNumber())||other.sub(1).toNumber();
+    var r=this.pow(this.pow(this));
+    r.array[1]=(r.array[1]+other.sub(3).toNumber())||other.sub(3).toNumber();
     console.log(r.array)
     r.standarlize();
     return r;
