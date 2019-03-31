@@ -9,7 +9,7 @@ If you are not planning to make something to the scale of [Incremental Unlimited
 
 * [break_infinity.js](https://github.com/Patashu/break_infinity.js) by Patashu - e9e15
 * [decimal.js](https://github.com/MikeMcl/decimal.js) by MikeMcl - e9e15
-* break_break_infinity.js(idk where it went) - e1.8e308
+* break_break_infinity.js(https://github.com/Patashu/break_infinity.js/blob/40c06af42d34c4962a38d73925c1835aee48a771/break_break_infinity.js) - e1.8e308
 * [logarithmica_numerus_lite.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/logarithmica_numerus_lite.js) by Aarex Tiaokhiao - e1.8e308
 * [confractus_numerus.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/confractus_numerus.js) by Aarex Tiaokhiao - ee9e15
 * [magna_numerus.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/magna_numerus.js) by Aarex Tiaokhiao - ?
