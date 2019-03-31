@@ -13,7 +13,7 @@ If you are not planning to make something to the scale of [Incremental Unlimited
 * [logarithmica_numerus_lite.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/logarithmica_numerus_lite.js) by Aarex Tiaokhiao - e1.8e308
 * [confractus_numerus.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/confractus_numerus.js) by Aarex Tiaokhiao - ee9e15
 * [magna_numerus.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/magna_numerus.js) by Aarex Tiaokhiao - ?
-* [break_eternity.js](https://github.com/Patashu/break_infinity.js) by Patashu - 10^^1.8e308
+* [break_eternity.js](https://github.com/Patashu/break_eternity.js) by Patashu - 10^^1.8e308
 
 Future ideas:
 
