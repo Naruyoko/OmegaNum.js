@@ -3,7 +3,7 @@ A huge number library holding up to 10{1000(configurable)}x. A basement for plan
 
 Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[n<sub>0</sub>,n<sub>1</sub>,n<sub>2</sub>,n<sub>3</sub>...]. They togeth3er represents sign*(...(10↑<sup>3</sup>)<sup>n<sub>3</sup></sup>(10↑↑)<sup>n<sub>2</sup></sup>(10↑)<sup>n<sub>1</sup></sup>n<sub>0</sup>.
 
-Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, sqrt, cbrt, root, log10, logBase, log=ln, tetr, arrow, chain, hyper`. Of cource, there are `toNumber()` and `toString()`.
+Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, sqrt, cbrt, root, log10, logBase, log=ln, tetr, arrow, chain, hyper`. Of course, there are `toNumber()` and `toString()`.
 
 If you are not planning to make something to the scale of [Incremental Unlimited](https://play.google.com/store/apps/details?id=com.antoine.mathematician.oddlittlegame), then use other libraries, such as, in ascending order:
 
