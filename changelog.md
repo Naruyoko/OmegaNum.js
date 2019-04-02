@@ -1,3 +1,5 @@
+# α 1.0.1.1 - 2019/04/02
+* Welp, let's fix another bug in [#3](https://github.com/Naruyoko/OmegaNum.js/issues/3) and [#4](https://github.com/Naruyoko/OmegaNum.js/issues/4).
 # α 1.0.1 - 2019/04/01
 * [README.md](https://github.com/Naruyoko/OmegaNum.js/blob/master/README.md) fixes. ([#1](https://github.com/Naruyoko/OmegaNum.js/pull/1) [#2](https://github.com/Naruyoko/OmegaNum.js/pull/2) [#11](https://github.com/Naruyoko/OmegaNum.js/pull/11))
 * Bugs. Like, 7 of them. ([#3](https://github.com/Naruyoko/OmegaNum.js/issues/3) [#4](https://github.com/Naruyoko/OmegaNum.js/issues/4) [#5](https://github.com/Naruyoko/OmegaNum.js/issues/5) [#6](https://github.com/Naruyoko/OmegaNum.js/issues/6) [#7](https://github.com/Naruyoko/OmegaNum.js/issues/7) [#8](https://github.com/Naruyoko/OmegaNum.js/issues/8) [#9](https://github.com/Naruyoko/OmegaNum.js/issues/9)). Oh, they are all by [Patashu](https://github.com/Patashu). Thanks.
