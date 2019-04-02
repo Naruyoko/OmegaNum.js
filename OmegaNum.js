@@ -55,7 +55,6 @@
 
     isOmegaNum = /^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
 
-    ONE,
     BASE = 10,
     LOG_BASE = 1,
     MAX_SAFE_INTEGER = 9007199254740991,
@@ -125,7 +124,7 @@
     other=OmegaNum(other);
     if ((this.sign==1)&&(other.sign==-1)) return 1;
     if ((this.sign==-1)&&(other.sign==1)) return -1;
-    if ((this.sign==-1)&&(other.sign==-1)) return this.neg().cmp(other.neg()).neg();
+    if ((this.sign==-1)&&(other.sign==-1)) return this.neg().cmp(other.neg())*-1;
     if (this.array.length>other.array.length) return 1;
     if (this.array.length<other.array.length) return -1;
     for (var i=this.array.length-1;i>=0;i--){
@@ -304,7 +303,7 @@
     if (this.sign==-1) return this.abs().div(other.abs());
     if (other.eq(0)) return OmegaNum(NaN);
     if (other.eq(1)) return this.clone();
-    if (this.eq(other)) return ONE;
+    if (this.eq(other)) return OmegaNum(1);
     if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
     if (this/other<=MAX_SAFE_INTEGER) return OmegaNum(this/other);
     return OmegaNum.pow(10,this.log10().sub(other.log10()));
@@ -330,7 +329,7 @@
   P.toPower=P.pow=function (other){
     var other=OmegaNum(other);
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"^"+other);
-    if (other.eq(0)) return ONE;
+    if (other.eq(0)) return OmegaNum(1);
     if (other.eq(1)) return this.clone();
     if (other.lt(0)) return this.pow(other.neg()).rec();
     if (other.lt(1)) return this.root(other.rec());
@@ -339,7 +338,7 @@
       return this.abs().pow(other).neg();
     }
     if (this.lt(0)) return OmegaNum(NaN);
-    if (this.eq(1)) return ONE;
+    if (this.eq(1)) return OmegaNum(1);
     if (this.eq(0)) return OmegaNum(0);
     if (this.max(other).gt("10^^"+MAX_SAFE_INTEGER)) return this.max(other);
     if (this.eq(10)){
@@ -376,7 +375,7 @@
     if (other.lt(0)) return this.root(other.neg()).rec();
     if (other.lt(1)) return this.pow(other.rec());
     if (this.lt(0)) return OmegaNum(NaN);
-    if (this.eq(1)) return ONE;
+    if (this.eq(1)) return OmegaNum(1);
     if (this.eq(0)) return OmegaNum(0);
     if (this.max(other).gt("10^^"+MAX_SAFE_INTEGER)) return this.max(other);
     return OmegaNum.pow(10,this.log10().div(OmegaNum.log10(other)));
@@ -415,8 +414,8 @@
     if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
     if (this.eq(0)&&other.eq(0)) return OmegaNum(NaN);
     if (this.eq(0)) return OmegaNum(0);
-    if (this.eq(1)) return ONE;
-    if (other.eq(0)) return ONE;
+    if (this.eq(1)) return OmegaNum(1);
+    if (other.eq(0)) return OmegaNum(1);
     if (other.eq(1)) return this.clone();
     if (other.eq(2)) return this.pow(this);
     if (this.eq(2)&&other.eq(3)) return OmegaNum(16);
@@ -450,7 +449,7 @@
       var other=OmegaNum(other);
       if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"{"+arrows+"}"+other);
       if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
-      if (other.eq(0)) return ONE;
+      if (other.eq(0)) return OmegaNum(1);
       if (other.eq(1)) return this.clone();
       if (arrows.gte(OmegaNum.maxArrow)){
         console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
@@ -585,14 +584,16 @@
       if (!(x instanceof OmegaNum)) return new OmegaNum(input);
       x.constructor=OmegaNum;
       x.array=[];
+      x.sign=1;
       if (typeof input=="number"){
         x.array[0]=Math.abs(input);
         x.sign=input<0?-1:1;
       }else if (typeof input=="string"){
         if (!input||input=="NaN") x=OmegaNum(NaN);
         if (input=="Infinity") x=OmegaNum(Infinity);
+        var negateIt=false;
         if (input[0]=="-"){
-          this.sign=-1;
+          negateIt=true;
           input=input.substring(1);
         }
         if (input.indexOf("10")==0){
@@ -629,10 +630,9 @@
             x.array[1]++;
           }
         }
-        if (input[0]=="-") x.sign=-1;
-        else x.sign=1;
+        if (negateIt) x.sign*=-1;
       }else if (input instanceof Array){
-        this.array=input.slice(0);
+        x.array=input.slice(0);
         x.sign=1;
       }else if (input instanceof OmegaNum){
       	x.array=input.array.slice(0);
@@ -721,9 +721,6 @@
 
   OmegaNum['default']=OmegaNum.OmegaNum=OmegaNum;
 
-  // Internal constant.
-  ONE=new OmegaNum(1);
-
   // Export.
 
   // AMD.
@@ -743,13 +740,3 @@
     globalScope.OmegaNum = OmegaNum;
   }
 })(this);
-document.getElementById("button").onclick=function (){
-  var e=document.getElementById("input").value;
-  var q;
-  if (e[0]=="[") q=OmegaNum(JSON.parse(e));
-  else q=OmegaNum(e);
-  document.getElementById("output").innerHTML=q+"<br>"+q.toNumber()+"<br>"+JSON.stringify(q.array);
-}
-document.getElementById("button2").onclick=function (){
-  document.getElementById("output2").innerHTML=eval(document.getElementById("input2").value);
-}
