@@ -3,6 +3,18 @@
   <head>
     <title>OmegaNum</title>
     <script src="./OmegaNum.js"></script>
+    <script>
+      document.getElementById("button").onclick=function (){
+        var e=document.getElementById("input").value;
+        var q;
+        if (e[0]=="[") q=OmegaNum(JSON.parse(e));
+        else q=OmegaNum(e);
+        document.getElementById("output").innerHTML=q+"<br>"+q.toNumber()+"<br>"+JSON.stringify(q.array);
+      }
+      document.getElementById("button2").onclick=function (){
+        document.getElementById("output2").innerHTML=eval(document.getElementById("input2").value);
+      }
+    </script>
   </head>
   <body>
     <input type="text" id="input" value="10"><button id="button">e</button>
