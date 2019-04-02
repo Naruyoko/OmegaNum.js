@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>	
+<html>	
+  <head>	
+    <title>OmegaNum</title>
+    <style>
+      body {
+        font-family:monospace;
+      }
+      body{
+        font-size:16px;
+      }
+    </style>
+    <link href="./rainbow.css" rel="stylesheet" type="text/css"></style>
+    <script src="./rainbow-custom.min.js"></script>
+  </head>	
+  <body>
+    <h1>OmegaNum.js Docs</h1>
+    <div style="border:1px black solid">
+      <ul>
+        <li><a href="#abs">absoluteValue abs</a></li>
+        <li><a href="#arrow">arrow</a></li>
+        <li><a href="#ceil">ceiling ceil</a></li>
+        <li><a href="#cmp">compareTo cmp</a></li>
+        <li><a href="#cbrt">cubeRoot cbrt</a></li>
+        <li><a href="#div">divide div</a></li>
+        <li><a href="#eq">equals eq</a></li>
+        <li><a href="#floor">floor</a></li>
+        <li><a href="#log10">generalLogarithm log10</a></li>
+      </ul>
+    </div>
+    <div style="font-size:12px">This document uses Rainbow with rainbow.css for syntax highlighting.</div>
+    <h2 id="abs">absoluteValue abs</h2>
+    <p>
+      Returns the absolute value of method.
+      <pre><code data-language="javascript">
+        console.log(OmegaNum("10^^ee5").abs().toString()) //"10^^ee5"
+        console.log(OmegaNum.abs(-3.7e52).toString()) //"3.7e52"
+      </code></pre>
+    </p>
+    <h2 id="arrow">arrow</h2>
+    <p>
+      For static method, it is in form OmegaNum.arrow(x,arrows,y), while non-static method is x.arrow(arrows)(y).
+      <pre><code data-language="javascript">
+        console.log(OmegaNum(13).arrow(3)(5).toString()) //"(10^^)^3 (10^)^11 337385711567664.9"
+        console.log(OmegaNum.arrow(6,4,5).toString()) //"(10^^^)^3 (10^^)^4 eeee36305.31580191892"
+      </code></pre>
+      For non-static method, not having the second parameter will return function of the arrows.
+    </p>
+    <h2 id="ceil">ceiling ceil</h2>
+    <p>
+      Returns the ceiling of method.
+      <pre><code data-language="javascript">
+        console.log(OmegaNum(2.34).ceil().toString()) //"2.34"
+        console.log(OmegaNum.ceil(-24.32).toString()) //"-24.32"
+      </code></pre>
+      Oh no I broke it.
+    </p>
+    <h2 id="cmp">compareTo cmp</h2>
+    <p>
+      Compares two numbers, returns 1 if greater, 0 if equal, and -1 if less than.
+      <pre><code data-language="javascript">
+        console.log(OmegaNum(5).cmp(3)) //1
+        console.log(OmegaNum.cmp(-8,3)) //-1
+        console.log(OmegaNum.cmp(6,6)) //0
+      </code></pre>
+    </p>
+    <h2 id="cbrt">cubeRoot cbrt</h2>
+    <p>
+      Returns the cube root of the number.
+      <pre><code data-language="javascript">
+        console.log(OmegaNum(5).cbrt().toNumber()) //29.172491415642423
+        console.log(OmegaNum.cbrt(-4).toNumber()) //Infinity
+        console.log(OmegaNum.cbrt(3).toNumber()) //10
+      </code></pre>
+      ...
+    </p>
+    <h2 id="div">divide div</h2>
+    <p>
+      Divides number by another.
+      <pre><code data-language="javascript">
+        OmegaNum.div(6,2).toString() //"3"
+        OmegaNum.div("ee5",2).toString() //"4.999999999978076e99999"
+        OmegaNum.div("ee5","-10^^3").toString() //"-0"
+      </code></pre>
+      That impresision tho
+    </p>
+    <h2 id="eq">equals eq</h2>
+    <p>
+      Returns whether two numberws are equal.
+      <pre><code data-language="javascript">
+        OmegaNum.div(5,5) //true
+        OmegaNum.div(0,120) //false
+        OmegaNum.div("10^^e16",[16,1,1])] //true
+      </code></pre>
+    </p>
+    <h2 id="floor">floor</h2>
+    <p>
+      Returns floor of number.
+      <pre><code data-language="javascript">
+        OmegaNum.floor(12.7).toString() //"12.7"
+        OmegaNum.floor("ee5e23").toString() //"eee23.69897000433602"
+      </code></pre>
+      Nice job, me<sup>/s</sup>.
+    </p>
+    <h2 id="log10">generalLogarithm log10</h2>
+    <p>
+      Returns general logarithm(log base 10) of number.
+      <pre><code data-language="javascript">
+        OmegaNum.log10(62.69).toString() //"1.797198269838959"
+        OmegaNum.log10("eee6.19").toString() //"4.15826806220026e1548816"
+      </code></pre>
+    </p>
+  </body>
+</html>
