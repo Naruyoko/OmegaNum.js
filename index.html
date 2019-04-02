@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>	
+<html>	
+  <head>	
+    <title>OmegaNum</title>	
+    <script src="https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/master/OmegaNum.js"></script>	
+    <script>	
+      window.onload=function (){
+        document.getElementById("button").onclick=function (){	
+          var e=document.getElementById("input").value;	
+          var q;	
+          if (e[0]=="[") q=OmegaNum(JSON.parse(e));	
+          else q=OmegaNum(e);	
+          document.getElementById("output").innerHTML=q+"<br>"+q.toNumber()+"<br>"+JSON.stringify(q.array);	
+        }	
+        document.getElementById("button2").onclick=function (){	
+          document.getElementById("output2").innerHTML=eval(document.getElementById("input2").value);	
+        }
+      };
+    </script>
+    <style>
+      * {
+        font-family:monospace;
+      }
+      body{
+        font-size:16px;
+      }
+    </style>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" async></script>
+  </head>	
+  <body>
+    <h1>OmegaNum.js</h1>
+    <p>
+      A large number library reaching 10{1000}10 in Bower's operator notation.<br>
+      For smaller numbers, use other libraries such as:<br>
+      <ul>
+        <li><a href="https://github.com/Patashu/break_infinity.js">break_infinity.js</a> by Patashu - e9e15</li>
+        <li><a href="https://github.com/MikeMcl/decimal.js">Decimal.js</a> by MikeMcl - e9e15</li>
+        <li>break_break_infinity.js(<a href="https://github.com/Patashu/break_infinity.js/blob/40c06af42d34c4962a38d73925c1835aee48a771/break_break_infinity.js">Archive</a>) - e1.8e308</li>
+        <li><a href="https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/logarithmica_numerus_lite.js">logarithmica_numerus_lite.js</a> by Aarex Tiaokhiao - e1.8e308</li>
+        <li><a href="https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/confractus_numerus.js">confractus_numerus.js</a> by Aarex Tiaokhiao - ee9e15</li>
+        <li><a href="https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/magna_numerus.js">magna_numerus.js</a> by Aarex Tiaokhiao - ?</li>
+        <li><a href="https://github.com/Patashu/break_eternity.js">break_eternity.js</a> by Patashu - 10^^1.8e308</li>
+      </ul>
+    </p>
+    <h2>
+      How it works
+    </h2>
+    <p>
+      This library works by storing the sign and an array.<br>
+      The sign is either 1 or -1, positive or negative respectively.<br>
+      Array holds the magnitude; Array [n<sub>0</sub>,n<sub>1</sub>,n<sub>2</sub>,n<sub>3</sub>...] represents:<br>
+      ...(10↑<sup>3</sup>)<sup>n<sub>3</sup></sup>(10↑↑)<sup>n<sub>2</sup></sup>(10↑)<sup>n<sub>1</sup></sup>n<sub>0</sub></sup><br>
+      Therefore, [23.2352,2,6,0,1,4] represents (10↑<sup>5</sup>)<sup>4</sup>10↑<sup>4</sup>(10↑↑)<sup>6</sup>(10↑)<sup>2</sup>23.2352, which without parenthesis becomes 10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>4</sup>10↑↑10↑↑10↑↑10↑↑10↑↑10↑↑10↑10↑23.2352. Using LaTeX, I can sort of expands into decimal, which is:
+      <div style="zoom:10%;">
+        \(\begin{matrix}\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\left.\left.\left.\left.\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}2\underset{171869969539773881871357}{\underbrace{28767407104742504939274665007259268034875905285622251679055397167730260624040178402089159341052814222\cdots}}.\end{matrix}\)
+      </div>
+      Yeah, that's enormous.
+    </p>
+    <h2>Test here</h2>
+    <p>
+      String or Array to big number<br>
+      <input type="text" id="input" value="10"><button id="button">Run</button>
+      <div id="output">Output here</div><br>
+      Arbiturarly code execution();<br>
+      <input type="text" id="input2" value="10"><button id="button2">Run</button>
+      <div id="output2">Output(eval()) here</div><br>
+    </p>
+  </body>
+</html>
