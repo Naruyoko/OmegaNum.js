@@ -211,21 +211,21 @@
     return OmegaNum(x).isint();
   }
   P.floor=function (){
-    if (this.isInteger) return this.clone();
+    if (this.isInteger()) return this.clone();
     return OmegaNum(Math.floor(this.toNumber()));
   }
   Q.floor=function (x){
     return OmegaNum(x).floor();
   }
   P.ceiling=P.ceil=function (){
-    if (this.isInteger) return this.clone();
+    if (this.isInteger()) return this.clone();
     return OmegaNum(Math.ceil(this.toNumber()));
   }
   Q.ceiling=Q.ceil=function (x){
     return OmegaNum(x).ceil();
   }
   P.round=function (){
-    if (this.isInteger) return this.clone();
+    if (this.isInteger()) return this.clone();
     return OmegaNum(Math.round(this.toNumber()));
   }
   Q.round=function (x){
@@ -332,7 +332,6 @@
     if (other.eq(0)) return OmegaNum(1);
     if (other.eq(1)) return this.clone();
     if (other.lt(0)) return this.pow(other.neg()).rec();
-    if (other.lt(1)) return this.root(other.rec());
     if (this.lt(0)&&other.isint()){
       if (other.mod(2).lt(1)) return this.abs().pow(other);
       return this.abs().pow(other).neg();
@@ -350,6 +349,7 @@
         return OmegaNum(Math.pow(10,other));
       }
     }
+    if (other.lt(1)) return this.root(other.rec());
     if (Math.pow(this,other)<=MAX_SAFE_INTEGER) return OmegaNum(Math.pow(this,other));
     return OmegaNum.pow(10,this.log10().mul(other));
   }
@@ -378,10 +378,10 @@
     if (this.eq(1)) return OmegaNum(1);
     if (this.eq(0)) return OmegaNum(0);
     if (this.max(other).gt("10^^"+MAX_SAFE_INTEGER)) return this.max(other);
-    return OmegaNum.pow(10,this.log10().div(OmegaNum.log10(other)));
+    return OmegaNum.pow(10,this.log10().div(other));
   }
   Q.root=function (x,y){
-    return OmegaNum(x).pow(y);
+    return OmegaNum(x).root(y);
   }
   P.generalLogarithm=P.log10=function (){
     var x=this.clone();
@@ -478,7 +478,10 @@
     return OmegaNum(x).arrow(z)(y);
   }
   Q.hyper=function (z){
-    return (x,y)=>OmegaNum(x).arrow(z+2)(y);
+    z=OmegaNum(z);
+    if (z.eq(0)) return (x,y)=>OmegaNum(y).eq(0)?OmegaNum(x):OmegaNum(x).add(1);
+    if (z.eq(1)) return (x,y)=>OmegaNum.add(x,y);
+    return (x,y)=>OmegaNum(x).arrow(z.sub(2))(y);
   }
   P.standarlize=function (){
   	var b;
