@@ -1,3 +1,5 @@
+# α 1.0.1.2 - 2019/04/05
+* Nice. [#12](https://github.com/Naruyoko/OmegaNum.js/issues/12)
 # α 1.0.1.1 - 2019/04/02
 * Welp, let's fix another bug in [#3](https://github.com/Naruyoko/OmegaNum.js/issues/3) and [#4](https://github.com/Naruyoko/OmegaNum.js/issues/4).
 # α 1.0.1 - 2019/04/01
