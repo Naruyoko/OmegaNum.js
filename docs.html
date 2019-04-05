@@ -45,6 +45,13 @@
         <li><a href="#add">plus add</a></li>
         <li><a href="#rec">reciprocate rec</a></li>
         <li><a href="#root">root</a></li>
+        <li><a href="#round">round</a></li>
+        <li><a href="#sqrt">squareRoot sqrt</a></li>
+        <li><a href="#mul">times mul</a></li>
+        <li><a href="#tetr">tetrate tetr</a></li>
+        <li><a href="#toNumber">toNumber</a></li>
+        <li><a href="#pow">toPower pow</a></li>
+        <li><a href="#toString">toString</a></li>
       </ul>
     </div>
     <div style="font-size:12px">This document uses Rainbow with rainbow.css for syntax highlighting.</div>
@@ -279,6 +286,64 @@
         OmegaNum.root(252.43,7).toString() //"6.531106580782975e16"
       </code></pre>
       Broken.
+    </p>
+    <h2 id="round">round</h2>
+    <p>
+      Returns the rounded number.
+      <pre><code data-language="javascript">
+        OmegaNum.round(52.32).toString() //"52.32"
+        OmegaNum.round(-68.23).toString() //"-68.23"
+      </code></pre>
+      Broken.
+    </p>
+    <h2 id="sqrt">squareRoot sqrt</h2>
+    <p>
+      Returns the square root.
+      <pre><code data-language="javascript">
+        OmegaNum.sqrt(16).toString() //"10000"
+        OmegaNum.sqrt("e5e10").toString() //"2.3340116923967886e166096404744"
+      </code></pre>
+      Broken.
+    </p>
+    <h2 id="mul">times mul</h2>
+    <p>
+      Multiplication.
+      <pre><code data-language="javascript">
+        OmegaNum.mul(120,5).toString() //"600"
+        OmegaNum.mul("e8e12","e2e13").toString() //"1e28000000000000"
+      </code></pre>
+    </p>
+    <h2 id="tetr">tetrate tetr</h2>
+    <p>
+      <a href="https://googology.wikia.com/wiki/Tetration">Tetration</a>.
+      <pre><code data-language="javascript">
+        OmegaNum.tetr(3,3).toString() //"7625597484987"
+        OmegaNum.tetr("e5e52",512).toString() //"(10^)^513 52.69897000433602"
+      </code></pre>
+    </p>
+    <h2 id="toNumber">toNumber</h2>
+    <p>
+      Converts the number into Number.
+      <pre><code data-language="javascript">
+        OmegaNum(52).toNumber() //52
+        OmegaNum("eee30").toNumber() //Infinity
+      </code></pre>
+    </p>
+    <h2 id="pow">toPower pow</h2>
+    <p>
+      Exponentiation.
+      <pre><code data-language="javascript">
+        OmegaNum.pow(5,5).toString() //"3125"
+        OmegaNum.pow("e2e9","e5e9").toString() //"e2.0000007521745653e5000000009"
+      </code></pre>
+    </p>
+    <h2 id="toString">toString</h2>
+    <p>
+      Converts the number into String.
+      <pre><code data-language="javascript">
+        OmegaNum(100).toString() //"100"
+        OmegaNum([5,3,2,0,0,1]).toString() //"10{5}(10^^)^2 e1e100000"
+      </code></pre>
     </p>
   </body>
 </html>
