@@ -76,10 +76,9 @@
     <p>
       Returns the ceiling of method.
       <pre><code data-language="javascript">
-        console.log(OmegaNum(2.34).ceil().toString()) //"2.34"
-        console.log(OmegaNum.ceil(-24.32).toString()) //"-24.32"
+        console.log(OmegaNum(2.34).ceil().toString()) //"3"
+        console.log(OmegaNum.ceil(-24.32).toString()) //"-24"
       </code></pre>
-      Oh no I broke it.
     </p>
     <h2 id="cmp">compareTo cmp</h2>
     <p>
@@ -94,9 +93,9 @@
     <p>
       Returns the cube root of the number.
       <pre><code data-language="javascript">
-        console.log(OmegaNum(5).cbrt().toNumber()) //29.172491415642423
+        console.log(OmegaNum(5).cbrt().toNumber()) //1.709975946676697
         console.log(OmegaNum.cbrt(-4).toNumber()) //Infinity
-        console.log(OmegaNum.cbrt(3).toNumber()) //10
+        console.log(OmegaNum.cbrt(3).toNumber()) //1.4422495703074083
       </code></pre>
       ...
     </p>
@@ -123,10 +122,9 @@
     <p>
       Returns floor of number.
       <pre><code data-language="javascript">
-        OmegaNum.floor(12.7).toString() //"12.7"
+        OmegaNum.floor(12.7).toString() //"12"
         OmegaNum.floor("ee5e23").toString() //"eee23.69897000433602"
       </code></pre>
-      Nice job, me<sup>/s</sup>.
     </p>
     <h2 id="log10">generalLogarithm log10</h2>
     <p>
@@ -158,8 +156,8 @@
     <p>
       Static only. OmegaNum.hyper(z)(x,y)=hyper-z(x,y).
       <pre><code data-language="javascript">
-        OmegaNum.hyper(4)(4,2).toString() //"(10^^^^)^2 (10^^^)^2 (10^^)^2 e8.072304726028035e153"
-        OmegaNum.hyper(12)(923,592).toString() //"(10{13})^590 (10{12})^921 (10{11})^921 (10{10})^921 (10{9})^921 (10{8})^921 (10{7})^921 (10{6})^921 (10{5})^921 (10^^^^)^921 (10^^^)^921 (10^^)^921 (10^)^922 2737.3532242875053"
+        OmegaNum.hyper(4)(4,2).toString() //"256"
+        OmegaNum.hyper(12)(923,592).toString() //"(10{9})^590 (10{8})^921 (10{7})^921 (10{6})^921 (10{5})^921 (10^^^^)^921 (10^^^)^921 (10^^)^921 (10^)^922 2737.3532242875053"
       </code></pre>
       Oops.
     </p>
@@ -282,8 +280,8 @@
     <p>
       Root.
       <pre><code data-language="javascript">
-        OmegaNum.root(523,4).toString() //"74818113841"
-        OmegaNum.root(252.43,7).toString() //"6.531106580782975e16"
+        OmegaNum.root(523,4).toString() //"4.782174531743749"
+        OmegaNum.root(252.43,7).toString() //"2.203753399900375"
       </code></pre>
       Broken.
     </p>
@@ -291,19 +289,17 @@
     <p>
       Returns the rounded number.
       <pre><code data-language="javascript">
-        OmegaNum.round(52.32).toString() //"52.32"
-        OmegaNum.round(-68.23).toString() //"-68.23"
+        OmegaNum.round(52.32).toString() //"52"
+        OmegaNum.round(-68.23).toString() //"-68"
       </code></pre>
-      Broken.
     </p>
     <h2 id="sqrt">squareRoot sqrt</h2>
     <p>
       Returns the square root.
       <pre><code data-language="javascript">
-        OmegaNum.sqrt(16).toString() //"10000"
-        OmegaNum.sqrt("e5e10").toString() //"2.3340116923967886e166096404744"
+        OmegaNum.sqrt(16).toString() //"4"
+        OmegaNum.sqrt("e5e10").toString() //"1e25000000000"
       </code></pre>
-      Broken.
     </p>
     <h2 id="mul">times mul</h2>
     <p>
