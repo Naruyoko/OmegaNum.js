@@ -321,7 +321,11 @@
     return OmegaNum(x).rec();
   }
   P.modular=P.mod=function (other){
-    return this.sub(this.mul(this.floor(this.div(other))));
+    var other=OmegaNum(other);
+    if (other.eq(0)) return OmegaNum(0);
+    if (this.sign*other.sign<0) return this.abs().mod(other.abs()).neg();
+    if (this.sign<0) return this.abs().mod(other.abs());
+    return this.sub(this.div(other).floor().mul(other));
   }
   Q.modular=Q.mod=function (x,y){
     return OmegaNum(x).mod(y);
@@ -374,10 +378,11 @@
     if (other.eq(1)) return this.clone();
     if (other.lt(0)) return this.root(other.neg()).rec();
     if (other.lt(1)) return this.pow(other.rec());
+    if (this.lt(0)&&other.isint()&&other.mod(2).eq(1)) return this.neg().root(other).neg();
     if (this.lt(0)) return OmegaNum(NaN);
     if (this.eq(1)) return OmegaNum(1);
     if (this.eq(0)) return OmegaNum(0);
-    if (this.max(other).gt("10^^"+MAX_SAFE_INTEGER)) return this.max(other);
+    if (this.max(other).gt("10^^"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
     return OmegaNum.pow(10,this.log10().div(other));
   }
   Q.root=function (x,y){
@@ -492,12 +497,12 @@
       if (x.array[i]==null){
         x.array[i]=0;
       }
-      if (!isFinite(x.array[i])){
-        x.array=[Infinity];
-        return;
-      }
       if (isNaN(x.array[i])){
         x.array=[NaN];
+        return;
+      }
+      if (!isFinite(x.array[i])){
+        x.array=[Infinity];
         return;
       }
     }
@@ -549,8 +554,8 @@
   }
   P.toString=function (){
     if (this.sign==-1) return "-"+this.abs();
-    if (!isFinite(this.array[0])) return "Infinity";
     if (isNaN(this.array[0])) return "NaN";
+    if (!isFinite(this.array[0])) return "Infinity";
     var b=false;
     for (var i=2;!b&&(i<this.array.length);i++) if (this.array[i]) b=true;
     if (b){
