@@ -1,3 +1,6 @@
+# α 1.0.1.3 - 2019/04/09
+* [#12](https://github.com/Naruyoko/OmegaNum.js/issues/12)'s `root` and `modulo` fix.
+* `OmegaNum(NaN).toString="Infinity"` bug fix.
 # α 1.0.1.2 - 2019/04/05
 * Nice. [#12](https://github.com/Naruyoko/OmegaNum.js/issues/12)
 # α 1.0.1.1 - 2019/04/02
