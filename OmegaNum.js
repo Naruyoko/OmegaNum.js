@@ -445,7 +445,7 @@
     return OmegaNum(x).tetr(y);
   }
   P.arrow=function (arrows){
-    arrows=OmegaNum(arrows);
+    var arrows=OmegaNum(arrows);
     if (!arrows.isint()||arrows.lt(0)) return other=>OmegaNum(NaN);
     if (arrows.eq(0)) return other=>this.mul(other);
     if (arrows.eq(1)) return other=>this.pow(other);
@@ -669,17 +669,16 @@
 
     OmegaNum.clone=clone;
     OmegaNum.config=OmegaNum.set=config;
-    //OmegaNum.abs=P.abs;
     OmegaNum=Object.assign(OmegaNum,Q);
-    /*
+    
     if (obj === void 0) obj = {};
     if (obj) {
-      ps = ['precision', 'rounding', 'toExpNeg', 'toExpPos', 'LN10'];
+      ps = ['rounding', 'maxArrow', 'debug'];
       for (i = 0; i < ps.length;) if (!obj.hasOwnProperty(p = ps[i++])) obj[p] = this[p];
     }
 
     OmegaNum.config(obj);
-    */
+    
     return OmegaNum;
   }
 
@@ -703,21 +702,15 @@
     }
     var i,p,v,
       ps = [
-        'precision',1,MAX_DIGITS,
         'rounding',0,8,
-        'toExpNeg',-1/0,0,
-        'toExpPos',0,1/0
+        'maxArrow',1,Number.MAX_SAFE_INTEGER,
+        'debug',0,2
       ];
     for (i = 0; i < ps.length; i += 3) {
       if ((v = obj[p = ps[i]]) !== void 0) {
         if (mathfloor(v) === v && v >= ps[i + 1] && v <= ps[i + 2]) this[p] = v;
         else throw Error(invalidArgument + p + ': ' + v);
       }
-    }
-
-    if ((v = obj[p = 'LN10']) !== void 0) {
-        if (v == Math.LN10) this[p] = new this(v);
-        else throw Error(invalidArgument + p + ': ' + v);
     }
 
     return this;
