@@ -1,3 +1,6 @@
+# α 1.0.1.4 - 2019/04/15
+* Fixed a bug which incorrectly overriden and `undefined` the static variables, making some methods such as `arrows` unusable.
+* Unmatched tags in [README.md](https://github.com/Naruyoko/OmegaNum.js/blob/master/README.md) fixes.
 # α 1.0.1.3 - 2019/04/09
 * [#12](https://github.com/Naruyoko/OmegaNum.js/issues/12)'s `root` and `modulo` fix.
 * `OmegaNum(NaN).toString="Infinity"` bug fix.
