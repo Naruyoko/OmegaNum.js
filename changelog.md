@@ -1,3 +1,6 @@
+# α 1.0.1.5 - 2019/04/20
+* Added exponential function `exponential` `exp`.
+* Added pentation `pentation` `pent`.
 # α 1.0.1.4 - 2019/04/15
 * Fixed a bug which incorrectly overriden and `undefined` the static variables, making some methods such as `arrows` unusable.
 * Unmatched tags in [README.md](https://github.com/Naruyoko/OmegaNum.js/blob/master/README.md) fixes.
