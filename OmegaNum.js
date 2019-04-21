@@ -30,6 +30,7 @@
       // It will warn and then return Infinity if exceeded.
       // This is to prevent loops to not be breaking, and also to prevent memory leaks.
       // 1000 means operation above {1000} is disallowed.
+      // It is not recommended to make this number too big.
       // `OmegaNum.maxArrow = 1000;`
       maxArrow: 1e3,
       
@@ -76,6 +77,7 @@
    *  cubeRoot                  cbrt
    *  divide                    div
    *  equals                    eq
+   *  exponential               exp
    *  floor
    *  generalLogarithm          log10
    *  greaterThan               gt
@@ -93,6 +95,7 @@
    *  modulo                    mod
    *  naturalLogarithm          ln        log
    *  negated                   neg
+   *  pentate                   pent
    *  plus                      add
    *  reciprocate               rec
    *  root
@@ -360,6 +363,12 @@
   Q.toPower=Q.pow=function (x,y){
     return OmegaNum(x).pow(y);
   }
+  P.exponential=P.exp=function (){
+    return OmegaNum.pow(Math.E,this);
+  }
+  Q.exponential=Q.exp=function (x){
+    return OmegaNum.pow(Math.E,x);
+  }
   P.squareRoot=P.sqrt=function (){
     return this.root(2);
   }
@@ -443,6 +452,12 @@
   }
   Q.tetrate=Q.tetr=function (x,y){
     return OmegaNum(x).tetr(y);
+  }
+  P.pentate=P.pent=function (other){
+    return this.arrow(3)(other);
+  }
+  Q.pentate=Q.pent=function (x,y){
+    return OmegaNum.arrow(x,3,y);
   }
   P.arrow=function (arrows){
     var arrows=OmegaNum(arrows);
