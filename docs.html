@@ -25,6 +25,7 @@
         <li><a href="#cbrt">cubeRoot cbrt</a></li>
         <li><a href="#div">divide div</a></li>
         <li><a href="#eq">equals eq</a></li>
+        <li><a href="#exp">exponential exp</a></li>
         <li><a href="#floor">floor</a></li>
         <li><a href="#log10">generalLogarithm log10</a></li>
         <li><a href="#gt">greaterThan gt</a></li>
@@ -42,6 +43,7 @@
         <li><a href="#mod">modular mod</a></li>
         <li><a href="#ln">naturalLogarithm ln log</a></li>
         <li><a href="#neg">negate neg</a></li>
+        <li><a href="#pent">pentate pent</a></li>
         <li><a href="#add">plus add</a></li>
         <li><a href="#rec">reciprocate rec</a></li>
         <li><a href="#root">root</a></li>
@@ -59,16 +61,16 @@
     <p>
       Returns the absolute value of method.
       <pre><code data-language="javascript">
-        console.log(OmegaNum("10^^ee5").abs().toString()) //"10^^ee5"
-        console.log(OmegaNum.abs(-3.7e52).toString()) //"3.7e52"
+        OmegaNum("10^^ee5").abs().toString() //"10^^ee5"
+        OmegaNum.abs(-3.7e52).toString() //"3.7e52"
       </code></pre>
     </p>
     <h2 id="arrow">arrow</h2>
     <p>
       For static method, it is in form OmegaNum.arrow(x,arrows,y), while non-static method is x.arrow(arrows)(y).
       <pre><code data-language="javascript">
-        console.log(OmegaNum(13).arrow(3)(5).toString()) //"(10^^)^3 (10^)^11 337385711567664.9"
-        console.log(OmegaNum.arrow(6,4,5).toString()) //"(10^^^)^3 (10^^)^4 eeee36305.31580191892"
+        OmegaNum(13).arrow(3)(5).toString() //"(10^^)^3 (10^)^11 337385711567664.9"
+        OmegaNum.arrow(6,4,5).toString() //"(10^^^)^3 (10^^)^4 eeee36305.31580191892"
       </code></pre>
       For non-static method, not having the second parameter will return function of the arrows.
     </p>
@@ -76,26 +78,26 @@
     <p>
       Returns the ceiling of method.
       <pre><code data-language="javascript">
-        console.log(OmegaNum(2.34).ceil().toString()) //"3"
-        console.log(OmegaNum.ceil(-24.32).toString()) //"-24"
+        OmegaNum(2.34).ceil().toString() //"3"
+        OmegaNum.ceil(-24.32).toString() //"-24"
       </code></pre>
     </p>
     <h2 id="cmp">compareTo cmp</h2>
     <p>
       Compares two numbers, returns 1 if greater, 0 if equal, and -1 if less than.
       <pre><code data-language="javascript">
-        console.log(OmegaNum(5).cmp(3)) //1
-        console.log(OmegaNum.cmp(-8,3)) //-1
-        console.log(OmegaNum.cmp(6,6)) //0
+        OmegaNum(5).cmp(3) //1
+        OmegaNum.cmp(-8,3) //-1
+        OmegaNum.cmp(6,6) //0
       </code></pre>
     </p>
     <h2 id="cbrt">cubeRoot cbrt</h2>
     <p>
       Returns the cube root of the number.
       <pre><code data-language="javascript">
-        console.log(OmegaNum(5).cbrt().toNumber()) //1.709975946676697
-        console.log(OmegaNum.cbrt(-4).toNumber()) //-1.5874010519681994
-        console.log(OmegaNum.cbrt(3).toNumber()) //1.4422495703074083
+        OmegaNum(5).cbrt().toNumber() //1.709975946676697
+        OmegaNum.cbrt(-4).toNumber() //-1.5874010519681994
+        OmegaNum.cbrt(3).toNumber() //1.4422495703074083
       </code></pre>
     </p>
     <h2 id="div">divide div</h2>
@@ -110,12 +112,22 @@
     </p>
     <h2 id="eq">equals eq</h2>
     <p>
-      Returns whether two numberws are equal.
+      Returns whether two numbers are equal.
       <pre><code data-language="javascript">
         OmegaNum.div(5,5) //true
         OmegaNum.div(0,120) //false
-        OmegaNum.div("10^^e16",[16,1,1])] //true
+        OmegaNum.div("10^^e16",[16,1,1]) //true
       </code></pre>
+    </p>
+    <h2 id="exp">exponential exp</h2>
+    <p>
+      exp function. exp(x)=e<sup>x</sup>
+      <pre><code data-language="javascript">
+        OmegaNum.exp(5).toString() //"148.41315910257657"
+        OmegaNum.exp(1e+200).toString() //"e4.342944819032647e199"
+        OmegaNum.exp("10^^100").toString() //"22026.465794806707"
+      </code></pre>
+      What the hell happened
     </p>
     <h2 id="floor">floor</h2>
     <p>
@@ -256,6 +268,14 @@
       <pre><code data-language="javascript">
         OmegaNum.neg(523).toString() //"-523"
         OmegaNum.neg(-921.3).toString() //"-921.3"
+      </code></pre>
+    </p>
+    <h2 id="pent">pentate pent</h2>
+    <p>
+      Pentation.
+      <pre><code data-language="javascript">
+        OmegaNum.pent(3,3).toString() //"(10^)^7625597484984 3638334640023.7783"
+        OmegaNum.pent("e5e18","ee5e10").toString() //"10^^^e1e50000000000"
       </code></pre>
     </p>
     <h2 id="add">plus add</h2>
