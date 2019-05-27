@@ -26,6 +26,7 @@
         <li><a href="#div">divide div</a></li>
         <li><a href="#eq">equals eq</a></li>
         <li><a href="#exp">exponential exp</a></li>
+        <li><a href="#fact">factorial fact</a></li>
         <li><a href="#floor">floor</a></li>
         <li><a href="#log10">generalLogarithm log10</a></li>
         <li><a href="#gt">greaterThan gt</a></li>
@@ -128,6 +129,14 @@
         OmegaNum.exp("10^^100").toString() //"22026.465794806707"
       </code></pre>
       What the hell happened
+    </p>
+    <h2 id="fact">factorial fact</h2>
+    <p>
+      Factorial. Currently, it does not support non-integer input.
+      <pre><code data-language="javascript">
+        OmegaNum.fact(10).toString() //"3628800"
+        OmegaNum.fact(1e100).toString() //"e9.956570551809593e101"
+      </code></pre>
     </p>
     <h2 id="floor">floor</h2>
     <p>
