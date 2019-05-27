@@ -1,3 +1,5 @@
+# α 1.0.1.6 - 2019/05/26
+* Added factorial `factorial` `fact`.
 # α 1.0.1.5 - 2019/04/20
 * Added exponential function `exponential` `exp`.
 * Added pentation `pentation` `pent`.
