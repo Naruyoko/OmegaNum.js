@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>	
+<html>	
+  <head>	
+    <title>OmegaNum</title>	
+    <script type="text/javascript" src="https://raw.githack.com/Naruyoko/OmegaNum.js/master/OmegaNum.min.js"></script>	
+    <script>	
+      window.onload=function (){
+        document.getElementById("button").onclick=function (){	
+          var e=document.getElementById("input").value;	
+          var q;	
+          if (e[0]=="[") q=OmegaNum(JSON.parse(e));	
+          else q=OmegaNum(e);	
+          document.getElementById("output").innerHTML=q+"<br>"+q.toNumber()+"<br>"+JSON.stringify(q.array);	
+        }	
+        document.getElementById("button2").onclick=function (){	
+          document.getElementById("output2").innerHTML=eval(document.getElementById("input2").value);	
+        }
+      };
+    </script>
+    <style>
+      * {
+        font-family:monospace;
+      }
+      body{
+        font-size:16px;
+      }
+    </style>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" async></script>
+  </head>	
+  <body>
+    <h1>OmegaNum.js Test</h1>
+    <input type="text" id="input2" value="10" style="width:95%;height:40px;"><button id="button2">Run</button>
+    <div id="output2">Output(eval()) here</div><br>
+  </body>
+</html>
