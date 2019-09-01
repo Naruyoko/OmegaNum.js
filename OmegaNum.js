@@ -310,6 +310,7 @@
     if (this.eq(other)) return OmegaNum(1);
     if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
     if (this/other<=MAX_SAFE_INTEGER) return OmegaNum(this/other);
+	if (OmegaNum.pow(10,this.log10().sub(other.log10())).sub(OmegaNum.pow(10,this.log10().sub(other.log10())).floor()).toNumber() < 0.000000001) return OmegaNum.pow(10,this.log10().sub(other.log10())).floor();
     return OmegaNum.pow(10,this.log10().sub(other.log10()));
   }
   Q.divide=Q.div=function (x,y){
