@@ -310,6 +310,7 @@
     if (this.eq(other)) return OmegaNum(1);
     if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
     if (this/other<=MAX_SAFE_INTEGER) return OmegaNum(this/other);
+	if (OmegaNum.pow(10,this.log10().sub(other.log10())).sub(OmegaNum.pow(10,this.log10().sub(other.log10())).floor()).lt(new OmegaNum(1e-9))) return OmegaNum.pow(10,this.log10().sub(other.log10())).floor();
     return OmegaNum.pow(10,this.log10().sub(other.log10()));
   }
   Q.divide=Q.div=function (x,y){
@@ -520,6 +521,49 @@
     if (z.eq(0)) return (x,y)=>OmegaNum(y).eq(0)?OmegaNum(x):OmegaNum(x).add(1);
     if (z.eq(1)) return (x,y)=>OmegaNum.add(x,y);
     return (x,y)=>OmegaNum(x).arrow(z.sub(2))(y);
+  }
+  // All of these are from Patashu's Break_Eternity.js
+  Q.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
+	/*
+		If you have resourcesAvailable, the price of something starts at
+		priceStart, and on each purchase it gets multiplied by priceRatio,
+		and you have already bought currentOwned, how many of the object
+		can you buy.
+	*/
+	let actualStart = priceStart.mul(priceRatio.pow(currentOwned));
+	return OmegaNum.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
+  }
+  Q.affordArithmeticSeries = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
+	/*
+		If you have resourcesAvailable, the price of something starts at
+		priceStart, and on each purchase it gets increased by priceAdd,
+		and you have already bought currentOwned, how many of the object
+		can you buy.
+	*/
+	var actualStart = priceStart.add(currentOwned.mul(priceAdd));
+	var b = actualStart.sub(priceAdd.div(2));
+	var b2 = b.pow(2);
+	return b.neg().add(b2.add(priceAdd.mul(resourcesAvailable).mul(2)).sqrt()).div(priceAdd).floor();
+  }
+  Q.sumGeometricSeries = function (numItems, priceStart, priceRatio, currentOwned) {
+	/*
+		If you want to buy numItems of something, the price of something starts at
+		priceStart, and on each purchase it gets multiplied by priceRatio,
+		and you have already bought currentOwned, what will be the price of numItems
+		of something.
+	*/
+	return priceStart.mul(priceRatio.pow(currentOwned)).mul(OmegaNum.sub(1, priceRatio.pow(numItems))).div(OmegaNum.sub(1, priceRatio));
+  }
+  Q.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
+	/*
+		If you want to buy numItems of something, the price of something starts at
+		priceStart, and on each purchase it gets increased by priceAdd,
+		and you have already bought currentOwned, what will be the price of numItems
+		of something.
+	*/
+	var actualStart = priceStart.add(currentOwned.mul(priceAdd));
+
+	return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
   }
   P.standarlize=function (){
   	var b;
