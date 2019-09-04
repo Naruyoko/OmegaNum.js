@@ -6,7 +6,7 @@
     <script>	
       window.onload=function (){
         document.getElementById("button").onclick=function (){	
-          document.getElementById("output").innerHTML=eval(document.getElementById("input").value);	
+          document.getElementById("output").innerHTML=Function(document.getElementById("input").value)();	
         }
       };
     </script>
@@ -22,6 +22,7 @@
   </head>	
   <body>
     <h1>OmegaNum.js Test</h1>
+    <p>Remember to only use var, not let or const as the function caller can't define/use variable defined with block scope.</p>
     <input type="text" id="input" value="10" style="width:95%;height:40px;"><button id="button">Run</button>
     <div id="output">Output(eval()) here</div><br>
   </body>
