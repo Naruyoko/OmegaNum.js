@@ -424,7 +424,7 @@
     if (x.lt(MAX_SAFE_INTEGER)) return OmegaNum(Math.log10(x.toNumber()));
     if (x.gt("10^^"+MAX_SAFE_INTEGER)) return x;
     x.array[1]--;
-    return x;
+    return x.standarlize();
   }
   Q.generalLogarithm=Q.log10=function (x){
     return OmegaNum(x).log10();
@@ -490,7 +490,7 @@
       if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
       if (other.eq(0)) return OmegaNum(1);
       if (other.eq(1)) return this.clone();
-      if (arrows.gte(OmegaNum.maxArrow)){
+      if (arrows.gte(OmegaNum.Arrow)){
         console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
         return OmegaNum(Infinity);
       }
