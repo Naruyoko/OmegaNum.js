@@ -490,7 +490,7 @@
       if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
       if (other.eq(0)) return OmegaNum(1);
       if (other.eq(1)) return this.clone();
-      if (arrows.gte(OmegaNum.Arrow)){
+      if (arrows.gte(OmegaNum.maxArrow)){
         console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
         return OmegaNum(Infinity);
       }
