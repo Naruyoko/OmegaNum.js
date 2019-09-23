@@ -424,7 +424,7 @@
     if (x.lt(MAX_SAFE_INTEGER)) return OmegaNum(Math.log10(x.toNumber()));
     if (x.gt("10^^"+MAX_SAFE_INTEGER)) return x;
     x.array[1]--;
-    return x;
+    return x.standarlize();
   }
   Q.generalLogarithm=Q.log10=function (x){
     return OmegaNum(x).log10();
@@ -564,6 +564,17 @@
 	var actualStart = priceStart.add(currentOwned.mul(priceAdd));
 
 	return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
+  }
+  // Binomial Coefficients n choose k
+  Q.choose = function (n, k) {
+	  /*
+		If you have n items and you take k out,
+		how many ways could you do this?
+	  */
+	  return OmegaNum(n).factorial().div(OmegaNum(k).factorial().mul(OmegaNum(n).sub(OmegaNum(k)).factorial()));
+  }
+  P.choose = function (other) {
+	  return OmegaNum.choose(this, other);
   }
   P.standarlize=function (){
   	var b;
