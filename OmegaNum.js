@@ -70,9 +70,12 @@
 
   /*
    *  absoluteValue             abs
+   *  affordArithmeticSeries
+   *  affordGeometricSeries
    *  arrow
    *  ceiling                   ceil
    *  chain
+   *  choose
    *  comparedTo                cmp
    *  cubeRoot                  cbrt
    *  divide                    div
@@ -102,6 +105,8 @@
    *  root
    *  round
    *  squareRoot                sqrt
+   *  sumArithmeticSeries
+   *  sumGeometricSeries
    *  times                     mul
    *  tetrate                   tetr
    *  toNumber
@@ -241,6 +246,7 @@
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"+"+other);
     if (x.sign==-1) return x.neg().add(other.neg()).neg();
     if (other.sign==-1) return x.sub(other.neg());
+    if (x.eq(0)) return other;
     if (other.eq(0)) return x;
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)) return x.max(other);
     var y=x.min(other);
@@ -310,7 +316,7 @@
     if (this.eq(other)) return OmegaNum(1);
     if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
     if (this/other<=MAX_SAFE_INTEGER) return OmegaNum(this/other);
-	if (OmegaNum.pow(10,this.log10().sub(other.log10())).sub(OmegaNum.pow(10,this.log10().sub(other.log10())).floor()).lt(new OmegaNum(1e-9))) return OmegaNum.pow(10,this.log10().sub(other.log10())).floor();
+    if (OmegaNum.pow(10,this.log10().sub(other.log10())).sub(OmegaNum.pow(10,this.log10().sub(other.log10())).floor()).lt(new OmegaNum(1e-9))) return OmegaNum.pow(10,this.log10().sub(other.log10())).floor();
     return OmegaNum.pow(10,this.log10().sub(other.log10()));
   }
   Q.divide=Q.div=function (x,y){
@@ -442,27 +448,36 @@
     return OmegaNum(x).ln();
   }
   P.tetrate=P.tetr=function (other){
+    var t=this.clone();
     var other=OmegaNum(other);
-    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"^^"+other);
+    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"^^"+other);
     if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
-    if (this.eq(0)&&other.eq(0)) return OmegaNum(NaN);
-    if (this.eq(0)) return OmegaNum(0);
-    if (this.eq(1)) return OmegaNum(1);
+    if (t.eq(0)&&other.eq(0)) return OmegaNum(NaN);
+    if (t.eq(0)) return OmegaNum(0);
+    if (t.eq(1)) return OmegaNum(1);
     if (other.eq(0)) return OmegaNum(1);
-    if (other.eq(1)) return this.clone();
-    if (other.eq(2)) return this.pow(this);
-    if (this.eq(2)&&other.eq(3)) return OmegaNum(16);
-    if (this.eq(2)&&other.eq(4)) return OmegaNum(65536);
-    if (this.max(other).gt("10^^^"+MAX_SAFE_INTEGER)) return this.max(other);
+    if (other.eq(1)) return t.clone();
+    if (other.eq(2)) return t.pow(t);
+    if (t.eq(2)&&other.eq(3)) return OmegaNum(16);
+    if (t.eq(2)&&other.eq(4)) return OmegaNum(65536);
+    if (t.max(other).gt("10^^^"+MAX_SAFE_INTEGER)) return t.max(other);
     if (other.gt(MAX_SAFE_INTEGER)){
-      other.array[2]=(other.array[2]+1)||1;
+      if (t.gt("10^^"+MAX_SAFE_INTEGER)){
+        var r=t.clone();
+        r.array[2]--;
+        var j=r.add(other);
+        j.array[2]=(j.array[2]||0)+1;
+        j.standarlize();
+        return j;
+      }
+      other.array[2]=(other.array[2]||0)+1;
       other.standarlize();
       return other;
     }
-    var r=this.pow(this.pow(this));
+    var r=t.pow(t.pow(t));
     other=other.sub(3);
     while (other.gt(0)&&r.lt("e"+MAX_SAFE_INTEGER)){
-      r=this.pow(r);
+      r=t.pow(r);
       other=other.sub(1);
     }
     r.array[1]=(r.array[1]+other.toNumber())||other.toNumber();
@@ -479,29 +494,38 @@
     return OmegaNum.arrow(x,3,y);
   }
   P.arrow=function (arrows){
+    var t=this.clone();
     var arrows=OmegaNum(arrows);
-    if (!arrows.isint()||arrows.lt(0)) return other=>OmegaNum(NaN);
-    if (arrows.eq(0)) return other=>this.mul(other);
-    if (arrows.eq(1)) return other=>this.pow(other);
-    if (arrows.eq(2)) return other=>this.tetr(other);
-    return other=>{
+    if (!arrows.isint()||arrows.lt(0)) return function(other){return OmegaNum(NaN);};
+    if (arrows.eq(0)) return function(other){return t.mul(other);};
+    if (arrows.eq(1)) return function(other){return t.pow(other);};
+    if (arrows.eq(2)) return function(other){return t.tetr(other);};
+    return function (other){
       var other=OmegaNum(other);
-      if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"{"+arrows+"}"+other);
+      if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"{"+arrows+"}"+other);
       if (!other.isint()||other.lt(0)) return OmegaNum(NaN);
       if (other.eq(0)) return OmegaNum(1);
-      if (other.eq(1)) return this.clone();
+      if (other.eq(1)) return t.clone();
       if (arrows.gte(OmegaNum.maxArrow)){
         console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
         return OmegaNum(Infinity);
       }
-      if (other.eq(2)) return this.arrow(arrows-1)(this);
-      if (this.max(other).gt("10{"+(arrows.add(1))+"}"+MAX_SAFE_INTEGER)) return this.max(other);
+      if (other.eq(2)) return t.arrow(arrows-1)(t);
+      if (t.max(other).gt("10{"+arrows.add(1)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
       if (other.gt(MAX_SAFE_INTEGER)){
-        other.array[arrows]=(other.array[arrows]+1)||1;
+        if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)){
+          var r=t.clone();
+          r.array[arrows]--;
+          var j=r.add(other);
+          j.array[arrows]=(j.array[arrows]||0)+1;
+          j.standarlize();
+          return j;
+        }
+        other.array[arrows]=(other.array[arrows]||0)+1;
         other.standarlize();
         return other;
       }
-      var r=this.arrow(arrows-1)(this.arrow(arrows-1)(this));
+      var r=t.arrow(arrows-1)(t.arrow(arrows-1)(t));
       r.array[arrows-1]=(r.array[arrows-1]+other.sub(3).toNumber())||other.sub(3).toNumber();
       r.standarlize();
       return r;
@@ -518,66 +542,66 @@
   }
   Q.hyper=function (z){
     z=OmegaNum(z);
-    if (z.eq(0)) return (x,y)=>OmegaNum(y).eq(0)?OmegaNum(x):OmegaNum(x).add(1);
-    if (z.eq(1)) return (x,y)=>OmegaNum.add(x,y);
-    return (x,y)=>OmegaNum(x).arrow(z.sub(2))(y);
+    if (z.eq(0)) return function(x,y){return OmegaNum(y).eq(0)?OmegaNum(x):OmegaNum(x).add(1);};
+    if (z.eq(1)) return function(x,y){return OmegaNum.add(x,y);};
+    return function(x,y){return OmegaNum(x).arrow(z.sub(2))(y);};
   }
   // All of these are from Patashu's Break_Eternity.js
   Q.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
-	/*
-		If you have resourcesAvailable, the price of something starts at
-		priceStart, and on each purchase it gets multiplied by priceRatio,
-		and you have already bought currentOwned, how many of the object
-		can you buy.
-	*/
-	let actualStart = priceStart.mul(priceRatio.pow(currentOwned));
-	return OmegaNum.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
+    /*
+      If you have resourcesAvailable, the price of something starts at
+      priceStart, and on each purchase it gets multiplied by priceRatio,
+      and you have already bought currentOwned, how many of the object
+      can you buy.
+    */
+    let actualStart = priceStart.mul(priceRatio.pow(currentOwned));
+    return OmegaNum.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
   }
   Q.affordArithmeticSeries = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
-	/*
-		If you have resourcesAvailable, the price of something starts at
-		priceStart, and on each purchase it gets increased by priceAdd,
-		and you have already bought currentOwned, how many of the object
-		can you buy.
-	*/
-	var actualStart = priceStart.add(currentOwned.mul(priceAdd));
-	var b = actualStart.sub(priceAdd.div(2));
-	var b2 = b.pow(2);
-	return b.neg().add(b2.add(priceAdd.mul(resourcesAvailable).mul(2)).sqrt()).div(priceAdd).floor();
+    /*
+      If you have resourcesAvailable, the price of something starts at
+      priceStart, and on each purchase it gets increased by priceAdd,
+      and you have already bought currentOwned, how many of the object
+      can you buy.
+    */
+    var actualStart = priceStart.add(currentOwned.mul(priceAdd));
+    var b = actualStart.sub(priceAdd.div(2));
+    var b2 = b.pow(2);
+    return b.neg().add(b2.add(priceAdd.mul(resourcesAvailable).mul(2)).sqrt()).div(priceAdd).floor();
   }
   Q.sumGeometricSeries = function (numItems, priceStart, priceRatio, currentOwned) {
-	/*
-		If you want to buy numItems of something, the price of something starts at
-		priceStart, and on each purchase it gets multiplied by priceRatio,
-		and you have already bought currentOwned, what will be the price of numItems
-		of something.
-	*/
-	return priceStart.mul(priceRatio.pow(currentOwned)).mul(OmegaNum.sub(1, priceRatio.pow(numItems))).div(OmegaNum.sub(1, priceRatio));
+    /*
+      If you want to buy numItems of something, the price of something starts at
+      priceStart, and on each purchase it gets multiplied by priceRatio,
+      and you have already bought currentOwned, what will be the price of numItems
+      of something.
+    */
+    return priceStart.mul(priceRatio.pow(currentOwned)).mul(OmegaNum.sub(1, priceRatio.pow(numItems))).div(OmegaNum.sub(1, priceRatio));
   }
   Q.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
-	/*
-		If you want to buy numItems of something, the price of something starts at
-		priceStart, and on each purchase it gets increased by priceAdd,
-		and you have already bought currentOwned, what will be the price of numItems
-		of something.
-	*/
-	var actualStart = priceStart.add(currentOwned.mul(priceAdd));
+    /*
+      If you want to buy numItems of something, the price of something starts at
+      priceStart, and on each purchase it gets increased by priceAdd,
+      and you have already bought currentOwned, what will be the price of numItems
+      of something.
+    */
+    var actualStart = priceStart.add(currentOwned.mul(priceAdd));
 
-	return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
+    return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
   }
   // Binomial Coefficients n choose k
   Q.choose = function (n, k) {
-	  /*
-		If you have n items and you take k out,
-		how many ways could you do this?
-	  */
-	  return OmegaNum(n).factorial().div(OmegaNum(k).factorial().mul(OmegaNum(n).sub(OmegaNum(k)).factorial()));
+    /*
+      If you have n items and you take k out,
+      how many ways could you do this?
+    */
+    return OmegaNum(n).factorial().div(OmegaNum(k).factorial().mul(OmegaNum(n).sub(OmegaNum(k)).factorial()));
   }
   P.choose = function (other) {
-	  return OmegaNum.choose(this, other);
+    return OmegaNum.choose(this, other);
   }
   P.standarlize=function (){
-  	var b;
+    var b;
     var x=this;
     if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
     if (!x.array.length) x.array=[0];
@@ -615,7 +639,7 @@
       if ((x.array[0]<MAX_SAFE_INTEGER)&&(!x.array[1])&&(x.array.length>2)){
         for (var i=2;!(this.array[i])&&(i<this.array.length);i++) continue;
         x.array[i-1]=x.array[0];
-        x.array[0]=10;
+        x.array[0]=1;
         x.array[i]--;
         b=true;
       }
@@ -692,7 +716,7 @@
           negateIt=true;
           input=input.substring(1);
         }
-        if (input.indexOf("10")==0){
+        if (input.indexOf("10")==0&&input.length>2){
           var w=input.substring(2).search(/[0-9e]/);
           if (input[2]=="{") w=input.substring(2).search("}")+1;
           if (w==-1) x=OmegaNum(NaN);

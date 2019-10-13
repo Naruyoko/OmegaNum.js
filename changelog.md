@@ -1,3 +1,8 @@
+# α 1.0.2 - 2019/10/12
+* Added `affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries` [#19](https://github.com/Naruyoko/OmegaNum.js/pull/19) `choose` [#21](https://github.com/Naruyoko/OmegaNum.js/pull/21) by Reinhardt-C.
+* Fixed `tetr` and `arrow` being broken on large base [#17](https://github.com/Naruyoko/OmegaNum.js/issues/17).
+* Fixed NaN returning NaN if the first argument is `0` [#22](https://github.com/Naruyoko/OmegaNum.js/issues/22).
+* Fixed having something over tetration in string or array causes wrong results because I went stupid in `standarlize()` [#23](https://github.com/Naruyoko/OmegaNum.js/issues/23) [#25](https://github.com/Naruyoko/OmegaNum.js/issues/25).
 # α 1.0.1.6 - 2019/05/26
 * Added factorial `factorial` `fact`.
 # α 1.0.1.5 - 2019/04/20
