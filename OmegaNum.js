@@ -109,7 +109,9 @@
    *  sumGeometricSeries
    *  times                     mul
    *  tetrate                   tetr
+   *  toJSON
    *  toNumber
+   *  toObject
    *  toPower                   pow
    *  toString
    */
@@ -683,6 +685,101 @@
     else if (this.array[1]<8) return "e".repeat(this.array[1])+this.array[0];
     else return "(10^)^"+this.array[1]+" "+this.array[0];
   }
+  //Note: toArray() would be impossible without changing the layout of the array or lose the information about the sign
+  P.toObject=function (){
+    return {
+      array:this.array.slice(0),
+      sign:this.sign
+    };
+  }
+  P.toJSON=function (){
+    return "{\"array\":"+JSON.stringify(this.array)+",\"sign\":"+this.sign+"}";
+  }
+  P.fromNumber=function (input){
+    if (typeof input!="number") throw Error(invalidArgument+"Expected Number");
+    var x=OmegaNum();
+    x.array[0]=Math.abs(input);
+    x.sign=input<0?-1:1;
+    x.standarlize();
+    return x;
+  }
+  P.fromString=function (input){
+    if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    var x=OmegaNum();
+    if (!input||input=="NaN") x=OmegaNum(NaN);
+    if (input=="Infinity") x=OmegaNum(Infinity);
+    var negateIt=false;
+    if (input[0]=="-"){
+      negateIt=true;
+      input=input.substring(1);
+    }
+    if (input.indexOf("10")==0&&input.length>2){
+      var w=input.substring(2).search(/[0-9e]/);
+      if (input[2]=="{") w=input.substring(2).search("}")+1;
+      if (w==-1) x=OmegaNum(NaN);
+      var s=input.substring(2,w+2);
+      var r=OmegaNum(input.substring(w+2));
+      if (r.isNaN()) x=r;
+      if (s[0]=="^"){
+        r.array[w]=(r.array[w]+1)||1;
+      }else if (s[0]=="{"){
+        var n=Number(s.substring(1,w-1));
+        if (isNaN(n)) x=OmegaNum(NaN);
+        if (n<=0) x=OmegaNum(NaN);
+        if (n>=OmegaNum.maxArrow){
+          console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
+          x=OmegaNum(Infinity);
+        }
+        r.array[n]=(r.array[n]+1)||1;
+      }else x=OmegaNum(NaN);
+      x=r;
+    }else if (input.indexOf("e")==-1){
+      x.array[0]=Number(input);
+    }else{
+      x.array=[0,input.search(/[0-9]/)];
+      var s=input.substring(input.search(/[0-9]/)
+      );
+      if (isFinite(Number(s))){
+        x.array[0]=Number(s);
+      }else{
+        x.array[0]=Number(s.substring(s.indexOf("e")+1));
+        if (s.indexOf("e")>0) x.array[0]+=Math.log10(Number(s.substring(0,s.indexOf("e"))));
+        x.array[1]++;
+      }
+    }
+    if (negateIt) x.sign*=-1;
+    x.standarlize();
+    return x;
+  }
+  P.fromArray=function (input1,input2){
+    var array,sign;
+    if (input1 instanceof Array&&(input2===undefined||typeof input2=="number")){
+      array=input1;
+      sign=input2;
+    }else if (input2 instanceof Array&&typeof input1=="number"){
+      array=input2;
+      sign=input1;
+    }else{
+      throw Error(invalidArgument+"Expected an Array [and Boolean]");
+    }
+    var x=OmegaNum();
+    x.array=array.slice(0);
+    x.sign=sign;
+    x.standarlize();
+    return x;
+  }
+  P.fromObject=function (input){
+    if (typeof input!="object") throw Error(invalidArgument+"Expected Object");
+    if (input instanceof Array) return OmegaNum.fromArray(input);
+    if (input instanceof OmegaNum) return OmegaNum(input);
+    if (!(input.array instanceof Array)) throw Error(invalidArgument+"Expected that property 'array' exists");
+    if (input.sign!==undefined&&typeof input.sign!="number") throw Error(invalidArgument+"Expected that property 'sign' is Number");
+    var x=OmegaNum();
+    x.array=input.array.slice(0);
+    x.sign=input.sign||1;
+    x.standarlize();
+    return x;
+  }
   P.clone=function (){
     return OmegaNum(this);
   }
@@ -699,13 +796,13 @@
    */
   function clone(obj) {
     var i, p, ps;
-    function OmegaNum(input) {
+    function OmegaNum(input,input2) {
       var x=this;
       if (!(x instanceof OmegaNum)) return new OmegaNum(input);
       x.constructor=OmegaNum;
       x.array=[];
       x.sign=1;
-      if (typeof input=="number"){
+      if (typeof input=="number"&&!(input2 instanceof Array)){
         x.array[0]=Math.abs(input);
         x.sign=input<0?-1:1;
       }else if (typeof input=="string"){
@@ -751,14 +848,30 @@
           }
         }
         if (negateIt) x.sign*=-1;
-      }else if (input instanceof Array){
-        x.array=input.slice(0);
-        x.sign=1;
+      }else if (input instanceof Array||input2 instanceof Array){
+        var array,sign;
+        if (input1 instanceof Array&&(input2===undefined||typeof input2=="number")){
+          array=input1;
+          sign=input2;
+        }else if (input2 instanceof Array&&typeof input1=="number"){
+          array=input2;
+          sign=input1;
+        }else{
+          throw Error(invalidArgument+"Expected an Array [and Boolean]");
+        }
+        x.array=array.slice(0);
+        x.sign=sign;
       }else if (input instanceof OmegaNum){
-      	x.array=input.array.slice(0);
+        x.array=input.array.slice(0);
         x.sign=input.sign;
+      }else if (typeof input=="object"){
+        if (!(input.array instanceof Array)) throw Error(invalidArgument+"Expected that property 'array' exists");
+        if (input.sign!==undefined&&typeof input.sign!="number") throw Error(invalidArgument+"Expected that property 'sign' is Number");
+        x.array=input.array.slice(0);
+        x.sign=input.sign||1;
       }else{
-        x=OmegaNum(NaN);
+        x.array=[NaN];
+        x.sign=1;
       }
       x.standarlize();
       return x;
@@ -810,7 +923,7 @@
    */
   function config(obj){
     if (!obj||typeof obj!=='object') {
-      throw Error(decimalError+'Object expected');
+      throw Error(omegaNumError+'Object expected');
     }
     var i,p,v,
       ps = [

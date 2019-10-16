@@ -1,11 +1,11 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![α](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/alpha.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![2](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/2.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![α](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/alpha.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![2](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/2.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png)
 A huge number library holding up to 10{1000(configurable)}x. A basement for planned {10,x,1,2}.
 
 This reaches level f<sub>ω</sub>, hence the name.
 
 Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[n<sub>0</sub>,n<sub>1</sub>,n<sub>2</sub>,n<sub>3</sub>...]. They together represents sign\*(...(10↑<sup>3</sup>)<sup>n<sub>3</sub></sup>(10↑↑)<sup>n<sub>2</sub></sup>(10↑)<sup>n<sub>1</sub></sup>n<sub>0</sub>).
 
-Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, exp, sqrt, cbrt, root, log10, logBase, log=ln, tetr, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()` and `toString()`.
+Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, exp, sqrt, cbrt, root, log10, logBase, log=ln, tetr, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()`, `toObject()`, and `toJSON()`.
 
 If you are not planning to make something to the scale of [Incremental Unlimited](https://play.google.com/store/apps/details?id=com.antoine.mathematician.oddlittlegame), then use other libraries, such as, in ascending order:
 
