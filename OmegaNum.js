@@ -695,7 +695,7 @@
   P.toJSON=function (){
     return "{\"array\":"+JSON.stringify(this.array)+",\"sign\":"+this.sign+"}";
   }
-  P.fromNumber=function (input){
+  Q.fromNumber=function (input){
     if (typeof input!="number") throw Error(invalidArgument+"Expected Number");
     var x=OmegaNum();
     x.array[0]=Math.abs(input);
@@ -703,55 +703,132 @@
     x.standarlize();
     return x;
   }
-  P.fromString=function (input){
+  Q.fromString=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
     var x=OmegaNum();
-    if (!input||input=="NaN") x=OmegaNum(NaN);
-    if (input=="Infinity") x=OmegaNum(Infinity);
+    x.array=[0];
+    if (!/^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/.test(input)){
+      console.warn(omegaNumError+"Malformed input: "+input);
+      x=OmegaNum(NaN);
+      return x;
+    }
     var negateIt=false;
-    if (input[0]=="-"){
-      negateIt=true;
+    if ("-+".includes(input[0])){
+      var signs=input.substring(0,input.search(/[^-\+]/));
+      negateIt=signs.match(/-/g).length%2===0;
       input=input.substring(1);
     }
-    if (input.indexOf("10")==0&&input.length>2){
-      var w=input.substring(2).search(/[0-9e]/);
-      if (input[2]=="{") w=input.substring(2).search("}")+1;
-      if (w==-1) x=OmegaNum(NaN);
-      var s=input.substring(2,w+2);
-      var r=OmegaNum(input.substring(w+2));
-      if (r.isNaN()) x=r;
-      if (s[0]=="^"){
-        r.array[w]=(r.array[w]+1)||1;
-      }else if (s[0]=="{"){
-        var n=Number(s.substring(1,w-1));
-        if (isNaN(n)) x=OmegaNum(NaN);
-        if (n<=0) x=OmegaNum(NaN);
-        if (n>=OmegaNum.maxArrow){
-          console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
-          x=OmegaNum(Infinity);
+    if (input=="NaN") x=OmegaNum(NaN);
+    else if (input=="Infinity") x=OmegaNum(Infinity);
+    else{
+      while (input){
+        if (/^\(?10[\^\{]/.test(input)){
+          if (input[0]=="("){
+            input=input.substring(1);
+          }
+          var arrows;
+          var a,b;
+          if (input[2]=="^"){
+            a=input.substring(2).search(/[^\^]/);
+            arrows=a;
+            b=a+2;
+          }else{
+            a=input.indexOf("}");
+            arrows=Number(input.substring(3,a));
+            b=a+1;
+          }
+          if (arrows>=OmegaNum.maxArrow){
+            console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
+            x=OmegaNum(Infinity);
+            break;
+          }
+          input=input.substring(b);
+          var c;
+          if (input[0]==")"){
+            a=input.indexOf(" ");
+            c=Number(input.substring(2,a));
+            input=input.substring(a+1);
+          }else{
+            c=1;
+          }
+          if (arrows==1){
+            x.array[1]=(x.array[1]||0)+c;
+          }else if (arrows==2){
+            a=x.array[1]||0;
+            b=x.array[0]||0;
+            if (b>=1e10){
+              a++;
+            }
+            if (b>=10){
+              a++;
+            }
+            x.array[0]=a;
+            x.array[1]=0;
+            x.array[2]=(x.array[2]||0)+c;
+          }else{
+            a=x.array[arrows-1]||0;
+            b=x.array[arrows-2]||0;
+            if (b>=10){
+              a++;
+            }
+            for (var i=1;i<arrows;i++){
+              x.array[i]=0;
+            }
+            x.array[0]=a;
+            x.array[arrows]=(x.array[arrows]||0)+c;
+          }
+        }else{
+          break;
         }
-        r.array[n]=(r.array[n]+1)||1;
-      }else x=OmegaNum(NaN);
-      x=r;
-    }else if (input.indexOf("e")==-1){
-      x.array[0]=Number(input);
-    }else{
-      x.array=[0,input.search(/[0-9]/)];
-      var s=input.substring(input.search(/[0-9]/)
-      );
-      if (isFinite(Number(s))){
-        x.array[0]=Number(s);
-      }else{
-        x.array[0]=Number(s.substring(s.indexOf("e")+1));
-        if (s.indexOf("e")>0) x.array[0]+=Math.log10(Number(s.substring(0,s.indexOf("e"))));
-        x.array[1]++;
       }
+      var a=input.split(/[Ee]/);
+      var b=[x.array[0],0];
+      var c=1;
+      for (var i=a.length-1;i>=0;i--){
+        var d=1;
+        if (a[i]){
+          d=Number(a[i]);
+        }
+        //The things that are already there
+        if (b[0]<MAX_E&&b[1]===0){
+          b[0]=Math.pow(10,c*b[0]);
+        }else if (c==-1){
+          if (b[1]===0){
+            b[0]=Math.pow(10,c*b[0]);
+          }else if (b[1]==1&&b[0]<=Math.log10(Number.MAX_VALUE)){
+            b[0]=Math.pow(10,c*Math.pow(10,b[0]));
+          }else{
+            b[0]=0;
+          }
+          b[1]=0;
+        }else{
+          b[1]++;
+        }
+        //Multiplying coefficient
+        if (b[1]===0){
+          b[0]*=Number(d);
+        }else if (b[1]==1){
+          b[0]+=Math.log10(Number(d));
+        }else if (b[1]==2&&b[0]<MAX_E+Math.log10(Math.log10(Number(d)))){
+          b[0]+=Math.log10(1+Math.pow(10,Math.log10(Math.log10(Number(d)))-b[0]));
+        }
+        //Carrying
+        if (b[0]<MAX_E&&b[1]){
+          b[0]=Math.pow(10,b[0]);
+          b[1]--;
+        }else if (b[0]>MAX_SAFE_INTEGER){
+          b[0]=Math.log10(b[0]);
+          b[1]++;
+        }
+      }
+      x.array[0]=b[0];
+      x.array[1]=b[1];
     }
     if (negateIt) x.sign*=-1;
     x.standarlize();
     return x;
   }
-  P.fromArray=function (input1,input2){
+  Q.fromArray=function (input1,input2){
     var array,sign;
     if (input1 instanceof Array&&(input2===undefined||typeof input2=="number")){
       array=input1;
@@ -768,7 +845,7 @@
     x.standarlize();
     return x;
   }
-  P.fromObject=function (input){
+  Q.fromObject=function (input){
     if (typeof input!="object") throw Error(invalidArgument+"Expected Object");
     if (input instanceof Array) return OmegaNum.fromArray(input);
     if (input instanceof OmegaNum) return OmegaNum(input);
@@ -806,49 +883,127 @@
         x.array[0]=Math.abs(input);
         x.sign=input<0?-1:1;
       }else if (typeof input=="string"){
-        if (!input||input=="NaN") x=OmegaNum(NaN);
-        if (input=="Infinity") x=OmegaNum(Infinity);
+        x.array=[0];
+        if (!/^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/.test(input)){
+          console.warn(omegaNumError+"Malformed input: "+input);
+          x=OmegaNum(NaN);
+          return x;
+        }
         var negateIt=false;
-        if (input[0]=="-"){
-          negateIt=true;
+        if ("-+".includes(input[0])){
+          var signs=input.substring(0,input.search(/[^-\+]/));
+          negateIt=signs.match(/-/g).length%2===0;
           input=input.substring(1);
         }
-        if (input.indexOf("10")==0&&input.length>2){
-          var w=input.substring(2).search(/[0-9e]/);
-          if (input[2]=="{") w=input.substring(2).search("}")+1;
-          if (w==-1) x=OmegaNum(NaN);
-          var s=input.substring(2,w+2);
-          var r=OmegaNum(input.substring(w+2));
-          if (r.isNaN()) x=r;
-          if (s[0]=="^"){
-            r.array[w]=(r.array[w]+1)||1;
-          }else if (s[0]=="{"){
-            var n=Number(s.substring(1,w-1));
-            if (isNaN(n)) x=OmegaNum(NaN);
-            if (n<=0) x=OmegaNum(NaN);
-            if (n>=OmegaNum.maxArrow){
-              console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
-              x=OmegaNum(Infinity);
+        if (input=="NaN") x=OmegaNum(NaN);
+        else if (input=="Infinity") x=OmegaNum(Infinity);
+        else{
+          while (input){
+            if (/^\(?10[\^\{]/.test(input)){
+              if (input[0]=="("){
+                input=input.substring(1);
+              }
+              var arrows;
+              var a,b;
+              if (input[2]=="^"){
+                a=input.substring(2).search(/[^\^]/);
+                arrows=a;
+                b=a+2;
+              }else{
+                a=input.indexOf("}");
+                arrows=Number(input.substring(3,a));
+                b=a+1;
+              }
+              if (arrows>=OmegaNum.maxArrow){
+                console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
+                x=OmegaNum(Infinity);
+                break;
+              }
+              input=input.substring(b);
+              var c;
+              if (input[0]==")"){
+                a=input.indexOf(" ");
+                c=Number(input.substring(2,a));
+                input=input.substring(a+1);
+              }else{
+                c=1;
+              }
+              if (arrows==1){
+                x.array[1]=(x.array[1]||0)+c;
+              }else if (arrows==2){
+                a=x.array[1]||0;
+                b=x.array[0]||0;
+                if (b>=1e10){
+                  a++;
+                }
+                if (b>=10){
+                  a++;
+                }
+                x.array[0]=a;
+                x.array[1]=0;
+                x.array[2]=(x.array[2]||0)+c;
+              }else{
+                a=x.array[arrows-1]||0;
+                b=x.array[arrows-2]||0;
+                if (b>=10){
+                  a++;
+                }
+                for (var i=1;i<arrows;i++){
+                  x.array[i]=0;
+                }
+                x.array[0]=a;
+                x.array[arrows]=(x.array[arrows]||0)+c;
+              }
+            }else{
+              break;
             }
-            r.array[n]=(r.array[n]+1)||1;
-          }else x=OmegaNum(NaN);
-          x=r;
-        }else if (input.indexOf("e")==-1){
-          x.array[0]=Number(input);
-        }else{
-          x.array=[0,input.search(/[0-9]/)];
-          var s=input.substring(input.search(/[0-9]/)
-          );
-          if (isFinite(Number(s))){
-            x.array[0]=Number(s);
-          }else{
-            x.array[0]=Number(s.substring(s.indexOf("e")+1));
-            if (s.indexOf("e")>0) x.array[0]+=Math.log10(Number(s.substring(0,s.indexOf("e"))));
-            x.array[1]++;
           }
+          var a=input.split(/[Ee]/);
+          var b=[x.array[0],0];
+          var c=1;
+          for (var i=a.length-1;i>=0;i--){
+            var d=1;
+            if (a[i]){
+              d=Number(a[i]);
+            }
+            //The things that are already there
+            if (b[0]<MAX_E&&b[1]===0){
+              b[0]=Math.pow(10,c*b[0]);
+            }else if (c==-1){
+              if (b[1]===0){
+                b[0]=Math.pow(10,c*b[0]);
+              }else if (b[1]==1&&b[0]<=Math.log10(Number.MAX_VALUE)){
+                b[0]=Math.pow(10,c*Math.pow(10,b[0]));
+              }else{
+                b[0]=0;
+              }
+              b[1]=0;
+            }else{
+              b[1]++;
+            }
+            //Multiplying coefficient
+            if (b[1]===0){
+              b[0]*=Number(d);
+            }else if (b[1]==1){
+              b[0]+=Math.log10(Number(d));
+            }else if (b[1]==2&&b[0]<MAX_E+Math.log10(Math.log10(Number(d)))){
+              b[0]+=Math.log10(1+Math.pow(10,Math.log10(Math.log10(Number(d)))-b[0]));
+            }
+            //Carrying
+            if (b[0]<MAX_E&&b[1]){
+              b[0]=Math.pow(10,b[0]);
+              b[1]--;
+            }else if (b[0]>MAX_SAFE_INTEGER){
+              b[0]=Math.log10(b[0]);
+              b[1]++;
+            }
+          }
+          x.array[0]=b[0];
+          x.array[1]=b[1];
         }
         if (negateIt) x.sign*=-1;
       }else if (input instanceof Array||input2 instanceof Array){
+        var input1=input;
         var array,sign;
         if (input1 instanceof Array&&(input2===undefined||typeof input2=="number")){
           array=input1;

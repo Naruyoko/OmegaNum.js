@@ -1,3 +1,8 @@
+# α 1.0.2.2 - 2019/10/18
+* Fixed and redesigned `fromString`'s logic [#26](https://github.com/Naruyoko/OmegaNum.js/issues/26).
+* Fixed `fromNumber, fromString, fromArray, fromObject` being a non-static method.
+* Fixed typo that broke the library [#27](https://github.com/Naruyoko/OmegaNum.js/issues/27).
+
 # α 1.0.2.1
 * Added `toObject, toJSON, fromNumber, fromString, fromArray, fromObject`
 * Allowed creating `OmegaNum` from `Array` to have an additional variable of type `number` for `sign`, which can be placed either way.
