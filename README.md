@@ -5,7 +5,7 @@ This reaches level f<sub>ω</sub>, hence the name.
 
 Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[n<sub>0</sub>,n<sub>1</sub>,n<sub>2</sub>,n<sub>3</sub>...]. They together represents sign\*(...(10↑<sup>3</sup>)<sup>n<sub>3</sub></sup>(10↑↑)<sup>n<sub>2</sub></sup>(10↑)<sup>n<sub>1</sub></sup>n<sub>0</sub>).
 
-Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, exp, sqrt, cbrt, root, log10, logBase, log=ln, tetr, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()`, `toObject()`, and `toJSON()`. Add one of the kind `toHyperE()`.
+Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, exp, sqrt, cbrt, root, log10, logBase, log=ln, tetr, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()`, `toObject()`, and `toJSON()`. Add one of a kind `toHyperE()`.
 
 If you are not planning to make something to the scale of [Incremental Unlimited](https://play.google.com/store/apps/details?id=com.antoine.mathematician.oddlittlegame), then use other libraries, such as, in ascending order:
 
