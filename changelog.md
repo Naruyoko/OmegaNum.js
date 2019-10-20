@@ -1,3 +1,9 @@
+# α 1.0.2.3 - 2019/10/19
+* Added `fromJSON`.
+* Added `toHyperE` and `fromHyperE`.
+* Fixed multiple signs being not handled correctly in `fromString`
+* Made code more safer in terms of stability(not regarding speed btw).
+
 # α 1.0.2.2 - 2019/10/18
 * Fixed and redesigned `fromString`'s logic [#26](https://github.com/Naruyoko/OmegaNum.js/issues/26).
 * Fixed `fromNumber, fromString, fromArray, fromObject` being a non-static method.

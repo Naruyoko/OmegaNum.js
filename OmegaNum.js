@@ -109,6 +109,7 @@
    *  sumGeometricSeries
    *  times                     mul
    *  tetrate                   tetr
+   *  toHyperE
    *  toJSON
    *  toNumber
    *  toObject
@@ -607,6 +608,11 @@
     var x=this;
     if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
     if (!x.array.length) x.array=[0];
+    if (![-1,1].includes(x.sign)){
+      if (typeof x.sign!="number") x.sign=Number(x.sign);
+      if (x.sign<0) x.sign=-1;
+      else x.sign=1;
+    }
     for (var i=0;i<x.array.length;i++){
       if (x.array[i]==null){
         x.array[i]=0;
@@ -695,6 +701,18 @@
   P.toJSON=function (){
     return "{\"array\":"+JSON.stringify(this.array)+",\"sign\":"+this.sign+"}";
   }
+  P.toHyperE=function (){
+    if (this.sign==-1) return "-"+this.abs().toHyperE();
+    if (isNaN(this.array[0])) return "NaN";
+    if (!isFinite(this.array[0])) return "Infinity";
+    if (this.lt(MAX_SAFE_INTEGER)) return String(this.array[0]);
+    if (this.lt("e"+MAX_SAFE_INTEGER)) return "E"+this.array[0];
+    var r="E"+this.array[0]+"#"+this.array[1];
+    for (var i=2;i<this.array.length;i++){
+      r+="#"+(this.array[i]+1);
+    }
+    return r;
+  }
   Q.fromNumber=function (input){
     if (typeof input!="number") throw Error(invalidArgument+"Expected Number");
     var x=OmegaNum();
@@ -705,6 +723,17 @@
   }
   Q.fromString=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    var isJSON=false;
+    if (typeof input=="string"){
+      try {
+        JSON.parse(str);
+      }finally{
+        isJSON=true;
+      }
+    }
+    if (isJSON){
+      return OmegaNum.fromJSON(input);
+    }
     var x=OmegaNum();
     x.array=[0];
     if (!/^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/.test(input)){
@@ -714,9 +743,10 @@
     }
     var negateIt=false;
     if ("-+".includes(input[0])){
-      var signs=input.substring(0,input.search(/[^-\+]/));
+      var numSigns=input.search(/[^-\+]/);
+      var signs=input.substring(0,numSigns);
       negateIt=signs.match(/-/g).length%2===0;
-      input=input.substring(1);
+      input=input.substring(numSigns);
     }
     if (input=="NaN") x=OmegaNum(NaN);
     else if (input=="Infinity") x=OmegaNum(Infinity);
@@ -841,7 +871,8 @@
     }
     var x=OmegaNum();
     x.array=array.slice(0);
-    x.sign=sign;
+    if (sign) x.sign=Number(sign);
+    else x.sign=1;
     x.standarlize();
     return x;
   }
@@ -853,7 +884,53 @@
     if (input.sign!==undefined&&typeof input.sign!="number") throw Error(invalidArgument+"Expected that property 'sign' is Number");
     var x=OmegaNum();
     x.array=input.array.slice(0);
-    x.sign=input.sign||1;
+    x.sign=Number(input.sign)||1;
+    x.standarlize();
+    return x;
+  }
+  Q.fromJSON=function (input){
+    if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    var parsedObject;
+    try{
+      parsedObject=JSON.parse(input);
+    }finally{
+      return OmegaNum.fromObject(parsedObject);
+    }
+  }
+  Q.fromHyperE=function (input){
+    if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    var x=OmegaNum();
+    x.array=[0];
+    if (!/^[-\+]*(0|[1-9]\d*(\.\d*)?|Infinity|NaN|E[1-9]\d*(\.\d*)?(#[1-9]\d*)*)$/.test(input)){
+      console.warn(omegaNumError+"Malformed input: "+input);
+      x=OmegaNum(NaN);
+      return x;
+    }
+    var negateIt=false;
+    if ("-+".includes(input[0])){
+      var numSigns=input.search(/[^-\+]/);
+      var signs=input.substring(0,numSigns);
+      negateIt=signs.match(/-/g).length%2===0;
+      input=input.substring(numSigns);
+    }
+    if (input=="NaN") x=OmegaNum(NaN);
+    else if (input=="Infinity") x=OmegaNum(Infinity);
+    else if (input[0]!="E"){
+      x.array[0]=Number(input);
+    }else if (input.indexOf("#")==-1){
+      x.array[0]=Number(input.substring(1));
+      x.array[1]=1;
+    }else{
+      var array=input.substring(1).split("#");
+      for (var i=0;i<array.length;i++){
+        var t=Number(array[i]);
+        if (i>=2){
+          t--;
+        }
+        x.array[i]=t;
+      }
+    }
+    if (negateIt) x.sign*=-1;
     x.standarlize();
     return x;
   }
@@ -879,9 +956,53 @@
       x.constructor=OmegaNum;
       x.array=[];
       x.sign=1;
+      var parsedObject;
+      if (typeof input=="string"){
+        try {
+          parsedObject=JSON.parse(input);
+        }catch(e){
+          //lol just keep going
+        }
+      }
       if (typeof input=="number"&&!(input2 instanceof Array)){
         x.array[0]=Math.abs(input);
         x.sign=input<0?-1:1;
+      }else if (parsedObject){
+        var y=OmegaNum.fromObject(parsedObject);
+        x.array=y.array;
+        x.sign=y.sign;
+      }else if (typeof input=="string"&&input[0]=="E"){
+        x.array=[0];
+        if (!/^[-\+]*(0|[1-9]\d*(\.\d*)?|Infinity|NaN|E[1-9]\d*(\.\d*)?(#[1-9]\d*)*)$/.test(input)){
+          console.warn(omegaNumError+"Malformed input: "+input);
+          x=OmegaNum(NaN);
+          return x;
+        }
+        var negateIt=false;
+        if ("-+".includes(input[0])){
+          var numSigns=input.search(/[^-\+]/);
+          var signs=input.substring(0,numSigns);
+          negateIt=signs.match(/-/g).length%2===0;
+          input=input.substring(numSigns);
+        }
+        if (input=="NaN") x=OmegaNum(NaN);
+        else if (input=="Infinity") x=OmegaNum(Infinity);
+        else if (input[0]!="E"){
+          x.array[0]=Number(input);
+        }else if (input.indexOf("#")==-1){
+          x.array[0]=Number(input.substring(1));
+          x.array[1]=1;
+        }else{
+          var array=input.substring(1).split("#");
+          for (var i=0;i<array.length;i++){
+            var t=Number(array[i]);
+            if (i>=2){
+              t--;
+            }
+            x.array[i]=t;
+          }
+        }
+        if (negateIt) x.sign*=-1;
       }else if (typeof input=="string"){
         x.array=[0];
         if (!/^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/.test(input)){
@@ -891,9 +1012,10 @@
         }
         var negateIt=false;
         if ("-+".includes(input[0])){
-          var signs=input.substring(0,input.search(/[^-\+]/));
+          var numSigns=input.search(/[^-\+]/);
+          var signs=input.substring(0,numSigns);
           negateIt=signs.match(/-/g).length%2===0;
-          input=input.substring(1);
+          input=input.substring(numSigns);
         }
         if (input=="NaN") x=OmegaNum(NaN);
         else if (input=="Infinity") x=OmegaNum(Infinity);
@@ -1015,7 +1137,8 @@
           throw Error(invalidArgument+"Expected an Array [and Boolean]");
         }
         x.array=array.slice(0);
-        x.sign=sign;
+        if (sign) x.sign=Number(sign);
+        else x.sign=1;
       }else if (input instanceof OmegaNum){
         x.array=input.array.slice(0);
         x.sign=input.sign;
@@ -1023,7 +1146,7 @@
         if (!(input.array instanceof Array)) throw Error(invalidArgument+"Expected that property 'array' exists");
         if (input.sign!==undefined&&typeof input.sign!="number") throw Error(invalidArgument+"Expected that property 'sign' is Number");
         x.array=input.array.slice(0);
-        x.sign=input.sign||1;
+        x.sign=Number(input.sign)||1;
       }else{
         x.array=[NaN];
         x.sign=1;
