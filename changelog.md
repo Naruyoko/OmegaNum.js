@@ -1,3 +1,6 @@
+# α 1.0.2.4 - 2019/10/20
+* (Potentially) fixed memory leak. Now [TrueInfinity](https://reinhardt-c.github.io/TrueInfinity/) won't have 0.2 fps DevTools and >50MB heap.
+
 # α 1.0.2.3 - 2019/10/19
 * Added `fromJSON`.
 * Added `toHyperE` and `fromHyperE`.

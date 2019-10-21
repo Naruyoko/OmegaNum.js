@@ -724,7 +724,7 @@
   Q.fromString=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
     var isJSON=false;
-    if (typeof input=="string"){
+    if (typeof input=="string"&&"[{".includes(input[0])){
       try {
         JSON.parse(str);
       }finally{
@@ -890,12 +890,17 @@
   }
   Q.fromJSON=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
-    var parsedObject;
+    var parsedObject,x;
     try{
       parsedObject=JSON.parse(input);
+    }catch(e){
+      parsedObject=null;
+      throw e;
     }finally{
-      return OmegaNum.fromObject(parsedObject);
+      x=OmegaNum.fromObject(parsedObject);
     }
+    parsedObject=null;
+    return x;
   }
   Q.fromHyperE=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
@@ -952,12 +957,12 @@
     var i, p, ps;
     function OmegaNum(input,input2) {
       var x=this;
-      if (!(x instanceof OmegaNum)) return new OmegaNum(input);
+      if (!(x instanceof OmegaNum)) return new OmegaNum(input,input2);
       x.constructor=OmegaNum;
       x.array=[];
       x.sign=1;
-      var parsedObject;
-      if (typeof input=="string"){
+      var parsedObject=null;
+      if (typeof input=="string"&&"[{".includes(input[0])){
         try {
           parsedObject=JSON.parse(input);
         }catch(e){
@@ -971,6 +976,7 @@
         var y=OmegaNum.fromObject(parsedObject);
         x.array=y.array;
         x.sign=y.sign;
+        parsedObject=null;
       }else if (typeof input=="string"&&input[0]=="E"){
         x.array=[0];
         if (!/^[-\+]*(0|[1-9]\d*(\.\d*)?|Infinity|NaN|E[1-9]\d*(\.\d*)?(#[1-9]\d*)*)$/.test(input)){
