@@ -134,6 +134,7 @@
   }
   P.compareTo=P.cmp=function (other){
     other=OmegaNum(other);
+    if (this.isNaN()||other.isNaN()) return NaN;
     if ((this.sign==1)&&(other.sign==-1)) return 1;
     if ((this.sign==-1)&&(other.sign==1)) return -1;
     if ((this.sign==-1)&&(other.sign==-1)) return this.neg().cmp(other.neg())*-1;
@@ -251,6 +252,9 @@
     if (other.sign==-1) return x.sub(other.neg());
     if (x.eq(0)) return other;
     if (other.eq(0)) return x;
+    if (x.isNaN()||other.isNaN()||x.eq(Infinity)&&other.eq(Infinity)&&x.eq(other.neg())) return OmegaNum(NaN);
+    if (x.eq(Infinity)) return x;
+    if (other.eq(Infinity)) return other;
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)) return x.max(other);
     var y=x.min(other);
     x=x.max(other);
@@ -270,11 +274,14 @@
   P.minus=P.sub=function (other){
     var x=this.clone();
     var other=OmegaNum(other);
-    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"-"+other);
+    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(x+"-"+other);
     if (x.sign==-1) return x.neg().sub(other.neg()).neg();
     if (other.sign==-1) return x.add(other.neg());
     if (x.eq(other)) return OmegaNum(0);
     if (other.eq(0)) return x;
+    if (x.isNaN()||other.isNaN()||x.eq(Infinity)&&other.eq(Infinity)) return OmegaNum(NaN);
+    if (x.eq(Infinity)) return x;
+    if (other.eq(Infinity)) return other.neg();
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)){
       return x.gt(other)?x:OmegaNum(other).neg();
     }
@@ -296,31 +303,39 @@
     return OmegaNum(x).sub(y);
   }
   P.times=P.mul=function (other){
+    var x=this.clone();
     var other=OmegaNum(other);
-    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"*"+other);
-    if (this.sign*other.sign==-1) return this.abs().mul(other.abs()).neg();
-    if (this.sign==-1) return this.abs().mul(other.abs());
+    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(x+"*"+other);
+    if (x.sign*other.sign==-1) return x.abs().mul(other.abs()).neg();
+    if (x.sign==-1) return x.abs().mul(other.abs());
+    if (x.isNaN()||other.isNaN()||x.eq(0)&&other.eq(Infinity)||x.eq(Infinity)&&other.abs().eq(0)) return OmegaNum(NaN);
     if (other.eq(0)) return OmegaNum(0);
-    if (other.eq(1)) return this.clone();
-    if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.max(other);
-    if (this*other<=MAX_SAFE_INTEGER) return OmegaNum(this*other);
-    return OmegaNum.pow(10,this.log10().add(other.log10()));
+    if (other.eq(1)) return x.clone();
+    if (x.eq(Infinity)) return x;
+    if (other.eq(Infinity)) return other;
+    if (x.max(other).gt("ee"+MAX_SAFE_INTEGER)) return x.max(other);
+    if (x*other<=MAX_SAFE_INTEGER) return OmegaNum(x*other);
+    return OmegaNum.pow(10,x.log10().add(other.log10()));
   }
   Q.times=Q.mul=function (x,y){
     return OmegaNum(x).mul(y);
   }
   P.divide=P.div=function (other){
+    var x=this.clone();
     var other=OmegaNum(other);
-    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"/"+other);
-    if (this.sign*other.sign==-1) return this.abs().div(other.abs()).neg();
-    if (this.sign==-1) return this.abs().div(other.abs());
-    if (other.eq(0)) return OmegaNum(NaN);
-    if (other.eq(1)) return this.clone();
-    if (this.eq(other)) return OmegaNum(1);
-    if (this.max(other).gt("ee"+MAX_SAFE_INTEGER)) return this.gt(other)?this.clone():OmegaNum(0);
-    if (this/other<=MAX_SAFE_INTEGER) return OmegaNum(this/other);
-    if (OmegaNum.pow(10,this.log10().sub(other.log10())).sub(OmegaNum.pow(10,this.log10().sub(other.log10())).floor()).lt(new OmegaNum(1e-9))) return OmegaNum.pow(10,this.log10().sub(other.log10())).floor();
-    return OmegaNum.pow(10,this.log10().sub(other.log10()));
+    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(x+"/"+other);
+    if (x.sign*other.sign==-1) return x.abs().div(other.abs()).neg();
+    if (x.sign==-1) return x.abs().div(other.abs());
+    if (x.isNaN()||other.isNaN()||x.eq(Infinity)&&other.eq(Infinity)||x.eq(0)&&other.eq(0)) return OmegaNum(NaN);
+    if (other.eq(0)) return OmegaNum(Infinity);
+    if (other.eq(1)) return x.clone();
+    if (x.eq(other)) return OmegaNum(1);
+    if (x.eq(Infinity)) return x;
+    if (other.eq(Infinity)) return OmegaNum(0);
+    if (x.max(other).gt("ee"+MAX_SAFE_INTEGER)) return x.gt(other)?x.clone():OmegaNum(0);
+    if (x/other<=MAX_SAFE_INTEGER) return OmegaNum(x/other);
+    if (OmegaNum.pow(10,x.log10().sub(other.log10())).sub(OmegaNum.pow(10,x.log10().sub(other.log10())).floor()).lt(new OmegaNum(1e-9))) return OmegaNum.pow(10,x.log10().sub(other.log10())).floor();
+    return OmegaNum.pow(10,x.log10().sub(other.log10()));
   }
   Q.divide=Q.div=function (x,y){
     return OmegaNum(x).div(y);
@@ -431,6 +446,7 @@
     if (x.lt(0)) return OmegaNum(NaN);
     if (x.eq(0)) return OmegaNum(-Infinity);
     if (x.lt(MAX_SAFE_INTEGER)) return OmegaNum(Math.log10(x.toNumber()));
+    if (x.isNaN()||!x.isFinite()) return x;
     if (x.gt("10^^"+MAX_SAFE_INTEGER)) return x;
     x.array[1]--;
     return x.standarlize();
@@ -439,6 +455,7 @@
     return OmegaNum(x).log10();
   }
   P.logarithm=P.logBase=function (base){
+    if (base===undefined) base=Math.E;
     return this.log10().div(OmegaNum.log10(base));
   }
   Q.logarithm=Q.logBase=function (x,base){
@@ -852,7 +869,7 @@
         }
       }
       x.array[0]=b[0];
-      x.array[1]=b[1];
+      x.array[1]+=b[1];
     }
     if (negateIt) x.sign*=-1;
     x.standarlize();

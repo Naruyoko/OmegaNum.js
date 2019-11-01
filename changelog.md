@@ -1,3 +1,10 @@
+# α 1.0.2.5 - 2019/10/31
+* Fixed having `10^` not being counted in `fromString`.
+* Made `logarithm` and `logBase` use natural logarithm if it recieved not base.
+* Fixed logarithm of `Infinity` being `undefined`
+* Fixed `eq` thinking that `NaN`=`0`
+* Fixed `Infinity` and `NaN` being broken in some functions
+
 # α 1.0.2.4 - 2019/10/20
 * (Potentially) fixed memory leak. Now [TrueInfinity](https://reinhardt-c.github.io/TrueInfinity/) won't have 0.2 fps DevTools and >50MB heap.
 
