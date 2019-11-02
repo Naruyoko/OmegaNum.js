@@ -135,6 +135,9 @@
   P.compareTo=P.cmp=function (other){
     other=OmegaNum(other);
     if (this.isNaN()||other.isNaN()) return NaN;
+    if (this.array[0]==Infinity&&other.array[0]!=Infinity) return this.sign;
+    if (this.array[0]!=Infinity&&other.array[0]==Infinity) return -other.sign;
+    if (this.array.length==1&&this.array[0]==0&&other.array.length==1&&other.array[0]==0) return 0;
     if ((this.sign==1)&&(other.sign==-1)) return 1;
     if ((this.sign==-1)&&(other.sign==1)) return -1;
     if ((this.sign==-1)&&(other.sign==-1)) return this.neg().cmp(other.neg())*-1;
@@ -762,7 +765,7 @@
     if ("-+".includes(input[0])){
       var numSigns=input.search(/[^-\+]/);
       var signs=input.substring(0,numSigns);
-      negateIt=signs.match(/-/g).length%2===0;
+      negateIt=signs.match(/-/g).length%2==1;
       input=input.substring(numSigns);
     }
     if (input=="NaN") x=OmegaNum(NaN);
@@ -869,7 +872,7 @@
         }
       }
       x.array[0]=b[0];
-      x.array[1]+=b[1];
+      x.array[1]=(x.array[1]||0)+b[1];
     }
     if (negateIt) x.sign*=-1;
     x.standarlize();
@@ -1037,7 +1040,7 @@
         if ("-+".includes(input[0])){
           var numSigns=input.search(/[^-\+]/);
           var signs=input.substring(0,numSigns);
-          negateIt=signs.match(/-/g).length%2===0;
+          negateIt=signs.match(/-/g).length%2==1;
           input=input.substring(numSigns);
         }
         if (input=="NaN") x=OmegaNum(NaN);
@@ -1144,7 +1147,7 @@
             }
           }
           x.array[0]=b[0];
-          x.array[1]=b[1];
+          x.array[1]=(x.array[1]||0)+b[1];
         }
         if (negateIt) x.sign*=-1;
       }else if (input instanceof Array||input2 instanceof Array){

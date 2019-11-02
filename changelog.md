@@ -1,3 +1,8 @@
+# α 1.0.2.6 - 2019/11/01
+* Fixed `Infinity` being less than `Number.MAX_SAFE_INTEGER+1`
+* Fixed `-0` being less than `0`
+* Fixed `fromString` being stupid
+
 # α 1.0.2.5 - 2019/10/31
 * Fixed having `10^` not being counted in `fromString`.
 * Made `logarithm` and `logBase` use natural logarithm if it recieved not base.
