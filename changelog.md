@@ -1,7 +1,12 @@
+# α 1.0.2.7 - 2019/11/03
+* Added `isInfinite`.
+* Fixed `standarlize`.
+* Slightly optimised `divide`.
+
 # α 1.0.2.6 - 2019/11/01
 * Fixed `Infinity` being less than `Number.MAX_SAFE_INTEGER+1`
 * Fixed `-0` being less than `0`
-* Fixed `fromString` being stupid
+* Fixed `fromString` being stupid [#29](https://github.com/Naruyoko/OmegaNum.js/issues/29).
 
 # α 1.0.2.5 - 2019/10/31
 * Fixed having `10^` not being counted in `fromString`.

@@ -88,6 +88,7 @@
    *  greaterThanOrEqualTo      gte
    *  hyper
    *  isFinite
+   *  isInfinite
    *  isInteger                 isint
    *  isNaN
    *  isNegative                isneg
@@ -117,7 +118,7 @@
    *  toString
    */
   P.absoluteValue=P.abs=function(){
-   	var x=this.clone();
+    var x=this.clone();
     x.sign=1;
     return x;
   }
@@ -218,6 +219,12 @@
   Q.isFinite=function (x){
     return OmegaNum(x).isFinite();
   }
+  P.isInfinite=function (){
+    return this.array[0]==Infinity;
+  }
+  Q.isInfinite=function (x){
+    return OmegaNum(x).isInfinite();
+  }
   P.isInteger=P.isint=function (){
     if (this.sign==-1) return this.abs().isint();
     if (this.gt(MAX_SAFE_INTEGER)) return true;
@@ -255,9 +262,9 @@
     if (other.sign==-1) return x.sub(other.neg());
     if (x.eq(0)) return other;
     if (other.eq(0)) return x;
-    if (x.isNaN()||other.isNaN()||x.eq(Infinity)&&other.eq(Infinity)&&x.eq(other.neg())) return OmegaNum(NaN);
-    if (x.eq(Infinity)) return x;
-    if (other.eq(Infinity)) return other;
+    if (x.isNaN()||other.isNaN()||x.isInfinite()&&other.isInfinite()&&x.eq(other.neg())) return OmegaNum(NaN);
+    if (x.isInfinite()) return x;
+    if (other.isInfinite()) return other;
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)) return x.max(other);
     var y=x.min(other);
     x=x.max(other);
@@ -282,9 +289,9 @@
     if (other.sign==-1) return x.add(other.neg());
     if (x.eq(other)) return OmegaNum(0);
     if (other.eq(0)) return x;
-    if (x.isNaN()||other.isNaN()||x.eq(Infinity)&&other.eq(Infinity)) return OmegaNum(NaN);
-    if (x.eq(Infinity)) return x;
-    if (other.eq(Infinity)) return other.neg();
+    if (x.isNaN()||other.isNaN()||x.isInfinite()&&other.isInfinite()) return OmegaNum(NaN);
+    if (x.isInfinite()) return x;
+    if (other.isInfinite()) return other.neg();
     if (x.max(other).gt("e"+MAX_SAFE_INTEGER)||x.div(other).max(other.div(x)).gt(MAX_SAFE_INTEGER)){
       return x.gt(other)?x:OmegaNum(other).neg();
     }
@@ -292,14 +299,14 @@
     x=x.max(other);
     if (!x.array[1]){
       var r=OmegaNum(x.toNumber()-y.toNumber());
-      return this.gt(other)?r:r.neg();
+      return x.gt(other)?r:r.neg();
     }else if (x.array[1]==1){
       if (!y.array[1]){
         y.array[0]=Math.log10(y.array[0]);
         y.array[1]=(y.array[1]+1)||1;
       }
       var r=OmegaNum([y.array[0]+Math.log10(Math.pow(10,x.array[0]-y.array[0])-1),1]);
-      return this.gt(other)?r:r.neg();
+      return x.gt(other)?r:r.neg();
     }
   }
   Q.minus=Q.sub=function (x,y){
@@ -311,11 +318,11 @@
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(x+"*"+other);
     if (x.sign*other.sign==-1) return x.abs().mul(other.abs()).neg();
     if (x.sign==-1) return x.abs().mul(other.abs());
-    if (x.isNaN()||other.isNaN()||x.eq(0)&&other.eq(Infinity)||x.eq(Infinity)&&other.abs().eq(0)) return OmegaNum(NaN);
+    if (x.isNaN()||other.isNaN()||x.eq(0)&&other.isInfinite()||x.isInfinite()&&other.abs().eq(0)) return OmegaNum(NaN);
     if (other.eq(0)) return OmegaNum(0);
     if (other.eq(1)) return x.clone();
-    if (x.eq(Infinity)) return x;
-    if (other.eq(Infinity)) return other;
+    if (x.isInfinite()) return x;
+    if (other.isInfinite()) return other;
     if (x.max(other).gt("ee"+MAX_SAFE_INTEGER)) return x.max(other);
     if (x*other<=MAX_SAFE_INTEGER) return OmegaNum(x*other);
     return OmegaNum.pow(10,x.log10().add(other.log10()));
@@ -329,16 +336,18 @@
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(x+"/"+other);
     if (x.sign*other.sign==-1) return x.abs().div(other.abs()).neg();
     if (x.sign==-1) return x.abs().div(other.abs());
-    if (x.isNaN()||other.isNaN()||x.eq(Infinity)&&other.eq(Infinity)||x.eq(0)&&other.eq(0)) return OmegaNum(NaN);
+    if (x.isNaN()||other.isNaN()||x.isInfinite()&&other.isInfinite()||x.eq(0)&&other.eq(0)) return OmegaNum(NaN);
     if (other.eq(0)) return OmegaNum(Infinity);
     if (other.eq(1)) return x.clone();
     if (x.eq(other)) return OmegaNum(1);
-    if (x.eq(Infinity)) return x;
-    if (other.eq(Infinity)) return OmegaNum(0);
+    if (x.isInfinite()) return x;
+    if (other.isInfinite()) return OmegaNum(0);
     if (x.max(other).gt("ee"+MAX_SAFE_INTEGER)) return x.gt(other)?x.clone():OmegaNum(0);
     if (x/other<=MAX_SAFE_INTEGER) return OmegaNum(x/other);
-    if (OmegaNum.pow(10,x.log10().sub(other.log10())).sub(OmegaNum.pow(10,x.log10().sub(other.log10())).floor()).lt(new OmegaNum(1e-9))) return OmegaNum.pow(10,x.log10().sub(other.log10())).floor();
-    return OmegaNum.pow(10,x.log10().sub(other.log10()));
+    var pw=OmegaNum.pow(10,x.log10().sub(other.log10()));
+    var fp=pw.floor();
+    if (pw.sub(fp).lt(new OmegaNum(1e-9))) return fp;
+    return pw;
   }
   Q.divide=Q.div=function (x,y){
     return OmegaNum(x).div(y);
@@ -449,7 +458,7 @@
     if (x.lt(0)) return OmegaNum(NaN);
     if (x.eq(0)) return OmegaNum(-Infinity);
     if (x.lt(MAX_SAFE_INTEGER)) return OmegaNum(Math.log10(x.toNumber()));
-    if (x.isNaN()||!x.isFinite()) return x;
+    if (!x.isFinite()) return x;
     if (x.gt("10^^"+MAX_SAFE_INTEGER)) return x;
     x.array[1]--;
     return x.standarlize();
@@ -627,45 +636,43 @@
     var b;
     var x=this;
     if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
-    if (!x.array.length) x.array=[0];
+    if (!x.array||!x.array.length) x.array=[0];
     if (![-1,1].includes(x.sign)){
       if (typeof x.sign!="number") x.sign=Number(x.sign);
-      if (x.sign<0) x.sign=-1;
-      else x.sign=1;
+      x.sign=x.sign<0?-1:1;
+    }
+    if (x.array.includes(NaN)){
+      x.array=[NaN];
+      return;
+    }
+    if (x.array.includes(Infinity)){
+      x.array=[Infinity];
+      return;
     }
     for (var i=0;i<x.array.length;i++){
       if (x.array[i]==null){
         x.array[i]=0;
-      }
-      if (isNaN(x.array[i])){
-        x.array=[NaN];
-        return;
-      }
-      if (!isFinite(x.array[i])){
-        x.array=[Infinity];
-        return;
       }
     }
     do{
       if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
       b=false;
       while (x.array[x.array.length-1]===0){
-      	x.array.pop();
-      	b=true;
+        x.array.pop();
+        b=true;
       }
       if (x.array[0]>MAX_SAFE_INTEGER){
-        if (!x.array[1]) x.array[1]=0;
-        x.array[1]++;
+        x.array[1]=(x.array[1]||0)+1;
         x.array[0]=Math.log10(x.array[0]);
         b=true;
       }
-      if ((x.array[0]<MAX_E)&&(x.array[1])){
+      while (x.array[0]<MAX_E&&x.array[1]){
         x.array[0]=Math.pow(10,x.array[0]);
         x.array[1]--;
         b=true;
       }
-      if ((x.array[0]<MAX_SAFE_INTEGER)&&(!x.array[1])&&(x.array.length>2)){
-        for (var i=2;!(this.array[i])&&(i<this.array.length);i++) continue;
+      if (!x.array[1]&&x.array.length>2){
+        for (var i=2;!x.array[i];i++) continue;
         x.array[i-1]=x.array[0];
         x.array[0]=1;
         x.array[i]--;
@@ -673,10 +680,9 @@
       }
       for (var i=1;i<x.array.length;i++){
         if (x.array[i]>MAX_SAFE_INTEGER){
-          if (!x.array[i+1]) x.array[i+1]=0;
-          x.array[i+1]++;
+          x.array[i+1]=(x.array[i+1]||0)+1;
           x.array[0]=x.array[i]+1;
-          x.array[i]=0;
+          for (var j=1;j<=i;j++) x.array[j]=0;
           b=true;
         }
       }
