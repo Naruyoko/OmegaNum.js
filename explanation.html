@@ -1,0 +1,67 @@
+<!DOCTYPE HTML> 
+<html>  
+  <head>  
+    <title>OmegaNum</title>
+    <style>
+      body {
+        font-family: "Consolas", monospace;
+        font-size: 16px;
+      }
+    </style>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" async></script>
+  </head> 
+  <body>
+    <h1>OmegaNum.js Explanation</h1>
+    <div style="border:1px black solid">
+      <ul>
+        <li><a href="#n">What do the numbers mean?</a>
+          <ul>
+            <li><a href="#n.exponent">Exponents</a></li>
+            <li><a href="#n.repeatedexponents">Repeated exponents</a></li>
+            <li><a href="#n.tetration">Tetration</a></li>
+            <li><a href="#n.hyperoperations">Hyperoperations</a></li>
+            <li><a href="#n.condenserepetitions">Condensing repetitions</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <h2 id="n">What do the numbers mean?</h2>
+    <h3 id="n.exponent">Exponents</h3>
+    <p>
+      If you are unaware of exponents and the notation:<br>
+      For whole numbers a and b, then exponents are written a<sup>b</sup> or a^b, and read "a raised to the power of b", "a to the power of b", "a to the b", or similar.<br>
+      a^b is equal to a×a×...×a with b a's.<br>
+      Note that a^b and b^a is not always equal. For example, 2^3 = 2×2×2 = 8, but 3^2 = 3×3 = 9.
+    </p>
+    <h3 id="n.repeatedexponents">Repeated exponents</h3>
+    <p>
+      When the exponents are stacked, such as a<sup>b<sup>c</sup></sup> or a^b^c, it is a general consensus that the exponents are calculated from top to bottom, or right to left.<br>
+      2^3^4 = 2^(3^4) = 2^81 = 2.4178516392292583e+24<br>
+      (2^3)^4 = 8^4 = 4096
+    </p>
+    <h3 id="n.tetration">Tetration</h3>
+    <p>
+      Revisit the definitions of multiplication and exponentiation:<br>
+      \(\begin{align}a\times b&=\underset{b\;a\text{'s}}{\underbrace{a+a+\cdots+a}}\\a\text{^}b&=\underset{b\;a\text{'s}}{\underbrace{a\times a\times\cdots\times a}}\end{align}\)<br>
+      We can see to extend the series of operation, which tetration achieves:<br>
+      \(a\uparrow\uparrow b=\underset{b\;a\text{'s}}{\underbrace{a\text{^}a\text{^}\cdots\text{^}a}}\)<br>
+      Tetration is also written as a^^b.<br>
+      Remember that the exponents are solved from top.<br>
+      3^^3 = 3^3^3 = 3^(3^3) = 3^27 = 7625597484987
+    </p>
+    <h3 id="n.hyperoperations">Hyperoperations</h3>
+    <p>
+      After tetration, the series can be extended such as pentation:<br>
+      \(a\uparrow\uparrow\uparrow b=\underset{b\;a\text{'s}}{\underbrace{a\uparrow\uparrow a\uparrow\uparrow\cdots\uparrow\uparrow a}}\)<br>
+      The repeated tetrations are solved from right to left as exponents.<br>
+      The number of arrows are increased as the operation become powerful. n arrows are often abbreviated as ↑<sup>n</sup> or {n}.
+      In general, \(a\uparrow^{c+1}b=\underset{b\;a\text{'s}}{\underbrace{a\uparrow^ca\uparrow^c\cdots\uparrow^ca}}\)<br>
+    </p>
+    <h3 id="n.condenserepetitions">Condensing repetitions</h3>
+    <p>
+      Sometimes, you find yourself over welmed by stuff like 10^^^10^^^10^^^10^^10^^10^10^10^328. OmegaNum.js condenses this by counting the number of repeated operations.<br>
+      If we have 10{n} repeated m times, it is condensed into (10{n})<sup>m</sup> or (10{n})^m. These are finally chained back into a number.<br>
+      The number above can be condensed into (10^^^)^3 (10^^)^2 (10^)^3 328.<br>
+    </p>
+  </body>
+</html>
