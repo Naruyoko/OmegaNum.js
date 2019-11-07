@@ -586,6 +586,10 @@
       and you have already bought currentOwned, how many of the object
       can you buy.
     */
+    resourcesAvailable=OmegaNum(resourcesAvailable);
+    priceStart=OmegaNum(priceStart);
+    priceRatio=OmegaNum(priceRatio);
+    currentOwned=OmegaNum(currentOwned);
     let actualStart = priceStart.mul(priceRatio.pow(currentOwned));
     return OmegaNum.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
   }
@@ -596,6 +600,10 @@
       and you have already bought currentOwned, how many of the object
       can you buy.
     */
+    resourcesAvailable=OmegaNum(resourcesAvailable);
+    priceStart=OmegaNum(priceStart);
+    priceRatio=OmegaNum(priceRatio);
+    currentOwned=OmegaNum(currentOwned);
     var actualStart = priceStart.add(currentOwned.mul(priceAdd));
     var b = actualStart.sub(priceAdd.div(2));
     var b2 = b.pow(2);
@@ -608,6 +616,10 @@
       and you have already bought currentOwned, what will be the price of numItems
       of something.
     */
+    numItems=OmegaNum(numItems);
+    priceStart=OmegaNum(priceStart);
+    priceRatio=OmegaNum(priceRatio);
+    currentOwned=OmegaNum(currentOwned);
     return priceStart.mul(priceRatio.pow(currentOwned)).mul(OmegaNum.sub(1, priceRatio.pow(numItems))).div(OmegaNum.sub(1, priceRatio));
   }
   Q.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
@@ -617,6 +629,10 @@
       and you have already bought currentOwned, what will be the price of numItems
       of something.
     */
+    numItems=OmegaNum(numItems);
+    priceStart=OmegaNum(priceStart);
+    priceRatio=OmegaNum(priceRatio);
+    currentOwned=OmegaNum(currentOwned);
     var actualStart = priceStart.add(currentOwned.mul(priceAdd));
 
     return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
@@ -995,6 +1011,7 @@
           //lol just keep going
         }
       }
+      var dontcheckstandard=false;
       if (typeof input=="number"&&!(input2 instanceof Array)){
         x.array[0]=Math.abs(input);
         x.sign=input<0?-1:1;
@@ -1174,16 +1191,19 @@
       }else if (input instanceof OmegaNum){
         x.array=input.array.slice(0);
         x.sign=input.sign;
+        dontcheckstandard=true;
       }else if (typeof input=="object"){
         if (!(input.array instanceof Array)) throw Error(invalidArgument+"Expected that property 'array' exists");
         if (input.sign!==undefined&&typeof input.sign!="number") throw Error(invalidArgument+"Expected that property 'sign' is Number");
         x.array=input.array.slice(0);
-        x.sign=Number(input.sign)||1;
+        var s=Number(input.sign)||1;
+        x.sign=s<0?-1:1;
       }else{
         x.array=[NaN];
         x.sign=1;
+        dontcheckstandard=true;
       }
-      x.standarlize();
+      if (!dontcheckstandard) x.standarlize();
       return x;
     }
     OmegaNum.prototype = P;

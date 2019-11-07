@@ -1,3 +1,7 @@
+# α 1.0.2.8 - 2019/11/06
+* Fixed `affordGeometricSeries`, `affordArithmeticSeries`, `sumGeometricSeries`, and `sumArithmeticSeries` being broken if fed non-OmegaNum.
+* Slightly optimized constructor when fed OmegaNum.
+
 # α 1.0.2.7 - 2019/11/03
 * Added `isInfinite`.
 * Fixed `standarlize`.

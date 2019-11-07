@@ -1,4 +1,4 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![α](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/alpha.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![2](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/2.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![7](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/7.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![α](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/alpha.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![2](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/2.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![8](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/8.png)
 A huge number library holding up to 10{1000(configurable)}x. A basement for planned {10,x,1,2}.
 
 This reaches level f<sub>ω</sub>, hence the name.
@@ -7,7 +7,7 @@ Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[
 
 Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, exp, sqrt, cbrt, root, log10, logBase, log=ln, tetr, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()`, `toObject()`, and `toJSON()`. Add one of a kind `toHyperE()`.
 
-If you are not planning to make something to the scale of [Incremental Unlimited](https://play.google.com/store/apps/details?id=com.antoine.mathematician.oddlittlegame), then use other libraries, such as, in ascending order:
+If you are not planning to make something to the scale of [Incremental Unlimited](https://play.google.com/store/apps/details?id=com.antoine.mathematician.oddlittlegame) or [TrueInfinity](https://reinhardt-c.github.io/TrueInfinity), then use other libraries, such as, in ascending order:
 
 * [break_infinity.js](https://github.com/Patashu/break_infinity.js) by Patashu - e9e15
 * [decimal.js](https://github.com/MikeMcl/decimal.js) by MikeMcl - e9e15
