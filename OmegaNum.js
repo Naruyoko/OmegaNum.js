@@ -113,7 +113,6 @@
    *  toHyperE
    *  toJSON
    *  toNumber
-   *  toObject
    *  toPower                   pow
    *  toString
    */
@@ -406,7 +405,7 @@
     if (this.eq(10)){
       if (other.gt(0)){
         other.array[1]=(other.array[1]+1)||1;
-        other.standarlize();
+        other.standardize();
         return other;
       }else{
         return new OmegaNum(Math.pow(10,other));
@@ -462,7 +461,7 @@
     if (!x.isFinite()) return x;
     if (x.gt("10^^"+MAX_SAFE_INTEGER)) return x;
     x.array[1]--;
-    return x.standarlize();
+    return x.standardize();
   };
   Q.generalLogarithm=Q.log10=function (x){
     return new OmegaNum(x).log10();
@@ -501,11 +500,11 @@
         r.array[2]--;
         var j=r.add(other);
         j.array[2]=(j.array[2]||0)+1;
-        j.standarlize();
+        j.standardize();
         return j;
       }
       other.array[2]=(other.array[2]||0)+1;
-      other.standarlize();
+      other.standardize();
       return other;
     }
     r=t.pow(t.pow(t));
@@ -515,7 +514,7 @@
       other=other.sub(1);
     }
     r.array[1]=(r.array[1]+other.toNumber())||other.toNumber();
-    r.standarlize();
+    r.standardize();
     return r;
   };
   Q.tetrate=Q.tetr=function (x,y){
@@ -553,16 +552,16 @@
           r.array[arrows]--;
           var j=r.add(other);
           j.array[arrows]=(j.array[arrows]||0)+1;
-          j.standarlize();
+          j.standardize();
           return j;
         }
         other.array[arrows]=(other.array[arrows]||0)+1;
-        other.standarlize();
+        other.standardize();
         return other;
       }
       r=t.arrow(arrows-1)(t.arrow(arrows-1)(t));
       r.array[arrows-1]=(r.array[arrows-1]+other.sub(3).toNumber())||other.sub(3).toNumber();
-      r.standarlize();
+      r.standardize();
       return r;
     };
   };
@@ -651,7 +650,7 @@
   P.choose = function (other) {
     return OmegaNum.choose(this, other);
   };
-  P.standarlize=function (){
+  P.standardize=function (){
     var b;
     var x=this;
     if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
@@ -662,11 +661,11 @@
     }
     if (x.array.includes(NaN)){
       x.array=[NaN];
-      return;
+      return x;
     }
     if (x.array.includes(Infinity)){
       x.array=[Infinity];
-      return;
+      return x;
     }
     for (var i=0;i<x.array.length;i++){
       if (x.array[i]===null){
@@ -737,14 +736,11 @@
     else return "(10^)^"+this.array[1]+" "+this.array[0];
   };
   //Note: toArray() would be impossible without changing the layout of the array or lose the information about the sign
-  P.toObject=function (){
+  P.toJSON=function (){
     return {
       array:this.array.slice(0),
       sign:this.sign
     };
-  };
-  P.toJSON=function (){
-    return "{\"array\":"+JSON.stringify(this.array)+",\"sign\":"+this.sign+"}";
   };
   P.toHyperE=function (){
     if (this.sign==-1) return "-"+this.abs().toHyperE();
@@ -763,7 +759,7 @@
     var x=new OmegaNum();
     x.array[0]=Math.abs(input);
     x.sign=input<0?-1:1;
-    x.standarlize();
+    x.standardize();
     return x;
   };
   Q.fromString=function (input){
@@ -899,7 +895,7 @@
       x.array[1]=(x.array[1]||0)+b[1];
     }
     if (negateIt) x.sign*=-1;
-    x.standarlize();
+    x.standardize();
     return x;
   };
   Q.fromArray=function (input1,input2){
@@ -917,7 +913,7 @@
     x.array=array.slice(0);
     if (sign) x.sign=Number(sign);
     else x.sign=1;
-    x.standarlize();
+    x.standardize();
     return x;
   };
   Q.fromObject=function (input){
@@ -929,7 +925,7 @@
     var x=new OmegaNum();
     x.array=input.array.slice(0);
     x.sign=Number(input.sign)||1;
-    x.standarlize();
+    x.standardize();
     return x;
   };
   Q.fromJSON=function (input){
@@ -980,7 +976,7 @@
       }
     }
     if (negateIt) x.sign*=-1;
-    x.standarlize();
+    x.standardize();
     return x;
   };
   P.clone=function (){

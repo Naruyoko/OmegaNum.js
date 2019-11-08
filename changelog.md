@@ -1,3 +1,9 @@
+# 0.0.0 - 2019/11/08
+* Replaced `toJSON` with what `toObject` used to be, `toObject` removed.
+* Fixed misspell in function `standarlize`, replaced with `standardize`.
+* Removed from alpha stage, entered development stage.
+* Uploaded to `npm`. [See here](https://www.npmjs.com/package/omega_num.js).
+
 # α 1.0.2.9 - 2019/11/07
 * No duplicate codes in the main constructor and `fromSomething` functions.
 * Added `new` on all constructor call. It is not required to be this way.

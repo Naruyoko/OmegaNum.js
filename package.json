@@ -1,0 +1,26 @@
+{
+  "name": "omega_num.js",
+  "version": "0.0.0",
+  "description": "A JavaScript library that handles arithmetic for numbers as large as 10{1000}9e15.",
+  "main": "OmegaNum.js",
+  "scripts": {
+    "test": "npm run dist && npm run docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Naruyoko/OmegaNum.js.git"
+  },
+  "keywords": [
+    "bignum",
+    "bignumber",
+    "bigdecimal",
+    "number",
+    "decimal"
+  ],
+  "author": "Naruyoko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Naruyoko/OmegaNum.js/issues"
+  },
+  "homepage": "https://github.com/Naruyoko/OmegaNum.js"
+}
