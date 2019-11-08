@@ -61,7 +61,6 @@
             <li><a href="#m.toHyperE">toHyperE</a></li>
             <li><a href="#m.toJSON">toJSON</a></li>
             <li><a href="#m.toNumber">toNumber</a></li>
-            <li><a href="#m.toObject">toObject</a></li>
             <li><a href="#m.pow">toPower pow</a></li>
             <li><a href="#m.toString">toString</a></li>
           </ul>
@@ -404,10 +403,10 @@
     </p>
     <h3 id="m.toJSON">toJSON</h3>
     <p>
-      Converts into JSON with property "array" and "sign".
+      Converts into Object with property "array" and "sign".
       <pre><code data-language="javascript">
-        OmegaNum(52).toJSON() //"{\"array\":[52],\"sign\":1}"
-        OmegaNum("eee30").toJSON() //"{\"array\":[30,3],\"sign\":1}"
+        OmegaNum(52).toJSON() //{array:[52],sign:1}
+        OmegaNum("eee30").toJSON() //{array:[30,3],sign:1}
       </code></pre>
     </p>
     <h3 id="m.toNumber">toNumber</h3>
@@ -416,14 +415,6 @@
       <pre><code data-language="javascript">
         OmegaNum(52).toNumber() //52
         OmegaNum("eee30").toNumber() //Infinity
-      </code></pre>
-    </p>
-    <h3 id="m.toObject">toObject</h3>
-    <p>
-      Converts into Object with property "array" and "sign".
-      <pre><code data-language="javascript">
-        OmegaNum(52).toJSON() //{array:[52],sign:1}
-        OmegaNum("eee30").toJSON() //{array:[30,3],sign:1}
       </code></pre>
     </p>
     <h3 id="m.pow">toPower pow</h3>
