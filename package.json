@@ -1,10 +1,10 @@
 {
   "name": "omega_num.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A JavaScript library that handles arithmetic for numbers as large as 10{1000}9e15.",
   "main": "OmegaNum.js",
   "scripts": {
-    "test": "npm run dist && npm run docs"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

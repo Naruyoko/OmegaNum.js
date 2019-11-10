@@ -1,3 +1,7 @@
+# 0.0.1 - 2019/11/10
+* Fixed `affordGeometricSeries`, `affordArithmeticSeries`, `sumGeometricSeries`, and `sumArithmeticSeries` putting wrong variables through constructor.
+* Removed `String.prototype.includes`(ES2015) and `Array.prototype.includes`(ES2016) to increase coverage.
+
 # 0.0.0 - 2019/11/08
 * Replaced `toJSON` with what `toObject` used to be, `toObject` removed.
 * Fixed misspell in function `standarlize`, replaced with `standardize`.

@@ -1,7 +1,7 @@
 //Code snippets and templates from Decimal.js
 
 ;(function (globalScope) {
-  'use strict';
+  "use strict";
 
 
   // --  EDITABLE DEFAULTS  -- //
@@ -48,18 +48,13 @@
 
     external = true,
 
-    omegaNumError = '[OmegaNumError] ',
-    invalidArgument = omegaNumError + 'Invalid argument: ',
+    omegaNumError = "[OmegaNumError] ",
+    invalidArgument = omegaNumError + "Invalid argument: ",
 
-    mathfloor = Math.floor,
-    mathpow = Math.pow,
+    isOmegaNum = /^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/,
 
-    isOmegaNum = /^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
-
-    BASE = 10,
-    LOG_BASE = 1,
     MAX_SAFE_INTEGER = 9007199254740991,
-    MAX_E = Math.log10(MAX_SAFE_INTEGER),    // 1286742750677284
+    MAX_E = Math.log10(MAX_SAFE_INTEGER), //15.954589770191003
 
     // OmegaNum.prototype object
     P={},
@@ -134,20 +129,28 @@
   };
   P.compareTo=P.cmp=function (other){
     other=new OmegaNum(other);
-    if (this.isNaN()||other.isNaN()) return NaN;
+    if (isNaN(this.array[0])||isNaN(other.array[0])) return NaN;
     if (this.array[0]==Infinity&&other.array[0]!=Infinity) return this.sign;
     if (this.array[0]!=Infinity&&other.array[0]==Infinity) return -other.sign;
     if (this.array.length==1&&this.array[0]===0&&other.array.length==1&&other.array[0]===0) return 0;
-    if ((this.sign==1)&&(other.sign==-1)) return 1;
-    if ((this.sign==-1)&&(other.sign==1)) return -1;
-    if ((this.sign==-1)&&(other.sign==-1)) return this.neg().cmp(other.neg())*-1;
-    if (this.array.length>other.array.length) return 1;
-    if (this.array.length<other.array.length) return -1;
-    for (var i=this.array.length-1;i>=0;i--){
-      if (this.array[i]>other.array[i]) return 1;
-      if (this.array[i]<other.array[i]) return -1;
+    if (this.sign!=other.sign) return this.sign;
+    var m=this.sign;
+    var r;
+    if (this.array.length>other.array.length) r=1;
+    else if (this.array.length<other.array.length) r=-1;
+    else{
+      for (var i=this.array.length-1;i>=0;i--){
+        if (this.array[i]>other.array[i]){
+          r=1;
+          break;
+        }else if (this.array[i]<other.array[i]){
+          r=-1;
+          break;
+        }
+      }
+      r=r||0;
     }
-    return 0;
+    return r*m;
   };
   Q.compare=Q.cmp=function (x,y){
     return new OmegaNum(x).cmp(y);
@@ -524,7 +527,7 @@
     return this.arrow(3)(other);
   };
   Q.pentate=Q.pent=function (x,y){
-    return new OmegaNum.arrow(x,3,y);
+    return OmegaNum.arrow(x,3,y);
   };
   P.arrow=function (arrows){
     var t=this.clone();
@@ -577,7 +580,7 @@
   Q.hyper=function (z){
     z=new OmegaNum(z);
     if (z.eq(0)) return function(x,y){return new OmegaNum(y).eq(0)?new OmegaNum(x):new OmegaNum(x).add(1);};
-    if (z.eq(1)) return function(x,y){return new OmegaNum.add(x,y);};
+    if (z.eq(1)) return function(x,y){return OmegaNum.add(x,y);};
     return function(x,y){return new OmegaNum(x).arrow(z.sub(2))(y);};
   };
   // All of these are from Patashu's Break_Eternity.js
@@ -591,8 +594,7 @@
     resourcesAvailable=new OmegaNum(resourcesAvailable);
     priceStart=new OmegaNum(priceStart);
     priceRatio=new OmegaNum(priceRatio);
-    currentOwned=new OmegaNum(currentOwned);
-    let actualStart = priceStart.mul(priceRatio.pow(currentOwned));
+    var actualStart = priceStart.mul(priceRatio.pow(currentOwned));
     return OmegaNum.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10().div(priceRatio.log10()));
   };
   Q.affordArithmeticSeries = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
@@ -604,7 +606,7 @@
     */
     resourcesAvailable=new OmegaNum(resourcesAvailable);
     priceStart=new OmegaNum(priceStart);
-    priceRatio=new OmegaNum(priceRatio);
+    priceAdd=new OmegaNum(priceAdd);
     currentOwned=new OmegaNum(currentOwned);
     var actualStart = priceStart.add(currentOwned.mul(priceAdd));
     var b = actualStart.sub(priceAdd.div(2));
@@ -618,10 +620,8 @@
       and you have already bought currentOwned, what will be the price of numItems
       of something.
     */
-    numItems=new OmegaNum(numItems);
     priceStart=new OmegaNum(priceStart);
     priceRatio=new OmegaNum(priceRatio);
-    currentOwned=new OmegaNum(currentOwned);
     return priceStart.mul(priceRatio.pow(currentOwned)).mul(OmegaNum.sub(1, priceRatio.pow(numItems))).div(OmegaNum.sub(1, priceRatio));
   };
   Q.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
@@ -633,7 +633,6 @@
     */
     numItems=new OmegaNum(numItems);
     priceStart=new OmegaNum(priceStart);
-    priceRatio=new OmegaNum(priceRatio);
     currentOwned=new OmegaNum(currentOwned);
     var actualStart = priceStart.add(currentOwned.mul(priceAdd));
 
@@ -655,15 +654,15 @@
     var x=this;
     if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
     if (!x.array||!x.array.length) x.array=[0];
-    if (![-1,1].includes(x.sign)){
+    if (x.sign!=1&&x.sign!=-1){
       if (typeof x.sign!="number") x.sign=Number(x.sign);
       x.sign=x.sign<0?-1:1;
     }
-    if (x.array.includes(NaN)){
+    if (x.array.filter(isNaN).length){
       x.array=[NaN];
       return x;
     }
-    if (x.array.includes(Infinity)){
+    if (x.array.filter(function(x){return !isFinite(x);}).length){
       x.array=[Infinity];
       return x;
     }
@@ -765,9 +764,9 @@
   Q.fromString=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
     var isJSON=false;
-    if (typeof input=="string"&&"[{".includes(input[0])){
+    if (typeof input=="string"&&(input[0]=="["||input[0]=="{")){
       try {
-        JSON.parse(str);
+        JSON.parse(input);
       }finally{
         isJSON=true;
       }
@@ -777,13 +776,13 @@
     }
     var x=new OmegaNum();
     x.array=[0];
-    if (!/^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/.test(input)){
+    if (!isOmegaNum.test(input)){
       console.warn(omegaNumError+"Malformed input: "+input);
       x.array=[NaN];
       return x;
     }
     var negateIt=false;
-    if ("-+".includes(input[0])){
+    if (input[0]=="-"||input[0]=="+"){
       var numSigns=input.search(/[^-\+]/);
       var signs=input.substring(0,numSigns);
       negateIt=signs.match(/-/g).length%2==1;
@@ -952,7 +951,7 @@
       return x;
     }
     var negateIt=false;
-    if ("-+".includes(input[0])){
+    if (input[0]=="-"||input[0]=="+"){
       var numSigns=input.search(/[^-\+]/);
       var signs=input.substring(0,numSigns);
       negateIt=signs.match(/-/g).length%2===0;
@@ -1000,7 +999,7 @@
       if (!(x instanceof OmegaNum)) return new OmegaNum(input,input2);
       x.constructor=OmegaNum;
       var parsedObject=null;
-      if (typeof input=="string"&&"[{".includes(input[0])){
+      if (typeof input=="string"&&(input[0]=="["||input[0]=="{")){
         try {
           parsedObject=JSON.parse(input);
         }catch(e){
@@ -1093,7 +1092,7 @@
       ];
     for (i = 0; i < ps.length; i += 3) {
       if ((v = obj[p = ps[i]]) !== void 0) {
-        if (mathfloor(v) === v && v >= ps[i + 1] && v <= ps[i + 2]) this[p] = v;
+        if (Math.floor(v) === v && v >= ps[i + 1] && v <= ps[i + 2]) this[p] = v;
         else throw Error(invalidArgument + p + ': ' + v);
       }
     }
