@@ -1,3 +1,8 @@
+# 0.1.0 - 2019/11/27
+* Added `gamma`, `lambertw`, `ssrt`, and `slog` (pulled straight from [break_eternity.js](https://github.com/Patashu/break_eternity.js)).
+* Expanded `fact` to real values.
+* Expanded `tetr` to real and infinite height.
+
 # 0.0.1 - 2019/11/10
 * Fixed `affordGeometricSeries`, `affordArithmeticSeries`, `sumGeometricSeries`, and `sumArithmeticSeries` putting wrong variables through constructor.
 * Removed `String.prototype.includes`(ES2015) and `Array.prototype.includes`(ES2016) to increase coverage.

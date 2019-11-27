@@ -1,6 +1,6 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png)
 [![NPM](https://img.shields.io/npm/v/omega_num.js.svg)](https://www.npmjs.com/package/omega_num.js)
-A huge number library holding up to 10{1000(configurable)}x. A basement for planned {10,x,1,2}.
+A huge number library holding up to 10{1000}9e15. A basement for planned {10,x,1,2}.
 
 This reaches level f<sub>ω</sub>, hence the name.
 
@@ -8,7 +8,7 @@ Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[
 
 For detailed explanation and documentation, [see here](https://naruyoko.github.io/OmegaNum.js/index.html).
 
-Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, pow, exp, sqrt, cbrt, root, log10, logBase, log=ln, tetr, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()`, and `toJSON()`. Add one of a kind `toHyperE()`.
+Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, gamma, fact, pow, exp, sqrt, cbrt, root, log10, logBase, log(alias ln), lambertw, tetr, ssrt, slog, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()`, and `toJSON()`. Add one of a kind `toHyperE()`.
 
 If you are not planning to make something to the scale of [Incremental Unlimited](https://play.google.com/store/apps/details?id=com.antoine.mathematician.oddlittlegame) or [TrueInfinity](https://reinhardt-c.github.io/TrueInfinity), then use other libraries, such as, in ascending order:
 
@@ -21,10 +21,10 @@ If you are not planning to make something to the scale of [Incremental Unlimited
 
 Future ideas:
 
-* ExpantaNum.js - f<sub>ω+1</sub>, index-value format with index of itself.
+* ExpantaNum.js - f<sub>ω+1</sub>, array of value-index pair with separate counter.
 * OmegaExpantaNum.js - f<sub>ω2</sub>
 * MegotaNum.js - f<sub>ω<sup>2</sup></sub>
 * PowiainaNum.js - f<sub>ω<sup>3</sup></sub>
-* break_line.js - f<sub>ω<sup>ω</sup></sub>
+* GodgahNum.js - f<sub>ω<sup>ω</sup></sub>
 
 number library, big number, big num, bignumber, bignum, big integer, biginteger, bigint, incremental games, idle games, large numbers, huge numbers, googology, javascript
