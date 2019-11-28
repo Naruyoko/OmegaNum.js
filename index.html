@@ -2,7 +2,7 @@
 <html>	
   <head>	
     <title>OmegaNum</title>	
-    <script type="text/javascript" src="https://raw.githack.com/Naruyoko/OmegaNum.js/master/OmegaNum.min.js"></script>	
+    <script type="text/javascript" src="https://raw.githack.com/Naruyoko/OmegaNum.js/master/OmegaNum.js"></script>	
     <script>	
       window.onload=function (){
         document.getElementById("button").onclick=function (){	
@@ -23,7 +23,6 @@
         font-size: 16px;
       }
     </style>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" async></script>
   </head>	
   <body>
     <h1>OmegaNum.js</h1>
@@ -47,15 +46,14 @@
       This library works by storing the sign and an array.<br>
       The sign is either 1 or -1, positive or negative respectively.<br>
       Array holds the magnitude; Array [n<sub>0</sub>,n<sub>1</sub>,n<sub>2</sub>,n<sub>3</sub>...] represents:<br>
-      ...(10↑<sup>3</sup>)<sup>n<sub>3</sup></sup>(10↑↑)<sup>n<sub>2</sup></sup>(10↑)<sup>n<sub>1</sup></sup>n<sub>0</sub></sup> <a href="./explanation.html">Learn what it means</a><br>
-      Therefore, [23.2352,2,6,0,1,4] represents (10↑<sup>5</sup>)<sup>4</sup>10↑<sup>4</sup>(10↑↑)<sup>6</sup>(10↑)<sup>2</sup>23.2352, which without parenthesis becomes 10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>4</sup>10↑↑10↑↑10↑↑10↑↑10↑↑10↑↑10↑10↑23.2352. Using LaTeX, I can sort of expands into decimal, which is:
-      <div style="zoom:10%;">
-        \(\begin{matrix}\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\left.\left.\left.\left.\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}2\underset{171869969539773881871357}{\underbrace{28767407104742504939274665007259268034875905285622251679055397167730260624040178402089159341052814222\cdots}}.\end{matrix}\)
-      </div>
+      ...(10↑<sup>3</sup>)<sup>n<sub>3</sup></sup>(10↑↑)<sup>n<sub>2</sup></sup>(10↑)<sup>n<sub>1</sup></sup>n<sub>0</sub></sup> <sup><a href="./explanation.html">Learn what it means</a></sup><br>
+      Therefore, [23.2352,2,6,0,1,4] represents (10↑<sup>5</sup>)<sup>4</sup>10↑<sup>4</sup>(10↑↑)<sup>6</sup>(10↑)<sup>2</sup>23.2352, which without parenthesis becomes 10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>5</sup>10↑<sup>4</sup>10↑↑10↑↑10↑↑10↑↑10↑↑10↑↑10↑10↑23.2352. Using LaTeX, I can sort of expands into decimal. To reduce lag, I will put the <i>source code</i> here. You can copy them in somewhere to see.<br>
+      <textarea style="font-size:4px;width:100%;height:40px;">\begin{matrix}\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\underbrace{\left.\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\cdots\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}10}\\\left.\begin{matrix}\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\\vdots\\\underbrace{\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\cdots\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}10}\\10\end{matrix}\right\}\left.\left.\left.\left.\left.\left.\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}\begin{matrix}1\underbrace{00\cdots00}\\\vdots\\1\underbrace{00\cdots00}\\10\end{matrix}\right\}2\underset{171869969539773881871357}{\underbrace{28767407104742504939274665007259268034875905285622251679055397167730260624040178402089159341052814222\cdots}}.\end{matrix}</textarea><br>
       Yeah, that's enormous.
     </p>
-    <h2>Document</h2>
+    <h2 id="docs">Document</h2>
     <p>
+      You can find the full document <a href="./docs.html">here</a>.
       <ul>
         <li>absoluteValue abs</li>
         <li>arrow</li>
@@ -68,6 +66,7 @@
         <li>exponential exp</li>
         <li>factorial fact</li>
         <li>floor</li>
+        <li>gamma</li>
         <li>generalLogarithm log10</li>
         <li>greaterThan gt</li>
         <li>greaterThanOrEqualTo gte</li>
@@ -77,6 +76,7 @@
         <li>isNaN</li>
         <li>isNegative isneg</li>
         <li>isPositive ispos</li>
+        <li>lambertw</li>
         <li>lessThan lt</li>
         <li>lessThanOrEqualTo lte</li>
         <li>logarithm logBase</li>
@@ -89,7 +89,9 @@
         <li>reciprocate rec</li>
         <li>root</li>
         <li>round</li>
+        <li>slog</li>
         <li>squareRoot sqrt</li>
+        <li>ssqrt ssrt</li>
         <li>tetrate tetr</li>
         <li>times mul</li>
         <li>toHyperE</li>
@@ -98,10 +100,9 @@
         <li>toPower pow</li>
         <li>toString</li>
       </ul>
-      You can find the full document <a href="./docs.html">here</a>.
     </p>
-    <h2><a href="https://github.com/Naruyoko/OmegaNum.js/issues">Known bugs</a></h2>
-    <h2><a href="./test.html">Test here</a></h2>
+    <h2 id="issues"><a href="https://github.com/Naruyoko/OmegaNum.js/issues">Known bugs</a></h2>
+    <h2 id="test"><a href="./test.html">Test here</a></h2>
     <p>
       String or Array to big number<br>
       <input type="text" id="input" value="10" style="width:95%;height:40px;"><button id="button">Run</button>
