@@ -1,3 +1,6 @@
+# 0.1.1 - 2019/11/28
+* Many optimizations. See diff for what I did.
+
 # 0.1.0 - 2019/11/27
 * Added `gamma`, `lambertw`, `ssrt`, and `slog` (pulled straight from [break_eternity.js](https://github.com/Patashu/break_eternity.js)).
 * Expanded `fact` to real values.

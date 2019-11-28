@@ -143,7 +143,7 @@
     if (this.array.length>other.array.length) r=1;
     else if (this.array.length<other.array.length) r=-1;
     else{
-      for (var i=this.array.length-1;i>=0;i--){
+      for (var i=this.array.length-1;i>=0;--i){
         if (this.array[i]>other.array[i]){
           r=1;
           break;
@@ -331,7 +331,8 @@
     if (x.isInfinite()) return x;
     if (other.isInfinite()) return other;
     if (x.max(other).gt("ee"+MAX_SAFE_INTEGER)) return x.max(other);
-    if (x*other<=MAX_SAFE_INTEGER) return new OmegaNum(x*other);
+    var n=x*other;
+    if (n<=MAX_SAFE_INTEGER) return new OmegaNum(n);
     return OmegaNum.pow(10,x.log10().add(other.log10()));
   };
   Q.times=Q.mul=function (x,y){
@@ -350,7 +351,8 @@
     if (x.isInfinite()) return x;
     if (other.isInfinite()) return new OmegaNum(0);
     if (x.max(other).gt("ee"+MAX_SAFE_INTEGER)) return x.gt(other)?x.clone():new OmegaNum(0);
-    if (x/other<=MAX_SAFE_INTEGER) return new OmegaNum(x/other);
+    var n=x/other;
+    if (n<=MAX_SAFE_INTEGER) return new OmegaNum(n);
     var pw=OmegaNum.pow(10,x.log10().sub(other.log10()));
     var fp=pw.floor();
     if (pw.sub(fp).lt(new OmegaNum(1e-9))) return fp;
@@ -362,7 +364,7 @@
   P.reciprocate=P.rec=function (){
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"^-1");
     if (this.isNaN()||this.eq(0)) return new OmegaNum(NaN);
-    if (this.abs().gt(Number.MAX_VALUE)) return new OmegaNum(0);
+    if (this.abs().gt("2e323")) return new OmegaNum(0);
     return new OmegaNum(1/this);
   };
   Q.reciprocate=Q.rec=function (x){
@@ -497,7 +499,8 @@
       }
     }
     if (other.lt(1)) return this.root(other.rec());
-    if (Math.pow(this,other)<=MAX_SAFE_INTEGER) return new OmegaNum(Math.pow(this,other));
+    var n=Math.pow(this,other);
+    if (n<=MAX_SAFE_INTEGER) return new OmegaNum(n);
     return OmegaNum.pow(10,this.log10().mul(other));
   };
   Q.toPower=Q.pow=function (x,y){
@@ -679,10 +682,10 @@
     var y=other.toNumber();
     var f=Math.floor(y);
     r=OmegaNum.pow(10,y-f);
-    for (var i=0;f!==0&&r.lt("e"+MAX_SAFE_INTEGER)&&i<100;i++){
+    for (var i=0;f!==0&&r.lt("e"+MAX_SAFE_INTEGER)&&i<100;++i){
       if (f>0){
         r=t.pow(r);
-        f--;
+        --f;
       }else{
         r=r.logBase(t);
       }
@@ -746,11 +749,11 @@
     for (var i=0;i<100;++i){
       if (x.lt(0)){
         x=OmegaNum.pow(base,x);
-        r--;
+        --r;
       }else if (x.lte(1)){
         return new OmegaNum(r+Number(x)-1);
       }else{
-        r++;
+        ++r;
         x=OmegaNum.logBase(x,base);
       }
     }
@@ -896,23 +899,24 @@
       if (typeof x.sign!="number") x.sign=Number(x.sign);
       x.sign=x.sign<0?-1:1;
     }
-    if (x.array.filter(isNaN).length){
-      x.array=[NaN];
-      return x;
-    }
-    if (x.array.filter(function(x){return !isFinite(x);}).length){
-      x.array=[Infinity];
-      return x;
-    }
     for (var i=0;i<x.array.length;i++){
-      if (x.array[i]===null){
+      var e=x.array[i];
+      if (isNaN(e)){
+        x.array=[NaN];
+        return x;
+      }
+      if (e==Infinity){
+        x.array=[Infinity];
+        return x;
+      }
+      if (e===null||e===undefined){
         x.array[i]=0;
       }
     }
     do{
       if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
       b=false;
-      while (x.array[x.array.length-1]===0){
+      while (x.array.length&&x.array[x.array.length-1]==0){
         x.array.pop();
         b=true;
       }
@@ -927,17 +931,17 @@
         b=true;
       }
       if (!x.array[1]&&x.array.length>2){
-        for (i=2;!x.array[i];i++) continue;
+        for (i=2;!x.array[i];++i) continue;
         x.array[i-1]=x.array[0];
         x.array[0]=1;
         x.array[i]--;
         b=true;
       }
-      for (i=1;i<x.array.length;i++){
+      for (i=1;i<x.array.length;++i){
         if (x.array[i]>MAX_SAFE_INTEGER){
           x.array[i+1]=(x.array[i+1]||0)+1;
           x.array[0]=x.array[i]+1;
-          for (var j=1;j<=i;j++) x.array[j]=0;
+          for (var j=1;j<=i;++j) x.array[j]=0;
           b=true;
         }
       }
@@ -949,7 +953,7 @@
     //console.log(this.array);
     if (this.sign==-1) return -1*this.abs();
     if ((this.array[1]>=2)||((this.array[1]==1)&&(this.array[0]>Math.log10(2)*1024))) return Infinity;
-    for (var i=2;i<this.array.length;i++) if (this.array[i]) return Infinity;
+    for (var i=2;i<this.array.length;++i) if (this.array[i]) return Infinity;
     if (this.array[1]==1) return Math.pow(10,this.array[0]);
     return this.array[0];
   };
@@ -958,19 +962,19 @@
     if (isNaN(this.array[0])) return "NaN";
     if (!isFinite(this.array[0])) return "Infinity";
     var b=false;
-    for (var i=2;!b&&(i<this.array.length);i++) if (this.array[i]) b=true;
-    if (b){
-      var s="";
-      for (i=2;i<this.array.length;i++){
+    var s="";
+    if (this.array.length>=2){
+      for (var i=2;i<this.array.length;++i){
         var q=i>=5?"{"+i+"}":"^".repeat(i);
         if (this.array[i]>1) s="(10"+q+")^"+this.array[i]+" "+s;
         else if (this.array[i]==1) s="10"+q+s;
       }
-      return s+new OmegaNum(this.array.slice(0,2));
-    }else if (!this.array[1]) return String(this.toNumber());
-    else if (this.array[1]<3) return "e".repeat(this.array[1]-1)+Math.pow(10,this.array[0]-Math.floor(this.array[0]))+"e"+Math.floor(this.array[0]);
-    else if (this.array[1]<8) return "e".repeat(this.array[1])+this.array[0];
-    else return "(10^)^"+this.array[1]+" "+this.array[0];
+    }
+    if (!this.array[1]) s+=String(this.toNumber());
+    else if (this.array[1]<3) s+="e".repeat(this.array[1]-1)+Math.pow(10,this.array[0]-Math.floor(this.array[0]))+"e"+Math.floor(this.array[0]);
+    else if (this.array[1]<8) s+="e".repeat(this.array[1])+this.array[0];
+    else s+="(10^)^"+this.array[1]+" "+this.array[0];
+    return s;
   };
   //Note: toArray() would be impossible without changing the layout of the array or lose the information about the sign
   P.toJSON=function (){
@@ -986,7 +990,7 @@
     if (this.lt(MAX_SAFE_INTEGER)) return String(this.array[0]);
     if (this.lt("e"+MAX_SAFE_INTEGER)) return "E"+this.array[0];
     var r="E"+this.array[0]+"#"+this.array[1];
-    for (var i=2;i<this.array.length;i++){
+    for (var i=2;i<this.array.length;++i){
       r+="#"+(this.array[i]+1);
     }
     return r;
@@ -1029,7 +1033,7 @@
     if (input=="NaN") x.array=[NaN];
     else if (input=="Infinity") x.array=[Infinity];
     else{
-      var a,b,c,i;
+      var a,b,c,d,i;
       while (input){
         if (/^\(?10[\^\{]/.test(input)){
           if (input[0]=="("){
@@ -1063,22 +1067,16 @@
           }else if (arrows==2){
             a=x.array[1]||0;
             b=x.array[0]||0;
-            if (b>=1e10){
-              a++;
-            }
-            if (b>=10){
-              a++;
-            }
+            if (b>=1e10) ++a;
+            if (b>=10) ++a;
             x.array[0]=a;
             x.array[1]=0;
             x.array[2]=(x.array[2]||0)+c;
           }else{
             a=x.array[arrows-1]||0;
             b=x.array[arrows-2]||0;
-            if (b>=10){
-              a++;
-            }
-            for (i=1;i<arrows;i++){
+            if (b>=10) ++a;
+            for (i=1;i<arrows;++i){
               x.array[i]=0;
             }
             x.array[0]=a;
@@ -1091,11 +1089,9 @@
       a=input.split(/[Ee]/);
       b=[x.array[0],0];
       c=1;
-      for (i=a.length-1;i>=0;i--){
-        var d=1;
-        if (a[i]){
-          d=Number(a[i]);
-        }
+      for (i=a.length-1;i>=0;--i){
+        if (a[i]) d=Number(a[i]);
+        else d=1;
         //The things that are already there
         if (b[0]<MAX_E&&b[1]===0){
           b[0]=Math.pow(10,c*b[0]);
@@ -1204,10 +1200,10 @@
       x.array[1]=1;
     }else{
       var array=input.substring(1).split("#");
-      for (var i=0;i<array.length;i++){
+      for (var i=0;i<array.length;++i){
         var t=Number(array[i]);
         if (i>=2){
-          t--;
+          --t;
         }
         x.array[i]=t;
       }
