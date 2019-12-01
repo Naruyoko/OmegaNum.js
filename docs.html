@@ -112,10 +112,11 @@
     </p>
     <h3 id="a.arrow">arrow</h3>
     <p>
-      For static method, it is in form OmegaNum.arrow(x,arrows,y), while non-static method is x.arrow(arrows)(y).
+      For static method, it is in form OmegaNum.arrow(x,arrows,y), while non-static method is x.arrow(arrows)(y).  Uses linear approximation for real height.
       <pre><code data-language="javascript">
         OmegaNum(13).arrow(3)(5).toString() //"(10^^)^3 (10^)^11 337385711567664.9"
         OmegaNum.arrow(6,4,5).toString() //"(10^^^)^3 (10^^)^4 eeee36305.31580191892"
+        OmegaNum.arrow(6,4,5.001).toString() //"(10^^^)^3 (10^^)^4 eeeeeee394749617.28181416"
       </code></pre>
       For non-static method, not having the second parameter will return function of the arrows.
     </p>
@@ -352,9 +353,10 @@
     </p>
     <h3 id="a.pent">pentate pent</h3>
     <p>
-      Pentation.
+      Pentation. Uses linear approximation for real height.
       <pre><code data-language="javascript">
         OmegaNum.pent(3,3).toString() //"(10^)^7625597484984 3638334640023.7783"
+        OmegaNum.pent(3,3.1).toString() //"10^^1.0184927774689214e591"
         OmegaNum.pent("e5e18","ee5e10").toString() //"10^^^e1e50000000000"
       </code></pre>
     </p>
@@ -422,6 +424,7 @@
         OmegaNum.tetr(3,3).toString() //"7625597484987"
         OmegaNum.tetr(10,2.5).toString() //"1.0972406760152253e1453"
         OmegaNum.tetr("e5e52",512).toString() //"(10^)^513 52.69897000433602"
+        OmegaNum.tetr(1.2,Infinity).toString() //"1.2577345413765264"
       </code></pre>
     </p>
     <h3 id="a.mul">times mul</h3>
