@@ -681,7 +681,7 @@
     }
     var y=other.toNumber();
     var f=Math.floor(y);
-    r=OmegaNum.pow(10,y-f);
+    r=t.pow(y-f);
     for (var i=0;f!==0&&r.lt("e"+MAX_SAFE_INTEGER)&&i<100;++i){
       if (f>0){
         r=t.pow(r);
@@ -769,6 +769,7 @@
   Q.pentate=Q.pent=function (x,y){
     return OmegaNum.arrow(x,3,y);
   };
+  //Uses linear approximations for real height
   P.arrow=function (arrows){
     var t=this.clone();
     arrows=new OmegaNum(arrows);
@@ -779,7 +780,7 @@
     return function (other){
       other=new OmegaNum(other);
       if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"{"+arrows+"}"+other);
-      if (!other.isint()||other.lt(0)) return new OmegaNum(NaN);
+      if (other.lt(0)) return new OmegaNum(NaN);
       if (other.eq(0)) return new OmegaNum(1);
       if (other.eq(1)) return t.clone();
       if (arrows.gte(OmegaNum.maxArrow)){
@@ -802,8 +803,17 @@
         other.standardize();
         return other;
       }
-      r=t.arrow(arrows-1)(t.arrow(arrows-1)(t));
-      r.array[arrows-1]=(r.array[arrows-1]+other.sub(3).toNumber())||other.sub(3).toNumber();
+      var y=other.toNumber();
+      var f=Math.floor(y);
+      r=t.arrow(arrows.sub(1))(y-f);
+      for (var i=0;f!==0&&r.lt("10{"+arrows.sub(1)+"}"+MAX_SAFE_INTEGER)&&i<100;++i){
+        if (f>0){
+          r=t.arrow(arrows.sub(1))(r);
+          --f;
+        }
+      }
+      if (i==100) f=0;
+      r.array[arrows.sub(1)]=(r.array[arrows.sub(1)]+f)||f;
       r.standardize();
       return r;
     };
@@ -901,6 +911,10 @@
     }
     for (var i=0;i<x.array.length;i++){
       var e=x.array[i];
+      if (e===null||e===undefined){
+        x.array[i]=0;
+        continue;
+      }
       if (isNaN(e)){
         x.array=[NaN];
         return x;
@@ -908,9 +922,6 @@
       if (e==Infinity){
         x.array=[Infinity];
         return x;
-      }
-      if (e===null||e===undefined){
-        x.array[i]=0;
       }
     }
     do{

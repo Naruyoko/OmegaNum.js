@@ -1,3 +1,7 @@
+# 0.2.0 - 2019/12/01
+* Expanded all hyperoperators to real height.
+* Fixed `pent` and above sometimes returning `NaN`.
+
 # 0.1.1 - 2019/11/28
 * Many optimizations. See diff for what I did.
 
