@@ -14,11 +14,11 @@
       // ROUND_DOWN       1 Towards zero.
       // ROUND_CEIL       2 Towards +Infinity.
       // ROUND_FLOOR      3 Towards -Infinity.
-      // ROUND_HALF_UP    4 Towards nearest neighbour. If equidistant, up.
-      // ROUND_HALF_DOWN  5 Towards nearest neighbour. If equidistant, down.
-      // ROUND_HALF_EVEN  6 Towards nearest neighbour. If equidistant, towards even neighbour.
-      // ROUND_HALF_CEIL  7 Towards nearest neighbour. If equidistant, towards +Infinity.
-      // ROUND_HALF_FLOOR 8 Towards nearest neighbour. If equidistant, towards -Infinity.
+      // ROUND_HALF_UP    4 Towards nearest neighbor. If equidistant, up.
+      // ROUND_HALF_DOWN  5 Towards nearest neighbor. If equidistant, down.
+      // ROUND_HALF_EVEN  6 Towards nearest neighbor. If equidistant, towards even neighbor.
+      // ROUND_HALF_CEIL  7 Towards nearest neighbor. If equidistant, towards +Infinity.
+      // ROUND_HALF_FLOOR 8 Towards nearest neighbor. If equidistant, towards -Infinity.
       //
       // E.g.
       // `OmegaNum.rounding = 4;`
@@ -593,7 +593,7 @@
   //at ``-1/e``. In some corner cases, `lambertw` might currently
   //fail to converge, or can end up on the wrong branch.
   var d_lambertw=function (z,tol){
-    if (tol==undefined) tol=1e-10;
+    if (tol===undefined) tol=1e-10;
     z=new OmegaNum(z);
     var w;
     var ew, wewz, wn;
@@ -664,20 +664,13 @@
       if (other.eq(3)) return new OmegaNum(16);
       if (other.eq(4)) return new OmegaNum(65536);
     }
-    if (t.max(other).gt("10^^^"+MAX_SAFE_INTEGER)) return t.max(other);
-    var r;
+    var m=t.max(other);
+    if (m.gt("10^^^"+MAX_SAFE_INTEGER)) return m;
     if (other.gt(MAX_SAFE_INTEGER)){
-      if (t.gt("10^^"+MAX_SAFE_INTEGER)){
-        r=t.clone();
-        r.array[2]--;
-        var j=r.add(other);
-        j.array[2]=(j.array[2]||0)+1;
-        j.standardize();
-        return j;
-      }
-      other.array[2]=(other.array[2]||0)+1;
-      other.standardize();
-      return other;
+      var j=t.slog(10).add(other);
+      j.array[2]=(other.array[2]||0)+1;
+      j.standardize();
+      return j;
     }
     var y=other.toNumber();
     var f=Math.floor(y);
@@ -722,12 +715,12 @@
   //https://en.wikipedia.org/wiki/Super-logarithm
   P.slog=function (base){
     if (base===undefined) base=10;
-    if (this.mag<0) return new OmegaNum(-1);
     var x=new OmegaNum(this);
     base=new OmegaNum(base);
     if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return new OmegaNum(NaN);
     if (x.isInfinite()) return x;
     if (base.isInfinite()) return new OmegaNum(0);
+    if (x.lt(0)) return new OmegaNum(-1);
     if (x.eq(1)) return new OmegaNum(0);
     if (x.eq(base)) return new OmegaNum(1);
     if (base.lt(Math.exp(1/Math.E))){
@@ -735,8 +728,16 @@
       if (x.eq(a)) return new OmegaNum(Infinity);
       if (x.gt(a)) return new OmegaNum(NaN);
     }
-    if (x.max(base).gt("10^^"+(MAX_SAFE_INTEGER*3))){
+    if (x.max(base).gt("10^^^"+MAX_SAFE_INTEGER)){
       if (x.gt(base)) return x;
+      return new OmegaNum(0);
+    }
+    if (x.max(base).gt("10^^"+MAX_SAFE_INTEGER)){
+      if (x.gt(base)){
+        x.array[2]--;
+        x.standardize();
+        return x.sub(x.array[1]);
+      }
       return new OmegaNum(0);
     }
     var r=0;
@@ -751,12 +752,13 @@
         x=OmegaNum.pow(base,x);
         --r;
       }else if (x.lte(1)){
-        return new OmegaNum(r+Number(x)-1);
+        return new OmegaNum(r+x.toNumber()-1);
       }else{
         ++r;
         x=OmegaNum.logBase(x,base);
       }
     }
+    if (x.gt(10))
     return new OmegaNum(r);
   };
   Q.slog=function (x,y){
@@ -791,17 +793,20 @@
       if (t.max(other).gt("10{"+arrows.add(1)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
       var r;
       if (other.gt(MAX_SAFE_INTEGER)){
+        debugger;
         if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)){
           r=t.clone();
           r.array[arrows]--;
-          var j=r.add(other);
-          j.array[arrows]=(j.array[arrows]||0)+1;
-          j.standardize();
-          return j;
+          r.standardize();
+        }else if (t.gt("10{"+arrows.sub(1)+"}"+MAX_SAFE_INTEGER)){
+          r=new OmegaNum(r.array[arrows]);
+        }else{
+          r=new OmegaNum(0);
         }
-        other.array[arrows]=(other.array[arrows]||0)+1;
-        other.standardize();
-        return other;
+        var j=r.add(other);
+        j.array[arrows]=(other.array[arrows]||0)+1;
+        j.standardize();
+        return j;
       }
       var y=other.toNumber();
       var f=Math.floor(y);
@@ -927,7 +932,7 @@
     do{
       if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
       b=false;
-      while (x.array.length&&x.array[x.array.length-1]==0){
+      while (x.array.length&&x.array[x.array.length-1]===0){
         x.array.pop();
         b=true;
       }
@@ -963,8 +968,7 @@
   P.toNumber=function (){
     //console.log(this.array);
     if (this.sign==-1) return -1*this.abs();
-    if ((this.array[1]>=2)||((this.array[1]==1)&&(this.array[0]>Math.log10(2)*1024))) return Infinity;
-    for (var i=2;i<this.array.length;++i) if (this.array[i]) return Infinity;
+    if (this.array.length>=2||this.array[1]>=2||this.array[1]==1&&this.array[0]>Math.log10(Number.MAX_VALUE)) return Infinity;
     if (this.array[1]==1) return Math.pow(10,this.array[0]);
     return this.array[0];
   };
@@ -1298,7 +1302,13 @@
 
     OmegaNum.clone=clone;
     OmegaNum.config=OmegaNum.set=config;
-    OmegaNum=Object.assign(OmegaNum,Q);
+    
+    //OmegaNum=Object.assign(OmegaNum,Q);
+    for (var prop in Q){
+      if (Q.hasOwnProperty(prop)){
+        OmegaNum[prop]=Q[prop];
+      }
+    }
     
     if (obj === void 0) obj = {};
     if (obj) {

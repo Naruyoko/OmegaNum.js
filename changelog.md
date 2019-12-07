@@ -1,3 +1,8 @@
+# 0.2.1 - 2019/12/07
+* Fixed `tetr` and other hyperoperators returning incorrect results for `other`>`9007199254740991`.
+* Slightly optimized `toNumber`.
+* Removed `Object.assign` in favor of compatibility.
+
 # 0.2.0 - 2019/12/01
 * Expanded all hyperoperators to real height.
 * Fixed `pent` and above sometimes returning `NaN`.
