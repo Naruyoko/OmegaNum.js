@@ -674,7 +674,7 @@
     }
     var y=other.toNumber();
     var f=Math.floor(y);
-    r=t.pow(y-f);
+    var r=t.pow(y-f);
     for (var i=0;f!==0&&r.lt("e"+MAX_SAFE_INTEGER)&&i<100;++i){
       if (f>0){
         r=t.pow(r);

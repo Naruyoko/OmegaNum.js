@@ -1,3 +1,6 @@
+# 0.2.2 - 2019/12/07 HOTFIX
+* Fixed line 677.
+
 # 0.2.1 - 2019/12/07
 * Fixed `tetr` and other hyperoperators returning incorrect results for `other`>`9007199254740991`.
 * Slightly optimized `toNumber`.
