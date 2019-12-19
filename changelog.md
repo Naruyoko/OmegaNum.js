@@ -1,3 +1,6 @@
+# 0.2.3 - 2019/12/18
+* Slight optimizations for higher hyperoperators.
+
 # 0.2.2 - 2019/12/07 HOTFIX
 * Fixed line 677.
 

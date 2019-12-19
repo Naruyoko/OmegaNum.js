@@ -572,7 +572,7 @@
   //from https://math.stackexchange.com/a/465183
   //The evaluation can become inaccurate very close to the branch point
   var f_lambertw=function (z,tol){
-    if (tol==undefined) tol=1e-10;
+    if (tol===undefined) tol=1e-10;
     var w;
     var wn;
     if (!Number.isFinite(z)) return z;
@@ -675,7 +675,7 @@
     var y=other.toNumber();
     var f=Math.floor(y);
     var r=t.pow(y-f);
-    for (var i=0;f!==0&&r.lt("e"+MAX_SAFE_INTEGER)&&i<100;++i){
+    for (var i=0,m=new OmegaNum("e"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
       if (f>0){
         r=t.pow(r);
         --f;
@@ -793,7 +793,6 @@
       if (t.max(other).gt("10{"+arrows.add(1)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
       var r;
       if (other.gt(MAX_SAFE_INTEGER)){
-        debugger;
         if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)){
           r=t.clone();
           r.array[arrows]--;
@@ -811,7 +810,7 @@
       var y=other.toNumber();
       var f=Math.floor(y);
       r=t.arrow(arrows.sub(1))(y-f);
-      for (var i=0;f!==0&&r.lt("10{"+arrows.sub(1)+"}"+MAX_SAFE_INTEGER)&&i<100;++i){
+      for (var i=0,m=new OmegaNum("10{"+arrows.sub(1)+"}"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
         if (f>0){
           r=t.arrow(arrows.sub(1))(r);
           --f;
@@ -914,7 +913,7 @@
       if (typeof x.sign!="number") x.sign=Number(x.sign);
       x.sign=x.sign<0?-1:1;
     }
-    for (var i=0;i<x.array.length;i++){
+    for (var l=x.array.length,i=0;i<l;i++){
       var e=x.array[i];
       if (e===null||e===undefined){
         x.array[i]=0;
@@ -924,7 +923,7 @@
         x.array=[NaN];
         return x;
       }
-      if (e==Infinity){
+      if (!isFinite(e)){
         x.array=[Infinity];
         return x;
       }
@@ -946,14 +945,14 @@
         x.array[1]--;
         b=true;
       }
-      if (!x.array[1]&&x.array.length>2){
+      if (x.array.length>2&&!x.array[1]){
         for (i=2;!x.array[i];++i) continue;
         x.array[i-1]=x.array[0];
         x.array[0]=1;
         x.array[i]--;
         b=true;
       }
-      for (i=1;i<x.array.length;++i){
+      for (l=x.array.length,i=1;i<l;++i){
         if (x.array[i]>MAX_SAFE_INTEGER){
           x.array[i+1]=(x.array[i+1]||0)+1;
           x.array[0]=x.array[i]+1;
@@ -1166,6 +1165,7 @@
   };
   Q.fromObject=function (input){
     if (typeof input!="object") throw Error(invalidArgument+"Expected Object");
+    if (input===null) return new OmegaNum(0);
     if (input instanceof Array) return OmegaNum.fromArray(input);
     if (input instanceof OmegaNum) return new OmegaNum(input);
     if (!(input.array instanceof Array)) throw Error(invalidArgument+"Expected that property 'array' exists");
