@@ -1,16 +1,20 @@
-<!DOCTYPE HTML>	
-<html>	
-  <head>	
+<!DOCTYPE HTML> 
+<html>  
+  <head>  
     <title>OmegaNum</title>
     <style>
       body {
         font-family: "Consolas", monospace;
         font-size: 16px;
       }
+      pre {
+        overflow-x: auto;
+        width: 100%;
+      }
     </style>
     <link href="./rainbow.css" rel="stylesheet" type="text/css"></style>
-    <script src="./rainbow-custoa.min.js"></script>
-  </head>	
+    <script src="./rainbow-custom.min.js"></script>
+  </head> 
   <body>
     <h1>OmegaNum.js Docs</h1>
     <div style="border:1px black solid">
@@ -29,7 +33,7 @@
             <li><a href="#a.cmp">compareTo cmp</a></li>
             <li><a href="#a.cbrt">cubeRoot cbrt</a></li>
             <li><a href="#a.div">divide div</a></li>
-            <li><a href="#a.eq">equals eq</a></li>
+            <li><a href="#a.eq">equalsTo eq</a></li>
             <li><a href="#a.exp">exponential exp</a></li>
             <li><a href="#a.fact">factorial fact</a></li>
             <li><a href="#a.floor">floor</a></li>
@@ -50,7 +54,7 @@
             <li><a href="#a.logBase">logarithm logBase</a></li>
             <li><a href="#a.sub">minus sub</a></li>
             <li><a href="#a.mod">modular mod</a></li>
-            <li><a href="#a.ln">naturalLogarithm ln log</a></li>
+            <li><a href="#a.ln">naturalLogarithm log ln</a></li>
             <li><a href="#a.neg">negate neg</a></li>
             <li><a href="#a.pent">pentate pent</a></li>
             <li><a href="#a.add">plus add</a></li>
@@ -62,13 +66,24 @@
             <li><a href="#a.ssrt">ssqrt ssrt</a></li>
             <li><a href="#a.tetr">tetrate tetr</a></li>
             <li><a href="#a.mul">times mul</a></li>
-            <li><a href="#a.toHyperE">toHyperE</a></li>
-            <li><a href="#a.toJSON">toJSON</a></li>
-            <li><a href="#a.toNumber">toNumber</a></li>
             <li><a href="#a.pow">toPower pow</a></li>
-            <li><a href="#a.toString">toString</a></li>
           </ul>
         </li>
+        <li><a href="#s">Methods (System)</a>
+          <ul>
+            <li><a href="#s.fromArray">fromArray</a></li>
+            <li><a href="#s.fromHyperE">fromHyperE</a></li>
+            <li><a href="#s.fromJSON">fromJSON</a></li>
+            <li><a href="#s.fromNumber">fromNumber</a></li>
+            <li><a href="#s.fromObject">fromObject</a></li>
+            <li><a href="#s.fromString">fromString</a></li>
+            <li><a href="#s.OmegaNum">OmegaNum</a></li>
+            <li><a href="#s.standardize">standardize</a></li>
+            <li><a href="#s.toHyperE">toHyperE</a></li>
+            <li><a href="#s.toJSON">toJSON</a></li>
+            <li><a href="#s.toNumber">toNumber</a></li>
+            <li><a href="#s.toString">toString</a></li>
+          </ul>
       </ul>
     </div>
     <div style="font-size:12px">This document uses Rainbow with rainbow.css for syntax highlighting.</div>
@@ -77,7 +92,7 @@
     <p>
       An array of integers that stores the magnitude of OmegaNum.<br>
       Array [a<sub>0</sub>,a<sub>1</sub>,a<sub>2</sub>,a<sub>3</sub>,...] represents the magnitude ...(10{3})<sup>a<sub>3</sub></sup>(10^^)<sup>a<sub>2</sub></sup>(10^)<sup>a<sub>1</sub></sup>a<sub>0</sub>
-      It is always standarlized to meet the following requirements(the value must be equivalent):
+      It is always standardized to meet the following requirements(the value must be equivalent):
       <ul>
         <li>There are at least 1 element.</li>
         <li>If there are 1 element:
@@ -101,9 +116,13 @@
     <p>
       Number representing the sign of OmegaNum. Either 1 or -1. 1 means positive, -1 means negative.
     </p>
-    <h2 id="m">Methods</h2>
+    <h2 id="m">Methods (Arithmetic)</h2>
     <h3 id="a.abs">absoluteValue abs</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.absoluteValue(x), OmegaNum.abs(x)<br>
+        Instance: &lt;OmegaNum&gt;.absoluteValue(), &lt;OmegaNum&gt;.abs()
+      </div>
       Returns the absolute value of method.
       <pre><code data-language="javascript">
         OmegaNum("10^^ee5").abs().toString() //"10^^ee5"
@@ -112,6 +131,10 @@
     </p>
     <h3 id="a.arrow">arrow</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.arrow(x,z,y)<br>
+        Instance: &lt;OmegaNum&gt;.arrow(z)(y)
+      </div>
       For static method, it is in form OmegaNum.arrow(x,arrows,y), while non-static method is x.arrow(arrows)(y).  Uses linear approximation for real height.
       <pre><code data-language="javascript">
         OmegaNum(13).arrow(3)(5).toString() //"(10^^)^3 (10^)^11 337385711567664.9"
@@ -122,6 +145,10 @@
     </p>
     <h3 id="a.ceil">ceiling ceil</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.ceiling(x), OmegaNum.ceil(x)<br>
+        Instance: &lt;OmegaNum&gt;.ceiling(), &lt;OmegaNum&gt;.ceil()
+      </div>
       Returns the ceiling of method.
       <pre><code data-language="javascript">
         OmegaNum(2.34).ceil().toString() //"3"
@@ -130,6 +157,10 @@
     </p>
     <h3 id="a.cmp">compareTo cmp</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.compare(x,y), OmegaNum.cmp(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.compareTo(y), &lt;OmegaNum&gt;.cmp(y)
+      </div>
       Compares two numbers, returns 1 if greater, 0 if equal, and -1 if less than.
       <pre><code data-language="javascript">
         OmegaNum(5).cmp(3) //1
@@ -139,6 +170,10 @@
     </p>
     <h3 id="a.cbrt">cubeRoot cbrt</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.cubeRoot(x), OmegaNum.cbrt(x)<br>
+        Instance: &lt;OmegaNum&gt;.cubeRoot(), &lt;OmegaNum&gt;.cbrt()
+      </div>
       Returns the cube root of the number.
       <pre><code data-language="javascript">
         OmegaNum(5).cbrt().toNumber() //1.709975946676697
@@ -148,6 +183,10 @@
     </p>
     <h3 id="a.div">divide div</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.divide(x,y), OmegaNum.div(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.divide(y), &lt;OmegaNum&gt;.div(y)
+      </div>
       Divides number by another.
       <pre><code data-language="javascript">
         OmegaNum.div(6,2).toString() //"3"
@@ -156,8 +195,12 @@
       </code></pre>
       That impresision tho
     </p>
-    <h3 id="a.eq">equals eq</h3>
+    <h3 id="a.eq">equalsTo eq</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.equalsTo(x,y), OmegaNum.eq(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.equalsTo(y), &lt;OmegaNum&gt;.abs(y)
+      </div>
       Returns whether two numbers are equal.
       <pre><code data-language="javascript">
         OmegaNum.div(5,5) //true
@@ -167,6 +210,10 @@
     </p>
     <h3 id="a.exp">exponential exp</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.exponential(x), OmegaNum.exp(x)<br>
+        Instance: &lt;OmegaNum&gt;.exponential(), &lt;OmegaNum&gt;.exp()
+      </div>
       exp function. exp(x)=e<sup>x</sup>
       <pre><code data-language="javascript">
         OmegaNum.exp(5).toString() //"148.41315910257657"
@@ -177,6 +224,10 @@
     </p>
     <h3 id="a.fact">factorial fact</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.factorial(x), OmegaNum.fact(x)<br>
+        Instance: &lt;OmegaNum&gt;.factorial(), &lt;OmegaNum&gt;.fact()
+      </div>
       Factorial. Currently, it does not support non-integer input.
       <pre><code data-language="javascript">
         OmegaNum.fact(10).toString() //"3628800"
@@ -185,6 +236,10 @@
     </p>
     <h3 id="a.floor">floor</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.floor(x)<br>
+        Instance: &lt;OmegaNum&gt;.floor()
+      </div>
       Returns floor of number.
       <pre><code data-language="javascript">
         OmegaNum.floor(12.7).toString() //"12"
@@ -193,6 +248,10 @@
     </p>
     <h3 id="a.gamma">gamma</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.gamma(x)<br>
+        Instance: &lt;OmegaNum&gt;.gamma()
+      </div>
       Applies <a href="https://en.wikipedia.org/wiki/Gamma_function">Gamma function</a>.
       <pre><code data-language="javascript">
         OmegaNum.gamma(0.5).toString() //"2"
@@ -202,6 +261,10 @@
     </p>
     <h3 id="a.log10">generalLogarithm log10</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.generalLogarithm(x), OmegaNum.log10(x)<br>
+        Instance: &lt;OmegaNum&gt;.generalLogarithm(), &lt;OmegaNum&gt;.log10()
+      </div>
       Returns general logarithm(log base 10) of number.
       <pre><code data-language="javascript">
         OmegaNum.log10(62.69).toString() //"1.797198269838959"
@@ -210,6 +273,10 @@
     </p>
     <h3 id="a.gt">greaterThan gt</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.greaterThan(x,y), OmegaNum.gt(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.greaterThan(x,y), &lt;OmegaNum&gt;.gt(x,y)
+      </div>
       Returns whether number is greater than other.
       <pre><code data-language="javascript">
         OmegaNum.gt(102,512) //false
@@ -219,6 +286,10 @@
     </p>
     <h3 id="a.gte">greaterThanOrEqualTo gte</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.greaterThanOrEqualTo(x,y), OmegaNum.gte(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.greaterThanOrEqualTo(y), &lt;OmegaNum&gt;.gte(y)
+      </div>
       Returns whether number is greater than or equal to other.
       <pre><code data-language="javascript">
         OmegaNum.gt(102,512) //false
@@ -228,6 +299,10 @@
     </p>
     <h3 id="a.hyper">hyper</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.hyper(z)(x,y)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
       Static only. OmegaNum.hyper(z)(x,y)=hyper-z(x,y).
       <pre><code data-language="javascript">
         OmegaNum.hyper(4)(4,2).toString() //"256"
@@ -236,6 +311,10 @@
     </p>
     <h3 id="a.isFinite">isFinite</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.isFinite(x)<br>
+        Instance: &lt;OmegaNum&gt;.isFinite()
+      </div>
       Returns whether number is finite.
       <pre><code data-language="javascript">
         OmegaNum.isFinite(6) //true
@@ -245,7 +324,11 @@
     </p>
     <h3 id="a.isInfinite">isInfinite</h3>
     <p>
-      Returns whether number is finite.
+      <div style="border:1px dashed black">
+        Static: OmegaNum.isInfinite(x)<br>
+        Instance: &lt;OmegaNum&gt;.isInfinite()
+      </div>
+      Returns whether number is infinite.
       <pre><code data-language="javascript">
         OmegaNum.isInfinite(6) //false
         OmegaNum.isInfinite(NaN) //false
@@ -254,6 +337,10 @@
     </p>
     <h3 id="a.isint">isInteger isint</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.isInteger(x), OmegaNum.isint(x)<br>
+        Instance: &lt;OmegaNum&gt;.isInteger(), &lt;OmegaNum&gt;.isint()
+      </div>
       Returns whether number is an integer.
       <pre><code data-language="javascript">
         OmegaNum.isint(4) //true
@@ -262,6 +349,10 @@
     </p>
     <h3 id="a.isNaN">isNaN</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.isNaN(x)<br>
+        Instance: &lt;OmegaNum&gt;.isNaN()
+      </div>
       Returns whether number is NaN.
       <pre><code data-language="javascript">
         OmegaNum.isNaN(3) //false
@@ -270,6 +361,10 @@
     </p>
     <h3 id="a.isneg">isNegative isneg</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.isNegative(x), OmegaNum.isNeg(x)<br>
+        Instance: &lt;OmegaNum&gt;.isNegative(), &lt;OmegaNum&gt;.isNeg()
+      </div>
       Returns whether number is negative.
       <pre><code data-language="javascript">
         OmegaNum.isNaN(5) //false
@@ -278,6 +373,10 @@
     </p>
     <h3 id="a.ispos">isPositive ispos</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.isPositive(x), OmegaNum.ispos(x)<br>
+        Instance: &lt;OmegaNum&gt;.isPositive(), &lt;OmegaNum&gt;.ispos()
+      </div>
       Returns whether number is positive.
       <pre><code data-language="javascript">
         OmegaNum.isNaN(5) //true
@@ -286,6 +385,10 @@
     </p>
     <h3 id="a.lambertw">lambertw</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.lambertw(x)<br>
+        Instance: &lt;OmegaNum&gt;.lambertw()
+      </div>
       Applies <a href="https://en.wikipedia.org/wiki/Lambert_W_function">Lambert W function</a>.
       <pre><code data-language="javascript">
         OmegaNum.lambert(-0.1).toString() //"-0.11183255915896297"
@@ -295,6 +398,10 @@
     </p>
     <h3 id="a.lt">lessThan lt</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.lessThan(x,y), OmegaNum.lt(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.lessThan(y), &lt;OmegaNum&gt;.lt(y)
+      </div>
       Returns whether number is less than other.
       <pre><code data-language="javascript">
         OmegaNum.gt(102,512) //true
@@ -304,6 +411,10 @@
     </p>
     <h3 id="a.lt">lessThanOrEqualTo lte</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.lessThanOrEqualTo(x,y), OmegaNum.lte(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.lessThanOrEqualTo(y), &lt;OmegaNum&gt;.lte(y)
+      </div>
       Returns whether number is less than or equal to other.
       <pre><code data-language="javascript">
         OmegaNum.gt(102,512) //true
@@ -313,6 +424,10 @@
     </p>
     <h3 id="a.logBase">logarithm logBase</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.logarithm(x[,y]), OmegaNum.logBase(x[,y])<br>
+        Instance: &lt;OmegaNum&gt;.logarithm([y]), &lt;OmegaNum&gt;.logBase([y])
+      </div>
       Returns logarithm of number with a base.
       <pre><code data-language="javascript">
         OmegaNum(3).logBase(2).toString() //"1.584962500721156"
@@ -321,6 +436,10 @@
     </p>
     <h3 id="a.sub">minus sub</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.minus(x,y), OmegaNum.sub(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.minus(y), &lt;OmegaNum&gt;.sub(y)
+      </div>
       Subtraction.
       <pre><code data-language="javascript">
         OmegaNum.sub(634,623).toString() //"11"
@@ -329,14 +448,22 @@
     </p>
     <h3 id="a.mod">modular mod</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.modular(x,y), OmegaNum.mod(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.modular(y), &lt;OmegaNum&gt;.mod(y)
+      </div>
       Modulo operation without floor.
       <pre><code data-language="javascript">
         OmegaNum.mod(32,7).toString() //"4"
         OmegaNum.mod("e13.523",6232).toString() //"1683.47265625"
       </code></pre>
     </p>
-    <h3 id="a.ln">naturalLogarithm ln log</h3>
+    <h3 id="a.ln">naturalLogarithm log ln</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.naturalLogarithm(x), OmegaNum.log(x), OmegaNum.ln(x)<br>
+        Instance: &lt;OmegaNum&gt;.naturalLogarithm(), &lt;OmegaNum&gt;.log(), &lt;OmegaNum&gt;ln()
+      </div>
       Returns the natural logaritha.
       <pre><code data-language="javascript">
         OmegaNum.ln(382.42).toString() //"5.946519481064813"
@@ -345,6 +472,10 @@
     </p>
     <h3 id="a.neg">negate neg</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.negate(x), OmegaNum.neg(x)<br>
+        Instance: &lt;OmegaNum&gt;.negate(), &lt;OmegaNum&gt;.neg()
+      </div>
       Returns the negated value.
       <pre><code data-language="javascript">
         OmegaNum.neg(523).toString() //"-523"
@@ -353,6 +484,10 @@
     </p>
     <h3 id="a.pent">pentate pent</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.pentate(x,y), OmegaNum.pent(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.pentate(y), &lt;OmegaNum&gt;.pent(y)
+      </div>
       Pentation. Uses linear approximation for real height.
       <pre><code data-language="javascript">
         OmegaNum.pent(3,3).toString() //"(10^)^7625597484984 3638334640023.7783"
@@ -362,6 +497,10 @@
     </p>
     <h3 id="a.add">plus add</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.plus(x,y), OmegaNum.add(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.plus(y), &lt;OmegaNum&gt;.add(y)
+      </div>
       Addition.
       <pre><code data-language="javascript">
         OmegaNum.add(63942334,"e16.523").toString() //"3.334264134026562e16"
@@ -370,6 +509,10 @@
     </p>
     <h3 id="a.rec">reciprocate rec</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.reciprocate(x), OmegaNum.rec(x)<br>
+        Instance: &lt;OmegaNum&gt;.reciprocate(), &lt;OmegaNum&gt;.rec()
+      </div>
       Returns the reciprocal.
       <pre><code data-language="javascript">
         OmegaNum.rec(432).toString() //"0.0023148148148148147"
@@ -378,6 +521,10 @@
     </p>
     <h3 id="a.root">root</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.root(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.root(y)
+      </div>
       Returns the y-th root of x.
       <pre><code data-language="javascript">
         OmegaNum.root(523,4).toString() //"4.782174531743749"
@@ -386,6 +533,10 @@
     </p>
     <h3 id="a.round">round</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.round(x)<br>
+        Instance: &lt;OmegaNum&gt;.round()
+      </div>
       Returns the rounded number.
       <pre><code data-language="javascript">
         OmegaNum.round(52.32).toString() //"52"
@@ -394,6 +545,10 @@
     </p>
     <h3 id="a.slog">slog</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.slog(x[,y])<br>
+        Instance: &lt;OmegaNum&gt;.slog([y])
+      </div>
       Applies <a href="https://en.wikipedia.org/wiki/Tetration#Super-logarithm">super-logarithm</a>. Uses linear approximation for real height.
       <pre><code data-language="javascript">
         OmegaNum.slog(0,10).toString() //"-1"
@@ -402,6 +557,10 @@
       </code></pre>
     <h3 id="a.sqrt">squareRoot sqrt</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.squareRoot(x), OmegaNum.sqrt(x)<br>
+        Instance: &lt;OmegaNum&gt;.squareRoot(), &lt;OmegaNum&gt;.sqrt()
+      </div>
       Returns the square root.
       <pre><code data-language="javascript">
         OmegaNum.sqrt(16).toString() //"4"
@@ -410,6 +569,10 @@
       </code></pre>
     <h3 id="a.ssrt">ssqrt ssrt</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.ssqrt(x), OmegaNum.ssrt(x)<br>
+        Instance: &lt;OmegaNum&gt;.ssqrt(), &lt;OmegaNum&gt;.ssrt()
+      </div>
       Applies <a href="https://en.wikipedia.org/wiki/Tetration#Square_super-root">square super-root</a>.
       <pre><code data-language="javascript">
         OmegaNum.ssrt(2).toString() //"1.5596104694623696"
@@ -419,6 +582,10 @@
     </p>
     <h3 id="a.tetr">tetrate tetr</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.tetrate(x,y), OmegaNum.tetr(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.tetrate(y), &lt;OmegaNum&gt;.tetr(y)
+      </div>
       <a href="https://googology.wikia.com/wiki/Tetration">Tetration</a>. Uses linear approximation for real height.
       <pre><code data-language="javascript">
         OmegaNum.tetr(3,3).toString() //"7625597484987"
@@ -429,46 +596,167 @@
     </p>
     <h3 id="a.mul">times mul</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.times(x,y), OmegaNum.mul(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.times(y), &lt;OmegaNum&gt;.mul(y)
+      </div>
       Multiplication.
       <pre><code data-language="javascript">
         OmegaNum.mul(120,5).toString() //"600"
         OmegaNum.mul("e8e12","e2e13").toString() //"1e28000000000000"
       </code></pre>
     </p>
-    <h3 id="a.toHyperE">toHyperE</h3>
-    <p>
-      Converts into <a href="https://googology.wikia.org/wiki/Hyper-E_notation">Hyper-E Notation</a>.
-      <pre><code data-language="javascript">
-        OmegaNum(52).toHyperE() //"52"
-        OmegaNum("eee30").toHyperE() //"E30#3"
-      </code></pre>
-    </p>
-    <h3 id="a.toJSON">toJSON</h3>
-    <p>
-      Converts into Object with property "array" and "sign".
-      <pre><code data-language="javascript">
-        OmegaNum(52).toJSON() //{array:[52],sign:1}
-        OmegaNum("eee30").toJSON() //{array:[30,3],sign:1}
-      </code></pre>
-    </p>
-    <h3 id="a.toNumber">toNumber</h3>
-    <p>
-      Converts the number into Number.
-      <pre><code data-language="javascript">
-        OmegaNum(52).toNumber() //52
-        OmegaNum("eee30").toNumber() //Infinity
-      </code></pre>
-    </p>
     <h3 id="a.pow">toPower pow</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.toPower(x,y), OmegaNum.pow(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.toPower(y), &lt;OmegaNum&gt;.pow(y)
+      </div>
       Exponentiation.
       <pre><code data-language="javascript">
         OmegaNum.pow(5,5).toString() //"3125"
         OmegaNum.pow("e2e9","e5e9").toString() //"e2.0000007521745653e5000000009"
       </code></pre>
     </p>
-    <h3 id="a.toString">toString</h3>
+    <h2 id="s">Methods (System)</h2>
+    <h3 id="s.fromArray">fromArray</h3>
     <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromArray(x[,y])<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes an Array and optionally a Boolean, and return an OmegaNum with given properties.
+    </p>
+    <h3 id="s.fromHyperE">fromHyperE</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromHyperE(x)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes a String representing <a href="https://googology.wikia.org/wiki/Hyper-E_notation">Hyper-E Notation</a> and return an OmegaNum with the corresponding value.<br>
+      Hyper-E notation syntax:<br>
+      <pre style="border:1px dotted black">
+&lt;syntax&gt;          ::= &lt;signs&gt; &lt;unsigned-syntax&gt;
+&lt;unsigned-syntax&gt; ::= &lt;special&gt; | &lt;decimal&gt; | "E" &lt;inside&gt;
+&lt;inside&gt;          ::= &lt;decimal&gt; | &lt;inside&gt; "#" &lt;decimal&gt;
+&lt;special&gt;         ::= "Infinity" | "NaN"
+&lt;signs&gt;           ::= "" | &lt;signs&gt; &lt;sign&gt;
+&lt;sign&gt;            ::= "+" | "-"
+&lt;decimal&gt;         ::= &lt;integer&gt; | &lt;integer&gt; "." | "." &lt;integer&gt; | &lt;integer&gt; "." &lt;integer&gt;
+&lt;integer&gt;         ::= "0" | &lt;nonzero-integer&gt;
+&lt;nonzero-integer&gt; ::= &lt;digit&gt; | &lt;nonzero-integer&gt; &lt;digit&gt;
+&lt;digit&gt;           ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"</pre>
+    </p>
+    <h3 id="s.fromJSON">fromJSON</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromJSON(x)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes a JSON in String and returns the corresponding OmegaNum.
+    </p>
+    <h3 id="s.fromNumber">fromNumber</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromNumber(x)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes a Number and returns the corresponding OmegaNum.
+    </p>
+    <h3 id="s.fromObject">fromObject</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromObject(x)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes an Object and returns the corresponding OmegaNum.
+    </p>
+    <h3 id="s.fromString">fromString</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromString(x)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes a String. If it is a Hyper-E notation or is a JSON, uses the corresponding function instead.<br>
+      Notation syntax otherwise:<br>
+      <pre style="border:1px dotted black">
+&lt;syntax&gt;              ::= &lt;signs&gt; &lt;unsigned-syntax&gt;
+&lt;unsigned-syntax&gt;     ::= &lt;special&gt; | &lt;left-syntax&gt; &lt;scientific-notation&gt;
+&lt;left-syntax&gt;         ::= "" | &lt;operator-part&gt; &lt;left-syntax&gt;
+&lt;operator-part&gt;       ::= &lt;operator-with-ten&gt; | "(" &lt;operator-with-ten&gt; ")^" &lt;nonzero-integer&gt; " "
+&lt;operator-with-ten&gt;   ::= "10" &lt;hyper-operator&gt;
+&lt;hyper-operator&gt;      ::= &lt;arrows&gt; | &lt;beaf-operator&gt;
+&lt;beaf-operator&gt;       ::= "{" &lt;nonzero-integer&gt; "}"
+&lt;arrows&gt;              ::= "^" | &lt;arrows&gt; "^"
+&lt;scientific-notation&gt; ::= &lt;signed-decimal&gt; | &lt;signed-decimal&gt; &lt;exponential&gt; &lt;scientific-notation&gt;
+&lt;signed-decimal&gt;      ::= &lt;signs&gt; &lt;decimal&gt;
+&lt;exponential&gt;         ::= "e" | "E"
+&lt;special&gt;             ::= "Infinity" | "NaN"
+&lt;signs&gt;               ::= "" | &lt;signs&gt; &lt;sign&gt;
+&lt;sign&gt;                ::= "+" | "-"
+&lt;decimal&gt;             ::= &lt;integer&gt; | &lt;integer&gt; "." | &lt;integer&gt; "." &lt;integer&gt;
+&lt;integer&gt;             ::= "0" | &lt;nonzero-integer&gt;
+&lt;nonzero-integer&gt;     ::= &lt;digit&gt; | &lt;nonzero-integer&gt; &lt;digit&gt;
+&lt;digit&gt;               ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"</pre>
+    </p>
+    <h3 id="s.OmegaNum">OmegaNum</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.OmegaNum(x[,y]), OmegaNum(x[,y])<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      The constructor of OmegaNum. Chooses and performs from fromArray, fromHyperE, fromJSON, fromNumber, fromObject, or fromString accordingly.
+    </p>
+    <h3 id="s.standardize">standardize</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.standardize()
+      </div>
+      Standardize the properties to match the requirements. Automatically executed on performing methods. Mutating method.
+    </p>
+    <h3 id="s.toHyperE">toHyperE</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toHyperE()
+      </div>
+      Converts into <a href="https://googology.wikia.org/wiki/Hyper-E_notation">Hyper-E Notation</a>.
+      <pre><code data-language="javascript">
+        OmegaNum(52).toHyperE() //"52"
+        OmegaNum("eee30").toHyperE() //"E30#3"
+      </code></pre>
+    </p>
+    <h3 id="s.toJSON">toJSON</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toJSON()
+      </div>
+      Converts into Object with property "array" and "sign".
+      <pre><code data-language="javascript">
+        OmegaNum(52).toJSON() //{array:[52],sign:1}
+        OmegaNum("eee30").toJSON() //{array:[30,3],sign:1}
+      </code></pre>
+    </p>
+    <h3 id="s.toNumber">toNumber</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toNumber()
+      </div>
+      Converts the number into Number.
+      <pre><code data-language="javascript">
+        OmegaNum(52).toNumber() //52
+        OmegaNum("eee30").toNumber() //Infinity
+      </code></pre>
+    </p>
+    <h3 id="s.toString">toString</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toString()
+      </div>
       Converts the number into String.
       <pre><code data-language="javascript">
         OmegaNum(100).toString() //"100"
