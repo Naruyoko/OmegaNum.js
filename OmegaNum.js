@@ -51,7 +51,7 @@
     omegaNumError = "[OmegaNumError] ",
     invalidArgument = omegaNumError + "Invalid argument: ",
 
-    isOmegaNum = /^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*(([1-9]\d*(\.\d*)?)?([Ee][-\+]*))*(0|[1-9]\d*(\.\d*)?))$/,
+    isOmegaNum = /^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*((\d+(\.\d*)?|\d*\.\d+)?([Ee][-\+]*))*(0|\d+(\.\d*)?|\d*\.\d+))$/,
 
     MAX_SAFE_INTEGER = 9007199254740991,
     MAX_E = Math.log10(MAX_SAFE_INTEGER), //15.954589770191003

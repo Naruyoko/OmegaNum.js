@@ -1,3 +1,6 @@
+# 0.2.4 - 2020/01/11
+* Fixed certain decimals and omitting of zeros in `fromString` resulting in `Malformed input` error.
+
 # 0.2.3 - 2019/12/18
 * Slight optimizations for higher hyperoperators.
 
