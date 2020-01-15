@@ -1,5 +1,8 @@
+# 0.2.5 - 2020/01/15
+* Fixed very high finite height tetration with base less than e^(1/e) [#31](https://github.com/Naruyoko/OmegaNum.js/issues/31).
+
 # 0.2.4 - 2020/01/11
-* Fixed certain decimals and omitting of zeros in `fromString` resulting in `Malformed input` error.
+* Fixed certain decimals and omitting of zeros in `fromString` resulting in `Malformed input` error [#30](https://github.com/Naruyoko/OmegaNum.js/issues/30).
 
 # 0.2.3 - 2019/12/18
 * Slight optimizations for higher hyperoperators.

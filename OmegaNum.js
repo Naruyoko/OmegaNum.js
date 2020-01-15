@@ -641,7 +641,7 @@
     other=new OmegaNum(other);
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"^^"+other);
     if (other.isInfinite()&&other.sign>0){
-      if (this.gt(Math.pow(Math.E,1/Math.E))) return new OmegaNum(Infinity);
+      if (t.gte(Math.pow(Math.E,1/Math.E))) return new OmegaNum(Infinity);
       //Formula for infinite height power tower.
       var negln = t.ln().neg();
       return negln.lambertw().div(negln);
@@ -667,6 +667,10 @@
     var m=t.max(other);
     if (m.gt("10^^^"+MAX_SAFE_INTEGER)) return m;
     if (other.gt(MAX_SAFE_INTEGER)){
+      if (this.lt(Math.pow(Math.E,1/Math.E))){
+        var negln = t.ln().neg();
+        return negln.lambertw().div(negln);
+      }
       var j=t.slog(10).add(other);
       j.array[2]=(other.array[2]||0)+1;
       j.standardize();
@@ -675,15 +679,27 @@
     var y=other.toNumber();
     var f=Math.floor(y);
     var r=t.pow(y-f);
+    var l=new OmegaNum(NaN);
     for (var i=0,m=new OmegaNum("e"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
       if (f>0){
         r=t.pow(r);
+        if (l.eq(r)){
+          f=0;
+          break;
+        }
+        l=r;
         --f;
       }else{
         r=r.logBase(t);
+        if (l.eq(r)){
+          f=0;
+          break;
+        }
+        l=r;
+        ++f;
       }
     }
-    if (i==100) f=0;
+    if (i==100||this.lt(Math.pow(Math.E,1/Math.E))) f=0;
     r.array[1]=(r.array[1]+f)||f;
     r.standardize();
     return r;
