@@ -1,3 +1,7 @@
+# 0.2.6 - 2020/01/28
+* Added many constants, which can be used outside of the library.
+* Replaced many magic numbers used with the said library, calling the constructor less often.
+
 # 0.2.5 - 2020/01/15
 * Fixed very high finite height tetration with base less than e^(1/e) [#31](https://github.com/Naruyoko/OmegaNum.js/issues/31).
 

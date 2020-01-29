@@ -1,6 +1,6 @@
 {
   "name": "omega_num.js",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A JavaScript library that handles arithmetic for numbers as large as 10{1000}9e15.",
   "main": "OmegaNum.js",
   "scripts": {
