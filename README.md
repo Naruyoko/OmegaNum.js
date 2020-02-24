@@ -1,6 +1,6 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![2](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/2.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![6](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/6.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![3](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/3.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png)
 [![NPM](https://img.shields.io/npm/v/omega_num.js.svg)](https://www.npmjs.com/package/omega_num.js)
-A huge number library holding up to 10{1000}9e15. A basement for planned {10,x,1,2}.
+A huge number library holding up to 10{1000}9e15.
 
 This reaches level f<sub>ω</sub>, hence the name.
 
@@ -23,7 +23,7 @@ If you are not planning to make something to the scale of [Incremental Unlimited
 
 Future ideas:
 
-* ExpantaNum.js - f<sub>ω+1</sub>, array of value-index pair with separate counter.
+* [ExpantaNum.js](https://github.com/Naruyoko/ExpantaNum.js) - f<sub>ω+1</sub>, array of value-index pair with separate counter.
 * OmegaExpantaNum.js - f<sub>ω2</sub>
 * MegotaNum.js - f<sub>ω<sup>2</sup></sub>
 * PowiainaNum.js - f<sub>ω<sup>3</sup></sub>

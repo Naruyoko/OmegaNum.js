@@ -1,3 +1,9 @@
+# 0.3.0 - 2020/02/23
+* Added `notEqualTo` `notEqual` `neq`.
+* Fixed some constants used within not being `OmegaNum`.
+* Made built-in constants enumerable.
+* Added link to [ExpantaNum.js](https://github.com/Naruyoko/ExpantaNum.js) in [README.md](https://github.com/Naruyoko/OmegaNum.js/blob/master/README.md).
+
 # 0.2.6 - 2020/01/28
 * Added many constants, which can be used outside of the library.
 * Replaced many magic numbers used with the said library, calling the constructor less often.

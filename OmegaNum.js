@@ -99,6 +99,7 @@
    *  modulo                    mod
    *  naturalLogarithm          ln        log
    *  negated                   neg
+   *  notEquals                 neq
    *  pentate                   pent
    *  plus                      add
    *  reciprocate               rec
@@ -208,6 +209,12 @@
   };
   Q.equalsTo=Q.equal=Q.eq=function (x,y){
     return new OmegaNum(x).eq(y);
+  };
+  P.notEqualsTo=P.notEqual=P.neq=function (other){
+    return this.cmp(other)!==0;
+  };
+  Q.notEqualsTo=Q.notEqual=Q.neq=function (x,y){
+    return new OmegaNum(x).neq(y);
   };
   P.minimum=P.min=function (other){
     return this.lt(other)?this.clone():new OmegaNum(other);
@@ -441,7 +448,7 @@
     var x=this.clone();
     if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return x;
     if (x.gt(OmegaNum.E_MAX_SAFE_INTEGER)) return OmegaNum.exp(x);
-    if (x.gt(MAX_SAFE_INTEGER)) return OmegaNum.exp(OmegaNum.mul(x,OmegaNum.ln(x).sub(1)));
+    if (x.gt(OmegaNum.MAX_SAFE_INTEGER)) return OmegaNum.exp(OmegaNum.mul(x,OmegaNum.ln(x).sub(1)));
     var n=x.array[0];
     if (n>1){
       if (n<24) return new OmegaNum(f_gamma(x.sign*n));
@@ -565,7 +572,7 @@
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log("log"+this);
     if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
     if (x.eq(OmegaNum.ZERO)) return OmegaNum.NEGATIVE_INFINITY.clone();
-    if (x.lt(MAX_SAFE_INTEGER)) return new OmegaNum(Math.log10(x.toNumber()));
+    if (x.lt(OmegaNum.MAX_SAFE_INTEGER)) return new OmegaNum(Math.log10(x.toNumber()));
     if (!x.isFinite()) return x;
     if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return x;
     x.array[1]--;
@@ -648,7 +655,7 @@
       x.array[1]--;
       return x;
     }
-    if (x.gt(MAX_SAFE_INTEGER)) return d_lambertw(x);
+    if (x.gt(OmegaNum.MAX_SAFE_INTEGER)) return d_lambertw(x);
     else return new OmegaNum(f_lambertw(x.sign*x.array[0]));
   };
   Q.lambertw=function (x){
@@ -686,7 +693,7 @@
     }
     var m=t.max(other);
     if (m.gt("10^^^"+MAX_SAFE_INTEGER)) return m;
-    if (other.gt(MAX_SAFE_INTEGER)){
+    if (other.gt(OmegaNum.MAX_SAFE_INTEGER)){
       if (this.lt(Math.exp(1/Math.E))){
         var negln = t.ln().neg();
         return negln.lambertw().div(negln);
@@ -700,7 +707,7 @@
     var f=Math.floor(y);
     var r=t.pow(y-f);
     var l=OmegaNum.NaN;
-    for (var i=0,m=new OmegaNum("e"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
+    for (var i=0,m=OmegaNum.E_MAX_SAFE_INTEGER;f!==0&&r.lt(m)&&i<100;++i){
       if (f>0){
         r=t.pow(r);
         if (l.eq(r)){
@@ -828,7 +835,7 @@
       if (other.eq(2)) return t.arrow(arrows-1)(t);
       if (t.max(other).gt("10{"+arrows.add(OmegaNum.ONE)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
       var r;
-      if (other.gt(MAX_SAFE_INTEGER)){
+      if (other.gt(OmegaNum.MAX_SAFE_INTEGER)){
         if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)){
           r=t.clone();
           r.array[arrows]--;
@@ -1037,8 +1044,8 @@
     if (this.sign==-1) return "-"+this.abs().toHyperE();
     if (isNaN(this.array[0])) return "NaN";
     if (!isFinite(this.array[0])) return "Infinity";
-    if (this.lt(MAX_SAFE_INTEGER)) return String(this.array[0]);
-    if (this.lt("e"+MAX_SAFE_INTEGER)) return "E"+this.array[0];
+    if (this.lt(OmegaNum.MAX_SAFE_INTEGER)) return String(this.array[0]);
+    if (this.lt(OmegaNum.E_MAX_SAFE_INTEGER)) return "E"+this.array[0];
     var r="E"+this.array[0]+"#"+this.array[1];
     for (var i=2;i<this.array.length;++i){
       r+="#"+(this.array[i]+1);
@@ -1363,7 +1370,7 @@
         if (Object.defineProperty){
           Object.defineProperty(obj,prop,{
             configurable: false,
-            enumerable: false,
+            enumerable: true,
             writable: false,
             value: new OmegaNum(R[prop])
           });
