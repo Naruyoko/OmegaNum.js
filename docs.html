@@ -56,6 +56,7 @@
             <li><a href="#a.mod">modular mod</a></li>
             <li><a href="#a.ln">naturalLogarithm log ln</a></li>
             <li><a href="#a.neg">negate neg</a></li>
+            <li><a href="#a.neq">notEquals neq</a></li>
             <li><a href="#a.pent">pentate pent</a></li>
             <li><a href="#a.add">plus add</a></li>
             <li><a href="#a.rec">reciprocate rec</a></li>
@@ -198,8 +199,8 @@
     <h3 id="a.eq">equalsTo eq</h3>
     <p>
       <div style="border:1px dashed black">
-        Static: OmegaNum.equalsTo(x,y), OmegaNum.eq(x,y)<br>
-        Instance: &lt;OmegaNum&gt;.equalsTo(y), &lt;OmegaNum&gt;.abs(y)
+        Static: OmegaNum.equalsTo(x,y), OmegaNum.equal(x,y), OmegaNum.eq(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.equalsTo(y), &lt;OmegaNum&gt;.equal(y), &lt;OmegaNum&gt;.eq(y)
       </div>
       Returns whether two numbers are equal.
       <pre><code data-language="javascript">
@@ -480,6 +481,19 @@
       <pre><code data-language="javascript">
         OmegaNum.neg(523).toString() //"-523"
         OmegaNum.neg(-921.3).toString() //"-921.3"
+      </code></pre>
+    </p>
+    <h3 id="a.neq">notEqualsTo neq</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.notEqualsTo(x,y), OmegaNum.notEqual(x,y), OmegaNum.neq(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.notEqualsTo(y), &lt;OmegaNum&gt;.notEqual(y), &lt;OmegaNum&gt;.neq(y)
+      </div>
+      Returns whether two numbers are not equal.
+      <pre><code data-language="javascript">
+        OmegaNum.div(5,5) //false
+        OmegaNum.div(0,120) //true
+        OmegaNum.div("10^^e16",[16,1,1]) //false
       </code></pre>
     </p>
     <h3 id="a.pent">pentate pent</h3>
