@@ -1,4 +1,4 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![3](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/3.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![3](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/3.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![1](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/1.png)
 [![NPM](https://img.shields.io/npm/v/omega_num.js.svg)](https://www.npmjs.com/package/omega_num.js)
 A huge number library holding up to 10{1000}9e15.
 
