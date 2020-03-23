@@ -7,25 +7,6 @@
   // --  EDITABLE DEFAULTS  -- //
     var OmegaNum = {
 
-      // The rounding mode used by default by `toInteger`, `toDecimalPlaces`, `toExponential`,
-      // `toFixed`, `toPrecision` and `toSignificantDigits`.
-      //
-      // ROUND_UP         0 Away from zero.
-      // ROUND_DOWN       1 Towards zero.
-      // ROUND_CEIL       2 Towards +Infinity.
-      // ROUND_FLOOR      3 Towards -Infinity.
-      // ROUND_HALF_UP    4 Towards nearest neighbor. If equidistant, up.
-      // ROUND_HALF_DOWN  5 Towards nearest neighbor. If equidistant, down.
-      // ROUND_HALF_EVEN  6 Towards nearest neighbor. If equidistant, towards even neighbor.
-      // ROUND_HALF_CEIL  7 Towards nearest neighbor. If equidistant, towards +Infinity.
-      // ROUND_HALF_FLOOR 8 Towards nearest neighbor. If equidistant, towards -Infinity.
-      //
-      // E.g.
-      // `OmegaNum.rounding = 4;`
-      // `OmegaNum.rounding = OmegaNum.ROUND_HALF_UP;`
-      // Unused
-      rounding: 4,                           // 0 to 8
-
       // The maximum number of arrows accepted in operation.
       // It will warn and then return Infinity if exceeded.
       // This is to prevent loops to not be breaking, and also to prevent memory leaks.
@@ -33,6 +14,12 @@
       // It is not recommended to make this number too big.
       // `OmegaNum.maxArrow = 1000;`
       maxArrow: 1e3,
+
+      // Specify what format is used when serializing for JSON.stringify
+      // 
+      // JSON   0 JSON object
+      // STRING 1 String
+      serializeMode: 0,
       
       // Level of debug information printed in console
       // 
@@ -112,11 +99,16 @@
    *  sumGeometricSeries
    *  times                     mul
    *  tetrate                   tetr
+   *  toExponential
+   *  toFixed
    *  toHyperE
    *  toJSON
    *  toNumber
    *  toPower                   pow
+   *  toPrecision
    *  toString
+   *  toStringWithDecimalPlaces
+   *  valueOf
    */
   R.ZERO=0;
   R.ONE=1;
@@ -1019,13 +1011,12 @@
     if (this.sign==-1) return "-"+this.abs();
     if (isNaN(this.array[0])) return "NaN";
     if (!isFinite(this.array[0])) return "Infinity";
-    var b=false;
     var s="";
     if (this.array.length>=2){
-      for (var i=2;i<this.array.length;++i){
+      for (var i=this.array.length-1;i>=2;--i){
         var q=i>=5?"{"+i+"}":"^".repeat(i);
-        if (this.array[i]>1) s="(10"+q+")^"+this.array[i]+" "+s;
-        else if (this.array[i]==1) s="10"+q+s;
+        if (this.array[i]>1) s+="(10"+q+")^"+this.array[i]+" ";
+        else if (this.array[i]==1) s+="10"+q;
       }
     }
     if (!this.array[1]) s+=String(this.toNumber());
@@ -1034,12 +1025,76 @@
     else s+="(10^)^"+this.array[1]+" "+this.array[0];
     return s;
   };
+  //from break_eternity.js
+  var decimalPlaces=function decimalPlaces(value,places){
+    var len=places+1;
+    var numDigits=Math.ceil(Math.log10(Math.abs(value)));
+    var rounded=Math.round(value*Math.pow(10,len-numDigits))*Math.pow(10,numDigits-len);
+    return parseFloat(rounded.toFixed(Math.max(len-numDigits,0)));
+  };
+  P.toStringWithDecimalPlaces=function (places,applyToOpNums){
+    if (this.sign==-1) return "-"+this.abs();
+    if (isNaN(this.array[0])) return "NaN";
+    if (!isFinite(this.array[0])) return "Infinity";
+    var b=0;
+    var s="";
+    var m=Math.pow(10,places);
+    if (this.array.length>=2){
+      for (var i=this.array.length-1;!b&&i>=2;--i){
+        var x=this.array[i];
+        if (applyToOpNums&&i==this.array.length-1&&x>=m){
+          ++i;
+          b=x;
+        }if (applyToOpNums&&this.array[i-1]>=m){
+          ++x;
+          b=this.array[i-1];
+        }
+        var q=i>=5?"{"+i+"}":"^".repeat(i);
+        if (x>1) s+="(10"+q+")^"+x+" ";
+        else if (x==1) s+="10"+q;
+      }
+    }
+    var k=this.array[0];
+    var l=this.array[1]||0;
+    if (k>m){
+      k=Math.log10(k);
+      ++l;
+    }
+    if (b) s+=decimalPlaces(b,places);
+    else if (!l) s+=String(decimalPlaces(k,places));
+    else if (l<3) s+="e".repeat(l-1)+decimalPlaces(Math.pow(10,k-Math.floor(k)),places)+"e"+decimalPlaces(Math.floor(k),places);
+    else if (l<8) s+="e".repeat(l)+decimalPlaces(k,places);
+    else if (applyToOpNums) s+="(10^)^"+decimalPlaces(l,places)+" "+decimalPlaces(k,places);
+    else s+="(10^)^"+l+" "+decimalPlaces(k,places);
+    return s;
+  };
+  //these are from break_eternity.js as well
+  P.toExponential=function (places,applyToOpNums){
+    if (this.array.length==1) return (this.sign*this.array[0]).toExponential(places);
+    return this.toStringWithDecimalPlaces(places,applyToOpNums);
+  };
+  P.toFixed=function (places,applyToOpNums){
+    if (this.array.length==1) return (this.sign*this.array[0]).toFixed(places);
+    return this.toStringWithDecimalPlaces(places,applyToOpNums);
+  };
+  P.toPrecision=function (places,applyToOpNums){
+    if (this.array.length==1&&this.array[0]<1e-6) return this.toExponential(places-1,applyToOpNums);
+    if (this.array.length==1&&places>Math.log10(this.array[0])) return this.toFixed(places-Math.floor(Math.log10(this.array[0]))-1,applyToOpNums);
+    return this.toExponential(places-1,applyToOpNums);
+  };
+  P.valueOf=function (){
+    return this.toString();
+  };
   //Note: toArray() would be impossible without changing the layout of the array or lose the information about the sign
   P.toJSON=function (){
-    return {
-      array:this.array.slice(0),
-      sign:this.sign
-    };
+    if (OmegaNum.serializeMode==OmegaNum.JSON){
+      return {
+        array:this.array.slice(0),
+        sign:this.sign
+      };
+    }else if (OmegaNum.serializeMode==OmegaNum.STRING){
+      return this.toString();
+    }
   };
   P.toHyperE=function (){
     if (this.sign==-1) return "-"+this.abs().toHyperE();
@@ -1331,15 +1386,8 @@
     }
     OmegaNum.prototype = P;
 
-    OmegaNum.ROUND_UP = 0;
-    OmegaNum.ROUND_DOWN = 1;
-    OmegaNum.ROUND_CEIL = 2;
-    OmegaNum.ROUND_FLOOR = 3;
-    OmegaNum.ROUND_HALF_UP = 4;
-    OmegaNum.ROUND_HALF_DOWN = 5;
-    OmegaNum.ROUND_HALF_EVEN = 6;
-    OmegaNum.ROUND_HALF_CEIL = 7;
-    OmegaNum.ROUND_HALF_FLOOR = 8;
+    OmegaNum.JSON = 0;
+    OmegaNum.STRING = 1;
     
     OmegaNum.NONE = 0;
     OmegaNum.NORMAL = 1;
@@ -1357,7 +1405,7 @@
     
     if (obj === void 0) obj = {};
     if (obj) {
-      ps = ['rounding', 'maxArrow', 'debug'];
+      ps = ['maxArrow', 'serializeMode', 'debug'];
       for (i = 0; i < ps.length;) if (!obj.hasOwnProperty(p = ps[i++])) obj[p] = this[p];
     }
 
@@ -1403,8 +1451,8 @@
     }
     var i,p,v,
       ps = [
-        'rounding',0,8,
         'maxArrow',1,Number.MAX_SAFE_INTEGER,
+        'serializeMode',0,1,
         'debug',0,2
       ];
     for (i = 0; i < ps.length; i += 3) {

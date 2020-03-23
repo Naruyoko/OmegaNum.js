@@ -1,3 +1,7 @@
+# 0.4.0 - 2020/03/23
+* Added an option to use `toString` method instead of returning JSON object for `toJSON`.
+* Added `valueOf`, `toStringWithDecimalPlaces`, `toExponential`, `toFixed`, and `toPrecision`.
+
 # 0.3.1 - 2020/03/16
 * Fixed `pent` and higher hyperoperators returning `NaN` if the base is between 10{c-1}MAX_SAFE_INTEGER and 10{c}MAX_SAFE_INTEGER, and the second operand is greater than MAX_SAFE_INTEGER.
 * Allowed inputting `Object` to `fromJSON`.
