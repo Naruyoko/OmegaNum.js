@@ -1042,10 +1042,11 @@
     if (this.array.length>=2){
       for (var i=this.array.length-1;!b&&i>=2;--i){
         var x=this.array[i];
-        if (applyToOpNums&&i==this.array.length-1&&x>=m){
+        if (applyToOpNums&&x>=m){
           ++i;
           b=x;
-        }if (applyToOpNums&&this.array[i-1]>=m){
+          x=1;
+        }else if (applyToOpNums&&this.array[i-1]>=m){
           ++x;
           b=this.array[i-1];
         }

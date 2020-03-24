@@ -1,3 +1,6 @@
+# 0.4.1 - 2020/03/23
+* Fixed `toStringWithDecimalPlaces` giving wrong iterations if the strongest operator is above maximum of places and `applyToOpNums` is enabled.
+
 # 0.4.0 - 2020/03/23
 * Added an option to use `toString` method instead of returning JSON object for `toJSON`.
 * Added `valueOf`, `toStringWithDecimalPlaces`, `toExponential`, `toFixed`, and `toPrecision`.
