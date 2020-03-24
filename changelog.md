@@ -1,3 +1,6 @@
+# 0.4.2 - 2020/03/23
+* Fixed `toPrecision` wrongfully using `toExponential` for `0`.
+
 # 0.4.1 - 2020/03/23
 * Fixed `toStringWithDecimalPlaces` giving wrong iterations if the strongest operator is above maximum of places and `applyToOpNums` is enabled.
 

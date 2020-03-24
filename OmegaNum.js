@@ -1079,6 +1079,7 @@
     return this.toStringWithDecimalPlaces(places,applyToOpNums);
   };
   P.toPrecision=function (places,applyToOpNums){
+    if (this.array[0]===0) return (this.sign*this.array[0]).toFixed(places-1,applyToOpNums);
     if (this.array.length==1&&this.array[0]<1e-6) return this.toExponential(places-1,applyToOpNums);
     if (this.array.length==1&&places>Math.log10(this.array[0])) return this.toFixed(places-Math.floor(Math.log10(this.array[0]))-1,applyToOpNums);
     return this.toExponential(places-1,applyToOpNums);
