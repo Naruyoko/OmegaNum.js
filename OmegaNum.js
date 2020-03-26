@@ -564,7 +564,7 @@
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log("log"+this);
     if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
     if (x.eq(OmegaNum.ZERO)) return OmegaNum.NEGATIVE_INFINITY.clone();
-    if (x.lt(OmegaNum.MAX_SAFE_INTEGER)) return new OmegaNum(Math.log10(x.toNumber()));
+    if (x.lte(OmegaNum.MAX_SAFE_INTEGER)) return new OmegaNum(Math.log10(x.toNumber()));
     if (!x.isFinite()) return x;
     if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return x;
     x.array[1]--;

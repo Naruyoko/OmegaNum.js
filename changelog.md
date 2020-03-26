@@ -1,3 +1,6 @@
+# 0.4.3 - 2020/03/25
+* Fixed `ExpantaNum.MAX_SAFE_INTEGER.log10()` being irregular form.
+
 # 0.4.2 - 2020/03/23
 * Fixed `toPrecision` wrongfully using `toExponential` for `0`.
 
