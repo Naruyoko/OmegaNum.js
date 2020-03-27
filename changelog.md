@@ -1,3 +1,7 @@
+# 0.5.0 - 2020/03/27
+* Added `iteratedexp`, `iteratedlog`, `layeradd`, and `layeradd10`.
+* Added voluntary `payload` argument to `tetr`.
+
 # 0.4.3 - 2020/03/25
 * Fixed `ExpantaNum.MAX_SAFE_INTEGER.log10()` being irregular form.
 

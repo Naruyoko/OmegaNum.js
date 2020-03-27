@@ -1,4 +1,4 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![4](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/4.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![3](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/3.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![5](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/5.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png)
 [![NPM](https://img.shields.io/npm/v/omega_num.js.svg)](https://www.npmjs.com/package/omega_num.js)
 A huge number library holding up to 10{1000}9e15.
 
@@ -8,7 +8,7 @@ Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[
 
 For detailed explanation and documentation, [see here](https://naruyoko.github.io/OmegaNum.js/index.html).
 
-Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, neq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, gamma, fact, pow, exp, sqrt, cbrt, root, log10, logBase, log(alias ln), lambertw, tetr, ssrt, slog, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()` (`toValue`, `toStringWithDecimalPlaces`, `toExponential`, `toFixed`, `toPrecision`), and `toJSON()`. Add one of a kind `toHyperE()`.
+Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, neq, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, gamma, fact, pow, exp, sqrt, cbrt, root, log10, logBase, log(alias ln), lambertw, tetr, iteratedexp, iteratedlog, layeradd, layeradd10, ssrt, slog, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()` (`toValue`, `toStringWithDecimalPlaces`, `toExponential`, `toFixed`, `toPrecision`), and `toJSON()`. Add one of a kind `toHyperE()`.
 
 If you are using built-in constants: Constants can not be replaced directly, however **the properties of it can. As the constants are also used inside OmegaNum.js, modifying them could CAUSE SERIOUS ISSUES AND POTENTIALLY RENDER THE LIBRARY UNUSABLE.**
 
