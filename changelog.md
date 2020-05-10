@@ -1,3 +1,6 @@
+# 0.5.1 - 2020/05/10
+* Very small optimizations.
+
 # 0.5.0 - 2020/03/27
 * Added `iteratedexp`, `iteratedlog`, `layeradd`, and `layeradd10`.
 * Added voluntary `payload` argument to `tetr`.

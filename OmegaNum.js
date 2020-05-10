@@ -149,7 +149,7 @@
     return new OmegaNum(x).neg();
   };
   P.compareTo=P.cmp=function (other){
-    other=new OmegaNum(other);
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
     if (isNaN(this.array[0])||isNaN(other.array[0])) return NaN;
     if (this.array[0]==Infinity&&other.array[0]!=Infinity) return this.sign;
     if (this.array[0]!=Infinity&&other.array[0]==Infinity) return -other.sign;
@@ -354,7 +354,7 @@
     if (x.isInfinite()) return x;
     if (other.isInfinite()) return other;
     if (x.max(other).gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.max(other);
-    var n=x*other;
+    var n=x.toNumber()*other.toNumber();
     if (n<=MAX_SAFE_INTEGER) return new OmegaNum(n);
     return OmegaNum.pow(10,x.log10().add(other.log10()));
   };
@@ -374,7 +374,7 @@
     if (x.isInfinite()) return x;
     if (other.isInfinite()) return OmegaNum.ZERO.clone();
     if (x.max(other).gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.gt(other)?x.clone():OmegaNum.ZERO.clone();
-    var n=x/other;
+    var n=x.toNumber()/other.toNumber();
     if (n<=MAX_SAFE_INTEGER) return new OmegaNum(n);
     var pw=OmegaNum.pow(10,x.log10().sub(other.log10()));
     var fp=pw.floor();
@@ -518,11 +518,11 @@
         other.standardize();
         return other;
       }else{
-        return new OmegaNum(Math.pow(10,other));
+        return new OmegaNum(Math.pow(10,other.toNumber()));
       }
     }
     if (other.lt(OmegaNum.ONE)) return this.root(other.rec());
-    var n=Math.pow(this,other);
+    var n=Math.pow(this.toNumber(),other.toNumber());
     if (n<=MAX_SAFE_INTEGER) return new OmegaNum(n);
     return OmegaNum.pow(10,this.log10().mul(other));
   };
@@ -740,7 +740,7 @@
   };
   Q.iteratedexp=function (x,y,payload){
     return new OmegaNum(x).iteratedexp(other,payload);
-  }
+  };
   //This implementation is highly inaccurate and slow, and probably be given custom code
   P.iteratedlog=function (base,other){
     if (base===undefined) base=10;
@@ -749,10 +749,10 @@
     base=new OmegaNum(base);
     other=new OmegaNum(other);
     return base.tetr(t.slog(base).sub(other));
-  }
+  };
   Q.iteratedlog=function (x,y,z){
     return new OmegaNum(x).iteratedlog(y,z);
-  }
+  };
   P.layeradd=function (other,base){
     if (base===undefined) base=10;
     if (other===undefined) other=OmegaNum.ONE.clone();
@@ -760,16 +760,16 @@
     base=new OmegaNum(base);
     other=new OmegaNum(other);
     return base.tetr(t.slog(base).add(other));
-  }
+  };
   Q.layeradd=function (x,y,z){
     return new OmegaNum(x).layeradd(y,z);
-  }
+  };
   P.layeradd10=function (other){
     return this.layeradd(other);
-  }
+  };
   Q.layeradd10=function (x,y){
     return new OmegaNum(x).layeradd10(y);
-  }
+  };
   //End implementation from break_eternity.js
   //All of these are from Patashu's break_eternity.js
   //The super square-root function - what number, tetrated to height 2, equals this?
@@ -1374,7 +1374,10 @@
     return x;
   };
   P.clone=function (){
-    return new OmegaNum(this);
+    var temp=new OmegaNum();
+    temp.array=this.array.slice(0);
+    temp.sign=this.sign;
+    return temp;
   };
   // OmegaNum methods
 
