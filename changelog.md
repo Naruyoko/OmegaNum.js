@@ -1,3 +1,6 @@
+# 0.5.2 - 2020/05/23
+* Fixed `tetr` and up returning non-`NaN` for special cases involving `NaN`.
+
 # 0.5.1 - 2020/05/10
 * Very small optimizations.
 

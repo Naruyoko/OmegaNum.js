@@ -667,6 +667,7 @@
     if (payload.neq(OmegaNum.ONE)) other=other.add(payload.slog(t));
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"^^"+other);
     var negln;
+    if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
     if (other.isInfinite()&&other.sign>0){
       if (t.gte(Math.exp(1/Math.E))) return OmegaNum.POSITIVE_INFINITY.clone();
       //Formula for infinite height power tower.
