@@ -48,7 +48,11 @@
             <li><a href="#a.isNaN">isNaN</a></li>
             <li><a href="#a.isneg">isNegative isneg</a></li>
             <li><a href="#a.ispos">isPositive ispos</a></li>
+            <li><a href="#a.iteratedexp">iteratedexp</a></li>
+            <li><a href="#a.iteratedlog">iteratedlog</a></li>
             <li><a href="#a.lambertw">lambertw</a></li>
+            <li><a href="#a.layeradd">layeradd</a></li>
+            <li><a href="#a.layeradd10">layeradd10</a></li>
             <li><a href="#a.lt">lessThan lt</a></li>
             <li><a href="#a.lte">lessThanOrEqualTo lte</a></li>
             <li><a href="#a.logBase">logarithm logBase</a></li>
@@ -80,11 +84,24 @@
             <li><a href="#s.fromString">fromString</a></li>
             <li><a href="#s.OmegaNum">OmegaNum</a></li>
             <li><a href="#s.standardize">standardize</a></li>
+            <li><a href="#s.toExponential">toExponential</a></li>
+            <li><a href="#s.toFixed">toFixed</a></li>
             <li><a href="#s.toHyperE">toHyperE</a></li>
             <li><a href="#s.toJSON">toJSON</a></li>
             <li><a href="#s.toNumber">toNumber</a></li>
+            <li><a href="#s.toPrecision">toPrecision</a></li>
             <li><a href="#s.toString">toString</a></li>
+            <li><a href="#s.toStringWithDecimalPlaces">toStringWithDecimalPlaces</a></li>
+            <li><a href="#s.valueOf">valueOf</a></li>
           </ul>
+        </li>
+        <li><a href="#o">Options</a>
+          <ul>
+            <li><a href="#o.debug">debug</a></li>
+            <li><a href="#o.maxArrow">maxArrow</a></li>
+            <li><a href="#o.serializeMode">serializeMode</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
     <div style="font-size:12px">This document uses Rainbow with rainbow.css for syntax highlighting.</div>
@@ -293,9 +310,9 @@
       </div>
       Returns whether number is greater than or equal to other.
       <pre><code data-language="javascript">
-        OmegaNum.gt(102,512) //false
-        OmegaNum.gt("ee4e5923","e43.348") //true
-        OmegaNum.gt(5,5) //true
+        OmegaNum.gte(102,512) //false
+        OmegaNum.gte("ee4e5923","e43.348") //true
+        OmegaNum.gte(5,5) //true
       </code></pre>
     </p>
     <h3 id="a.hyper">hyper</h3>
@@ -368,8 +385,8 @@
       </div>
       Returns whether number is negative.
       <pre><code data-language="javascript">
-        OmegaNum.isNaN(5) //false
-        OmegaNum.isNaN(-3) //true
+        OmegaNum.isneg(5) //false
+        OmegaNum.isneg(-3) //true
       </code></pre>
     </p>
     <h3 id="a.ispos">isPositive ispos</h3>
@@ -380,9 +397,25 @@
       </div>
       Returns whether number is positive.
       <pre><code data-language="javascript">
-        OmegaNum.isNaN(5) //true
-        OmegaNum.isNaN(-3) //false
+        OmegaNum.ispos(5) //true
+        OmegaNum.ispos(-3) //false
       </code></pre>
+    </p>
+    <h3 id="a.iteratedexp">iteratedexp</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.iteratedexp(x,y[,z])<br>
+        Instance: &lt;OmegaNum&gt;.iteratedexp(y[,z])
+      </div>
+      Alias for <a href="a.tetr">tetr</a>.
+    </p>
+    <h3 id="a.iteratedlog">iteratedlog</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.iteratedlog(x,y,z)<br>
+        Instance: &lt;OmegaNum&gt;.iteratedlog(y,z)
+      </div>
+      Repeatedly applies log base y to x z times. z can be real.
     </p>
     <h3 id="a.lambertw">lambertw</h3>
     <p>
@@ -397,6 +430,22 @@
         OmegaNum.lambert(10).toString() //"1.7455280027406992"
       </code></pre>
     </p>
+    <h3 id="a.layeradd">layeradd</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.layeradd(x,y,z)<br>
+        Instance: &lt;OmegaNum&gt;.layeradd(y,z)
+      </div>
+      Adds z layers of exponential tower of base y of x at the bottom. z can be real.
+    </p>
+    <h3 id="a.layeradd10">layeradd10</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.layeradd10(x,y)<br>
+        Instance: &lt;OmegaNum&gt;.layeradd10(y)
+      </div>
+      Adds y layers of exponential tower of base 10 of x at the bottom. y can be real.
+    </p>
     <h3 id="a.lt">lessThan lt</h3>
     <p>
       <div style="border:1px dashed black">
@@ -405,9 +454,9 @@
       </div>
       Returns whether number is less than other.
       <pre><code data-language="javascript">
-        OmegaNum.gt(102,512) //true
-        OmegaNum.gt("ee4e5923","e43.348") //false
-        OmegaNum.gt(5,5) //false
+        OmegaNum.lt(102,512) //true
+        OmegaNum.lt("ee4e5923","e43.348") //false
+        OmegaNum.lt(5,5) //false
       </code></pre>
     </p>
     <h3 id="a.lt">lessThanOrEqualTo lte</h3>
@@ -418,9 +467,9 @@
       </div>
       Returns whether number is less than or equal to other.
       <pre><code data-language="javascript">
-        OmegaNum.gt(102,512) //true
-        OmegaNum.gt("ee4e5923","e43.348") //false
-        OmegaNum.gt(5,5) //true
+        OmegaNum.lte(102,512) //true
+        OmegaNum.lte("ee4e5923","e43.348") //false
+        OmegaNum.lte(5,5) //true
       </code></pre>
     </p>
     <h3 id="a.logBase">logarithm logBase</h3>
@@ -597,10 +646,10 @@
     <h3 id="a.tetr">tetrate tetr</h3>
     <p>
       <div style="border:1px dashed black">
-        Static: OmegaNum.tetrate(x,y), OmegaNum.tetr(x,y)<br>
-        Instance: &lt;OmegaNum&gt;.tetrate(y), &lt;OmegaNum&gt;.tetr(y)
+        Static: OmegaNum.tetrate(x,y[,z]), OmegaNum.tetr(x,y[,z])<br>
+        Instance: &lt;OmegaNum&gt;.tetrate(y[,z]), &lt;OmegaNum&gt;.tetr(y[,z])
       </div>
-      <a href="https://googology.wikia.com/wiki/Tetration">Tetration</a>. Uses linear approximation for real height.
+      <a href="https://googology.wikia.com/wiki/Tetration">Tetration</a>. Uses linear approximation for real height. z is placed on top of exponential tower (thus becoming <a href="a.iteratedexp">iterated exponentiation</a>).
       <pre><code data-language="javascript">
         OmegaNum.tetr(3,3).toString() //"7625597484987"
         OmegaNum.tetr(10,2.5).toString() //"1.0972406760152253e1453"
@@ -667,7 +716,7 @@
         Static: OmegaNum.fromJSON(x)<br>
         Instance: <span style="color:red">None</span>
       </div>
-      Takes a JSON in String and returns the corresponding OmegaNum.
+      Takes a JSON in String or an Object and returns the corresponding OmegaNum.
     </p>
     <h3 id="s.fromNumber">fromNumber</h3>
     <p>
@@ -729,6 +778,22 @@
       </div>
       Standardize the properties to match the requirements. Automatically executed on performing methods. Mutating method.
     </p>
+    <h3 id="s.toExponential">toExponential</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toExponential(places[,applyToOpNums])
+      </div>
+      An alias for <a href="s.toStringWithDecimalPlaces">toStringWithDecimalPlaces</a>.
+    </p>
+    <h3 id="s.toFixed">toFixed</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toFixed(places[,applyToOpNums])
+      </div>
+      An alias for <a href="s.toStringWithDecimalPlaces">toStringWithDecimalPlaces</a>.
+    </p>
     <h3 id="s.toHyperE">toHyperE</h3>
     <p>
       <div style="border:1px dashed black">
@@ -765,6 +830,14 @@
         OmegaNum("eee30").toNumber() //Infinity
       </code></pre>
     </p>
+    <h3 id="s.toPrecision">toPrecision</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toPrecision(places[,applyToOpNums])
+      </div>
+      For small numbers, the number of decimal places to both sides of decimal point combined is fixed. Else, it is an alias for <a href="s.toStringWithDecimalPlaces">toStringWithDecimalPlaces</a> (1 place removed).
+    </p>
     <h3 id="s.toString">toString</h3>
     <p>
       <div style="border:1px dashed black">
@@ -776,6 +849,44 @@
         OmegaNum(100).toString() //"100"
         OmegaNum([5,3,2,0,0,1]).toString() //"10{5}(10^^)^2 e1e100000"
       </code></pre>
+    </p>
+    <h3 id="s.toStringWithDecimalPlaces">toStringWithDecimalPlaces</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.toStringWithDecimalPlaces(places[,applyToOpNums])
+      </div>
+      Converts the number into String with decimal places.
+    </p>
+    <h3 id="s.valueOf">valueOf</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: <span style="color:red">None</span><br>
+        Instance: &lt;OmegaNum&gt;.valueOf()
+      </div>
+      Converts the OmegaNum to a primitive or a JSON object. Automatically used for JSON.stringify and casting. <a href="#o.serializeMode">Configurable</a>.
+    </p>
+    <h2 id="o">Options</h2>
+    <h3 id="o.debug">debug</h3>
+    <p>
+      <div style="border:1px dashed black">
+        NONE   0 Show no information.<br>
+        NORMAL 1 Show operations.<br>
+        ALL    2 Show everything.
+      </div>
+      Setting this will output information on what operations are run to the console. Default is 0 (NONE).
+    </p>
+    <h3 id="o.maxArrow">maxArrow</h3>
+    <p>
+      Sets the maximum number of arrows are accepted when storing or operating. A number will turn Infinity if it exceeds this limit. Default is 1000.
+    </p>
+    <h3 id="o.serializeMode">serializeMode</h3>
+    <p>
+      <div style="border:1px dashed black">
+        JSON   0 JSON object<br>
+        STRING 1 String
+      </div>
+      Sets the mode of what form is used when serializing for JSON.stringify and <a href="#s.valueOf">valueOf</a>. Default is 0 (JSON).
     </p>
   </body>
 </html>
