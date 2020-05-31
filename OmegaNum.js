@@ -694,7 +694,7 @@
     }
     var m=t.max(other);
     if (m.gt("10^^^"+MAX_SAFE_INTEGER)) return m;
-    if (other.gt(OmegaNum.MAX_SAFE_INTEGER)){
+    if (m.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)||other.gt(OmegaNum.MAX_SAFE_INTEGER)){
       if (this.lt(Math.exp(1/Math.E))){
         negln = t.ln().neg();
         return negln.lambertw().div(negln);
@@ -873,7 +873,7 @@
       if (other.eq(2)) return t.arrow(arrows-1)(t);
       if (t.max(other).gt("10{"+arrows.add(OmegaNum.ONE)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
       var r;
-      if (other.gt(OmegaNum.MAX_SAFE_INTEGER)){
+      if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)||other.gt(OmegaNum.MAX_SAFE_INTEGER)){
         if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)){
           r=t.clone();
           r.array[arrows]--;

@@ -1,3 +1,6 @@
+# 0.5.3 - 2020/05/30
+* Fixed `a{n}b` for `10{n}MSI<a<=10{n+1}MSI` and `b<MSI`.
+
 # 0.5.2 - 2020/05/23
 * Fixed `tetr` and up returning non-`NaN` for special cases involving `NaN`.
 
