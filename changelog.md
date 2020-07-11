@@ -1,3 +1,6 @@
+# 0.5.4 - 2020/07/11
+* Added `0` times and `1` time logs case for `iteratedLog`.
+
 # 0.5.3 - 2020/05/30
 * Fixed `a{n}b` for `10{n}MSI<a<=10{n+1}MSI` and `b<MSI`.
 

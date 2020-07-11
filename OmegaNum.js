@@ -747,6 +747,8 @@
     if (base===undefined) base=10;
     if (other===undefined) other=OmegaNum.ONE.clone();
     var t=this.clone();
+    if (other.eq(ExpantaNum.ZERO)) return t;
+    if (other.eq(ExpantaNum.ONE)) return t.logBase(base);
     base=new OmegaNum(base);
     other=new OmegaNum(other);
     return base.tetr(t.slog(base).sub(other));
