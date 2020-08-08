@@ -1,3 +1,6 @@
+# 0.5.5 - 2020/08/07
+* Fixed decimal array element.
+
 # 0.5.4 - 2020/07/11
 * Added `0` times and `1` time logs case for `iteratedLog`.
 

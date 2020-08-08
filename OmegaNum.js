@@ -1010,6 +1010,7 @@
         x.array=[Infinity];
         return x;
       }
+      if (i!==0&&!Number.isInteger(e)) x.array[i]=Math.floor(e);
     }
     do{
       if (OmegaNum.debug>=OmegaNum.ALL) console.log(x.toString());
