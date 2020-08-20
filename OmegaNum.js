@@ -1051,7 +1051,7 @@
   P.toNumber=function (){
     //console.log(this.array);
     if (this.sign==-1) return -1*this.abs();
-    if (this.array.length>=2||this.array[1]>=2||this.array[1]==1&&this.array[0]>Math.log10(Number.MAX_VALUE)) return Infinity;
+    if (this.array.length>=2&&(this.array[1]>=2||this.array[1]==1&&this.array[0]>Math.log10(Number.MAX_VALUE))) return Infinity;
     if (this.array[1]==1) return Math.pow(10,this.array[0]);
     return this.array[0];
   };

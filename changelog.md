@@ -1,3 +1,6 @@
+# 0.5.6 - 2020/08/19
+* Fixed arithmetic above MSI being imprecise.
+
 # 0.5.5 - 2020/08/07
 * Fixed decimal array element.
 
