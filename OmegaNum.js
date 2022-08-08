@@ -872,35 +872,37 @@
         console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
         return OmegaNum.POSITIVE_INFINITY.clone();
       }
-      if (other.eq(2)) return t.arrow(arrows-1)(t);
-      if (t.max(other).gt("10{"+arrows.add(OmegaNum.ONE)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
+      var arrowsNum=arrows.toNumber();
+      if (other.eq(2)) return t.arrow(arrows.sub(OmegaNum.ONE))(t);
+      if (t.max(other).gt("10{"+(arrowsNum+1)+"}"+MAX_SAFE_INTEGER)) return t.max(other);
       var r;
-      if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)||other.gt(OmegaNum.MAX_SAFE_INTEGER)){
-        if (t.gt("10{"+arrows+"}"+MAX_SAFE_INTEGER)){
+      if (t.gt("10{"+arrowsNum+"}"+MAX_SAFE_INTEGER)||other.gt(OmegaNum.MAX_SAFE_INTEGER)){
+        if (t.gt("10{"+arrowsNum+"}"+MAX_SAFE_INTEGER)){
           r=t.clone();
-          r.array[arrows]--;
+          r.array[arrowsNum]--;
           r.standardize();
-        }else if (t.gt("10{"+arrows.sub(OmegaNum.ONE)+"}"+MAX_SAFE_INTEGER)){
-          r=new OmegaNum(t.array[arrows.sub(OmegaNum.ONE)]);
+        }else if (t.gt("10{"+(arrowsNum-1)+"}"+MAX_SAFE_INTEGER)){
+          r=new OmegaNum(t.array[arrowsNum-1]);
         }else{
           r=OmegaNum.ZERO;
         }
         var j=r.add(other);
-        j.array[arrows]=(j.array[arrows]||0)+1;
+        j.array[arrowsNum]=(j.array[arrowsNum]||0)+1;
         j.standardize();
         return j;
       }
       var y=other.toNumber();
       var f=Math.floor(y);
-      r=t.arrow(arrows.sub(1))(y-f);
-      for (var i=0,m=new OmegaNum("10{"+arrows.sub(OmegaNum.ONE)+"}"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
+      var arrows_m1=arrows.sub(OmegaNum.ONE);
+      r=t.arrow(arrows_m1)(y-f);
+      for (var i=0,m=new OmegaNum("10{"+(arrowsNum-1)+"}"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
         if (f>0){
-          r=t.arrow(arrows.sub(OmegaNum.ONE))(r);
+          r=t.arrow(arrows_m1)(r);
           --f;
         }
       }
       if (i==100) f=0;
-      r.array[arrows.sub(OmegaNum.ONE)]=(r.array[arrows.sub(OmegaNum.ONE)]+f)||f;
+      r.array[arrowsNum-1]=(r.array[arrowsNum-1]+f)||f;
       r.standardize();
       return r;
     };
