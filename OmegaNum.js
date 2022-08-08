@@ -700,7 +700,7 @@
         return negln.lambertw().div(negln);
       }
       var j=t.slog(10).add(other);
-      j.array[2]=(other.array[2]||0)+1;
+      j.array[2]=(j.array[2]||0)+1;
       j.standardize();
       return j;
     }
@@ -886,7 +886,7 @@
           r=OmegaNum.ZERO;
         }
         var j=r.add(other);
-        j.array[arrows]=(other.array[arrows]||0)+1;
+        j.array[arrows]=(j.array[arrows]||0)+1;
         j.standardize();
         return j;
       }
