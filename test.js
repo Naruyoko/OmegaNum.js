@@ -10,7 +10,7 @@ window.onload=function (){
       throw error;
     }
   }
-  getFirst();
+  initVersions();
 };
 function fetch(url,callback,onfail){
   var xhttp=new XMLHttpRequest();
@@ -27,12 +27,13 @@ function fetch(url,callback,onfail){
   xhttp.open("GET",url,true);
   xhttp.send();
 }
-var commitsLink="https://api.github.com/repos/Naruyoko/OmegaNum.js/commits";
-var latestLink="https://raw.githack.com/Naruyoko/OmegaNum.js/master/OmegaNum.js";
-var commits;
-var filteredCommits;
+var apiUrl="https://api.github.com/repos/Naruyoko/OmegaNum.js";
+var filesUrl="https://github.com/Naruyoko/OmegaNum.js/raw";
+var releases;
+var tags;
+var tagsByName;
 var OmegaNum;
-var versions={};
+var versions;
 function showNetWorkError(url){
   throw Error("Network error: "+url);
 }
@@ -47,77 +48,59 @@ function changeProcessItem(s){
   node.innerHTML=s;
   node=null;
 }
-function getFirst(){
-  addProcessItem("Fetching list...");
+function initVersions(){
+  addProcessItem("Fetching list...0 of 2");
+  var listFetched=0;
   fetch(
-    commitsLink,
+    apiUrl+"/releases?per_page=100",
     function (s){
-      commits=JSON.parse(s);
-      changeProcessItem("Fetching list...Done.");
-      filterDiffed();
+      releases=JSON.parse(s);
+      changeProcessItem(++listFetched==2?"Fetching list...Done.":"Fetching list...1 of 2");
+      if (listFetched==2) processReleases();
+    });
+  fetch(
+    apiUrl+"/tags?per_page=100",
+    function (s){
+      tags=JSON.parse(s);
+      changeProcessItem(++listFetched==2?"Fetching list...Done.":"Fetching list...1 of 2");
+      if (listFetched==2) processReleases();
     });
 }
-function filterDiffed(){
-  filteredCommits=[];
-  var lastCommitIndex=-1;
-  var lastLibSHA="";
-  function getNext(){
-    lastCommitIndex++;
-    fetch(
-      commits[lastCommitIndex].commit.tree.url,
-      function (s){
-        changeProcessItem("Fetching commits..."+(lastCommitIndex+1)+" of "+commits.length);
-        var tree=JSON.parse(s);
-        var libIndex=0;
-        while (libIndex<tree.tree.length&&tree.tree[libIndex].path!="OmegaNum.js") libIndex++;
-        if (libIndex!=tree.tree.length&&lastLibSHA!=tree.tree[libIndex].sha){
-          lastLibSHA=tree.tree[libIndex].sha;
-          tree.libIndex=libIndex;
-          tree.commitIndex=lastCommitIndex;
-          filteredCommits.push(tree);
-        };
-        if (lastCommitIndex==commits.length-1){
-          changeProcessItem("Fetching commits...Done.");
-          showVersions();
-        }else{
-          getNext();
-        }
-      });
-  }
-  addProcessItem("Fetching commits...0 of "+commits.length);
-  getNext();
-}
-function showVersions(){
+function processReleases(){
+  tagsByName=Object.create(null);
+  for (var i=0;i<tags.length;i++) tagsByName[tags[i]["name"]]=tags[i];
+  versions=Object.create(null);
   addProcessItem("Making results...");
-  for (var i=0;i<filteredCommits.length;i++){
-    var commit=commits[filteredCommits[i].commitIndex];
+  for (var i=0;i<releases.length;i++){
+    var release=releases[i];
+    var releaseName=release["name"];
+    var tag=tagsByName[release["tag_name"]];
     var node=document.createElement("option");
-    if (commit.commit.message.length>30){
-      node.innerHTML=commit.commit.message.substring(0,27)+"... ("+commit.sha.substring(0,6)+")";
-    }else{
-      node.innerHTML=commit.commit.message+" ("+commit.sha.substring(0,6)+")";
-    }
-    node.value=i;
+    node.innerHTML=releaseName+" ("+tag["commit"]["sha"].substring(0,6)+")";
+    node.value=i+"";
     dg("version").appendChild(node);
     node=null;
   }
   changeProcessItem("Making results...Done.");
-  changeLibVersion();
+  switchVersion();
 }
-function changeLibVersion(){
-  var versionIndex=dg("version").value;
-  var sha=commits[filteredCommits[versionIndex].commitIndex].sha;
-  if (versions[sha]){
-    OmegaNum=versions[sha];
+function switchVersion(){
+  var releaseIndex=dg("version").value;
+  var release=releases[releaseIndex];
+  var releaseName=release["name"];
+  if (versions[releaseName]){
+    OmegaNum=versions[releaseName];
   }else{
-    addProcessItem("Fetching version "+sha+"...");
+    var tag=tagsByName[release["tag_name"]];
+    var sha=tag["commit"]["sha"];
+    addProcessItem("Fetching <a href=\""+release["html_url"]+"\">"+releaseName+"</a>...");
     fetch(
-      filteredCommits[versionIndex].tree[filteredCommits[versionIndex].libIndex].url,
+      filesUrl+"/"+sha+"/OmegaNum.js",
       function (s){
         OmegaNum=undefined;
         (Function(atob(JSON.parse(s).content)))();
-        versions[sha]=OmegaNum;
+        versions[releaseName]=OmegaNum;
       });
-    changeProcessItem("Fetching version "+sha+"...Done.");
+    changeProcessItem("Fetching <a href=\""+release["html_url"]+"\">"+releaseName+"</a>...Done.");
   }
 }
