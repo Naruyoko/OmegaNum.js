@@ -6,12 +6,15 @@ window.onload=function (){
     try{
       document.getElementById("output").innerHTML=Function(document.getElementById("input").value)(); 
     }catch(error){
-      document.getElementById("error").value=new Date().getTime()+"ms, "+new Date().toTimeString()+"\n"+(error?"\n"+error.name+": "+error.message+(error.stack?"\n"+error.stack:""):"");
-      throw error;
+      showError(error);
     }
   }
   initVersions();
 };
+function showError(error){
+  document.getElementById("error").value=new Date().getTime()+"ms, "+new Date().toTimeString()+"\n"+(error?"\n"+error.name+": "+error.message+(error.stack?"\n"+error.stack:""):"");
+  console.error(error);
+}
 function fetch(url,callback,onfail){
   var xhttp=new XMLHttpRequest();
   xhttp.onreadystatechange=function (){
@@ -20,7 +23,7 @@ function fetch(url,callback,onfail){
         callback(this.responseText);
       }else{
         if (onfail) onfail(url);
-        else showNetWorkError(url);
+        else throw Error("Network error: "+url);
       }
     }
   };
@@ -34,9 +37,6 @@ var tags;
 var tagsByName;
 var OmegaNum;
 var versions;
-function showNetWorkError(url){
-  throw Error("Network error: "+url);
-}
 function addProcessItem(s){
   var node=document.createElement("li");
   node.innerHTML=s;
@@ -93,13 +93,18 @@ function switchVersion(){
   }else{
     var tag=tagsByName[release["tag_name"]];
     var sha=tag["commit"]["sha"];
-    addProcessItem("Fetching <a href=\""+release["html_url"]+"\">"+releaseName+"</a>...");
+    addProcessItem("Fetching <a href=\""+release["html_url"]+"\">"+releaseName+"</a>...0 of 2");
     fetch(
-      filesUrl+"/"+sha+"/OmegaNum.js",
+      apiUrl+"/contents/OmegaNum.js?ref="+sha,
       function (s){
         OmegaNum=undefined;
-        (Function(atob(JSON.parse(s).content)))();
-        versions[releaseName]=OmegaNum;
+        try{
+          (Function(atob(JSON.parse(s)["content"])))();
+        }catch(error){
+          showError(error);
+        }finally{
+          versions[releaseName]=OmegaNum;
+        }
       });
     changeProcessItem("Fetching <a href=\""+release["html_url"]+"\">"+releaseName+"</a>...Done.");
   }
