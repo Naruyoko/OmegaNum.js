@@ -7,7 +7,7 @@
   "unpkg": "dist/OmegaNum.min.js",
   "types": "dist/OmegaNum.d.ts",
   "scripts": {
-    "build": "bili",
+    "build": "bili && node postprocessor.js",
     "prepublishOnly": "npm run build",
     "updateprecompiled": "npm run build && copy /y dist\\* .",
     "test": "echo \"Error: no test specified\" && exit 1"

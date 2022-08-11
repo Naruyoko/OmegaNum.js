@@ -149,13 +149,13 @@
 
   var OmegaNum = /*#__PURE__*/function () {
     function OmegaNum(input, input2) {
-      _classCallCheck(this, OmegaNum);
+      if (!(this instanceof OmegaNum)) return new OmegaNum(input, input2);
 
       this.array = [0];
-      this.sign = 1;
-      var x = this; //@ts-ignore
+      this.sign = 1; //@ts-ignore
 
-      if (!(x instanceof OmegaNum)) return new OmegaNum(input, input2);
+      0;
+      var x = this;
       var parsedObject = null;
 
       if (typeof input == "string" && (input[0] == "[" || input[0] == "{")) {

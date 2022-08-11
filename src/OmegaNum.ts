@@ -1509,9 +1509,9 @@ export default class OmegaNum {
   constructor(input?:OmegaNumSource,input2?:undefined)
   constructor(input:number,input2:number[])
   constructor(input?:OmegaNumSource,input2?:OmegaNumSource){
-    var x=this;
     //@ts-ignore
-    if (!(x instanceof OmegaNum)) return new OmegaNum(input,input2);
+    if (!(this instanceof OmegaNum)) return new OmegaNum(input,input2);
+    var x=this;
     var parsedObject=null;
     if (typeof input=="string"&&(input[0]=="["||input[0]=="{")){
       try {
