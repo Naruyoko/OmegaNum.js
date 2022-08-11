@@ -2,13 +2,22 @@
   "name": "omega_num.js",
   "version": "0.5.6",
   "description": "A JavaScript library that handles arithmetic for numbers as large as 10{1000}9e15.",
-  "main": "OmegaNum.js",
+  "main": "dist/OmegaNum.js",
+  "module": "dist/OmegaNum.esm.js",
+  "unpkg": "dist/OmegaNum.min.js",
+  "types": "dist/OmegaNum.d.ts",
   "scripts": {
+    "build": "bili",
+    "prepublishOnly": "npm run build",
+    "updateprecompiled": "npm run build && copy /y dist\\* .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Naruyoko/OmegaNum.js.git"
+    "url": "git+https://github.com/Naruyoko/OmegaNum.js.git"
   },
   "keywords": [
     "bignum",
@@ -22,5 +31,10 @@
   "bugs": {
     "url": "https://github.com/Naruyoko/OmegaNum.js/issues"
   },
-  "homepage": "https://github.com/Naruyoko/OmegaNum.js"
+  "homepage": "https://github.com/Naruyoko/OmegaNum.js",
+  "devDependencies": {
+    "bili": "^5.0.5",
+    "rollup-plugin-typescript2": "^0.32.1",
+    "typescript": "^4.7.4"
+  }
 }
