@@ -1,3 +1,7 @@
+# 0.5.7 - 2022/08/15
+* Fixed `a{n}b` when `10{n}10{n}MSI<a<=10{n+1}MSI` and `MSI<=b<10{n}10{n}a` ([ExpantaNum.js#20](https://github.com/Naruyoko/ExpantaNum.js/issues/20)).
+* Compacted factorials LUT, reducing un-minified file size.
+
 # 0.5.6 - 2020/08/19
 * Fixed arithmetic above MSI being imprecise.
 
