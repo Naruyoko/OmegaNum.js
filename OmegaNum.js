@@ -21,6 +21,7 @@
       // STRING 1 String
       serializeMode: 0,
       
+      // Deprecated
       // Level of debug information printed in console
       // 
       // NONE   0 Show no information.
@@ -283,10 +284,14 @@
   Q.round=function (x){
     return new OmegaNum(x).round();
   };
+  var debugMessageSent=false;
   P.plus=P.add=function (other){
     var x=this.clone();
     other=new OmegaNum(other);
-    if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(this+"+"+other);
+    if (OmegaNum.debug>=OmegaNum.NORMAL){
+      console.log(this+"+"+other);
+      if (!debugMessageSent) console.warn(omegaNumError+"Debug output via 'debug' is being deprecated and will be removed in the future!"),debugMessageSent=true;
+    }
     if (x.sign==-1) return x.neg().add(other.neg()).neg();
     if (other.sign==-1) return x.sub(other.neg());
     if (x.eq(OmegaNum.ZERO)) return other;
