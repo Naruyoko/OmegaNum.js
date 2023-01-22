@@ -1168,6 +1168,33 @@
     x.standardize();
     return x;
   };
+  var log10PosBigInt=function log10PosBigInt(input){
+    var exp=BigInt(64);
+    while (input>=BigInt(1)<<exp) exp*=BigInt(2);
+    var expdel=exp/BigInt(2);
+    while (expdel>BigInt(0)){
+      if (input>=BigInt(1)<<exp) exp+=expdel;
+      else exp-=expdel;
+      expdel/=BigInt(2);
+    }
+    var cutbits=exp-BigInt(54);
+    var firstbits=input>>cutbits;
+    return Math.log10(Number(firstbits))+Math.LOG10E/Math.LOG2E*Number(cutbits);
+  }
+  Q.fromBigInt=function (input){
+    if (typeof input!="bigint") throw Error(invalidArgument+"Expected BigInt");
+    var x=new OmegaNum();
+    var abs=input<BigInt(0)?-input:input;
+    x.sign=input<BigInt(0)?-1:1;
+    if (abs<=MAX_SAFE_INTEGER) x.array[0]=Number(abs);
+    else x.array=[log10PosBigInt(abs),1];
+    x.standardize();
+    return x;
+  }
+  var LONG_STRING_MIN_LENGTH=17;
+  var log10LongString=function log10LongString(str){
+    return Math.log10(Number(str.substring(0,LONG_STRING_MIN_LENGTH)))+(str.length-LONG_STRING_MIN_LENGTH);
+  }
   Q.fromString=function (input){
     if (typeof input!="string") throw Error(invalidArgument+"Expected String");
     var isJSON=false;
@@ -1255,8 +1282,6 @@
       b=[x.array[0],0];
       c=1;
       for (i=a.length-1;i>=0;--i){
-        if (a[i]) d=Number(a[i]);
-        else d=1;
         //The things that are already there
         if (b[0]<MAX_E&&b[1]===0){
           b[0]=Math.pow(10,c*b[0]);
@@ -1273,12 +1298,18 @@
           b[1]++;
         }
         //Multiplying coefficient
+        var decimalPointPos=a[i].indexOf(".");
+        var intPartLen=decimalPointPos==-1?a[i].length:decimalPointPos;
         if (b[1]===0){
-          b[0]*=Number(d);
-        }else if (b[1]==1){
-          b[0]+=Math.log10(Number(d));
-        }else if (b[1]==2&&b[0]<MAX_E+Math.log10(Math.log10(Number(d)))){
-          b[0]+=Math.log10(1+Math.pow(10,Math.log10(Math.log10(Number(d)))-b[0]));
+          if (intPartLen>=LONG_STRING_MIN_LENGTH) b[0]=Math.log10(b[0])+log10LongString(a[i].substring(0,intPartLen)),b[1]=1;
+          else if (a[i]) b[0]*=Number(a[i]);
+        }else{
+          d=intPartLen>=LONG_STRING_MIN_LENGTH?log10LongString(a[i].substring(0,intPartLen)):a[i]?Math.log10(Number(a[i])):0;
+          if (b[1]==1){
+            b[0]+=d;
+          }else if (b[1]==2&&b[0]<MAX_E+Math.log10(d)){
+            b[0]+=Math.log10(1+Math.pow(10,Math.log10(d)-b[0]));
+          }
         }
         //Carrying
         if (b[0]<MAX_E&&b[1]){
@@ -1413,6 +1444,8 @@
       var temp,temp2;
       if (typeof input=="number"&&!(input2 instanceof Array)){
         temp=OmegaNum.fromNumber(input);
+      }else if (typeof input=="bigint"){
+        temp=OmegaNum.fromBigInt(input);
       }else if (parsedObject){
         temp=OmegaNum.fromObject(parsedObject);
       }else if (typeof input=="string"&&input[0]=="E"){
