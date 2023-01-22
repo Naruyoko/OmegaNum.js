@@ -1079,6 +1079,7 @@
   var decimalPlaces=function decimalPlaces(value,places){
     var len=places+1;
     var numDigits=Math.ceil(Math.log10(Math.abs(value)));
+    if (numDigits<100) numDigits=0; //A hack-y solution to https://github.com/Naruyoko/ExpantaNum.js/issues/22
     var rounded=Math.round(value*Math.pow(10,len-numDigits))*Math.pow(10,numDigits-len);
     return parseFloat(rounded.toFixed(Math.max(len-numDigits,0)));
   };
