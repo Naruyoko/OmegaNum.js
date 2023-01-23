@@ -4,6 +4,7 @@
 
 * Added support for conversion from BigInt ([#37](https://github.com/Naruyoko/OmegaNum.js/issues/37)).
 * Fixed long number converted to `Infinity` when converting from a string ([#37](https://github.com/Naruyoko/OmegaNum.js/issues/37)).
+* Fixed `toStringWithDecimalPlaces` throwing `RangeError` on small values ([ExpantaNum.js#22](https://github.com/Naruyoko/ExpantaNum.js/issues/22)).
 * Renamed "standardize" to "normalize" and deprecated the old name.
 * Deprecated "debug" option.
 
