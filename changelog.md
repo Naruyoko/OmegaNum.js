@@ -1,5 +1,12 @@
 # OmegaNum.js changelog
 
+## 0.6.0 - 2023/01/22
+
+* Added support for conversion from BigInt ([#37](https://github.com/Naruyoko/OmegaNum.js/issues/37)).
+* Fixed long number converted to `Infinity` when converting from a string ([#37](https://github.com/Naruyoko/OmegaNum.js/issues/37)).
+* Renamed "standardize" to "normalize" and deprecated the old name.
+* Deprecated "debug" option.
+
 ## 0.5.7 - 2022/08/15
 
 * Fixed `a{n}b` when `10{n}10{n}MSI<a<=10{n+1}MSI` and `MSI<=b<10{n}10{n}a` ([ExpantaNum.js#20](https://github.com/Naruyoko/ExpantaNum.js/issues/20)).
