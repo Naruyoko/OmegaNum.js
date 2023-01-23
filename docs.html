@@ -80,6 +80,7 @@
             <li><a href="#s.fromHyperE">fromHyperE</a></li>
             <li><a href="#s.fromJSON">fromJSON</a></li>
             <li><a href="#s.fromNumber">fromNumber</a></li>
+            <li><a href="#s.fromBigInt">fromBigInt</a></li>
             <li><a href="#s.fromObject">fromObject</a></li>
             <li><a href="#s.fromString">fromString</a></li>
             <li><a href="#s.OmegaNum">OmegaNum</a></li>
@@ -726,6 +727,15 @@
       </div>
       Takes a Number and returns the corresponding OmegaNum.
     </p>
+    </p>
+    <h3 id="s.fromBigInt">fromBigInt</h3>
+    <p>
+      <div style="border:1px dashed black">
+        Static: OmegaNum.fromBigInt(x)<br>
+        Instance: <span style="color:red">None</span>
+      </div>
+      Takes a BigInt and returns the corresponding OmegaNum.
+    </p>
     <h3 id="s.fromObject">fromObject</h3>
     <p>
       <div style="border:1px dashed black">
@@ -768,7 +778,7 @@
         Static: OmegaNum.OmegaNum(x[,y]), OmegaNum(x[,y])<br>
         Instance: <span style="color:red">None</span>
       </div>
-      The constructor of OmegaNum. Chooses and performs from fromArray, fromHyperE, fromJSON, fromNumber, fromObject, or fromString accordingly.
+      The constructor of OmegaNum. Chooses and performs from fromArray, fromHyperE, fromJSON, fromNumber, fromBigInt, fromObject, or fromString accordingly.
     </p>
     <h3 id="s.standardize">standardize</h3>
     <p>
