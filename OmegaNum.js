@@ -16,14 +16,14 @@
       maxArrow: 1e3,
 
       // Specify what format is used when serializing for JSON.stringify
-      // 
+      //
       // JSON   0 JSON object
       // STRING 1 String
       serializeMode: 0,
-      
+
       // Deprecated
       // Level of debug information printed in console
-      // 
+      //
       // NONE   0 Show no information.
       // NORMAL 1 Show operations.
       // ALL    2 Show everything.
@@ -1235,7 +1235,7 @@
     }
     if (input=="NaN") x.array=[NaN];
     else if (input=="Infinity") x.array=[Infinity];
-    else{
+    else out:{
       var a,b,c,d,i;
       while (input){
         if (/^\(?10[\^\{]/.test(input)){
@@ -1253,9 +1253,9 @@
             b=a+1;
           }
           if (arrows>=OmegaNum.maxArrow){
-            console.warn("Number too large to reasonably handle it: tried to "+arrows.add(2)+"-ate.");
+            console.warn("Number too large to reasonably handle it: tried to "+(arrows+2)+"-ate.");
             x.array=[Infinity];
-            break;
+            break out;
           }
           input=input.substring(b);
           if (input[0]==")"){
@@ -1487,21 +1487,21 @@
 
     OmegaNum.JSON = 0;
     OmegaNum.STRING = 1;
-    
+
     OmegaNum.NONE = 0;
     OmegaNum.NORMAL = 1;
     OmegaNum.ALL = 2;
 
     OmegaNum.clone=clone;
     OmegaNum.config=OmegaNum.set=config;
-    
+
     //OmegaNum=Object.assign(OmegaNum,Q);
     for (var prop in Q){
       if (Q.hasOwnProperty(prop)){
         OmegaNum[prop]=Q[prop];
       }
     }
-    
+
     if (obj === void 0) obj = {};
     if (obj) {
       ps = ['maxArrow', 'serializeMode', 'debug'];
@@ -1509,7 +1509,7 @@
     }
 
     OmegaNum.config(obj);
-    
+
     return OmegaNum;
   }
 
