@@ -605,7 +605,6 @@
     if (tol===undefined) tol=1e-10;
     if (principal===undefined) principal=true;
     var w;
-    var wn;
     if (!Number.isFinite(z)) return z;
     if (principal){
       if (z===0) return z;
@@ -618,7 +617,7 @@
       else w=Math.log(-z)-Math.log(-Math.log(-z));
     }
     for (var i=0;i<100;++i){
-      wn=(z*Math.exp(-w)+w*w)/(w+1);
+      var wn=(z*Math.exp(-w)+w*w)/(w+1);
       if (Math.abs(wn-w)<tol*Math.abs(wn)) return wn;
       w=wn;
     }
@@ -633,7 +632,6 @@
     if (principal===undefined) principal=true;
     z=new OmegaNum(z);
     var w;
-    var ew, wewz, wn;
     if (!z.isFinite()) return z;
     if (principal){
       if (z.eq(OmegaNum.ZERO)) return z;
@@ -644,9 +642,11 @@
       w=OmegaNum.ln(z.neg());
     }
     for (var i=0;i<100;++i){
-      ew=w.neg().exp();
-      wewz=w.sub(z.mul(ew));
-      wn=w.sub(wewz.div(w.add(OmegaNum.ONE).sub(w.add(2).mul(wewz).div(OmegaNum.mul(2,w).add(2)))));
+      var ew=w.neg().exp();
+      var wewz=w.sub(z.mul(ew));
+      var dd=w.add(OmegaNum.ONE).sub(w.add(2).mul(wewz).div(OmegaNum.mul(2,w).add(2)));
+      if (dd.eq(OmegaNum.ZERO)) return wn; //Escape to fix https://github.com/Naruyoko/ExpantaNum.js/issues/25
+      var wn=w.sub(wewz.div(dd));
       if (OmegaNum.abs(wn.sub(w)).lt(OmegaNum.abs(wn).mul(tol))) return wn;
       w = wn;
     }
