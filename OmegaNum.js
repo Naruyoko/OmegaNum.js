@@ -800,6 +800,195 @@
   Q.ssqrt=Q.ssrt=function (x){
     return new OmegaNum(x).ssqrt();
   };
+  //Uses linear approximation
+  //For more information, please see the break_eternity.js source:
+  //https://github.com/Patashu/break_eternity.js/blob/96901974c175cb28f66c7164a5a205cdda783872/src/index.ts#L3901
+  P.linear_sroot=function (degree){
+    var x=new OmegaNum(this);
+    degree=new OmegaNum(degree);
+    if (degree.isNaN()) return OmegaNum.NaN.clone();
+    var degreeNum=Number(degree);
+    if (degreeNum==1) return x;
+    if (x.eq(OmegaNum.POSITIVE_INFINITY)) return OmegaNum.POSITIVE_INFINITY.clone();
+    if (!x.isFinite()) return OmegaNum.NaN.clone();
+    if (degreeNum>0&&degreeNum<1) return x.root(degreeNum);
+    if (degreeNum>-2&&degreeNum<-1) return degree.add(2).pow(x.recip());
+    if (degreeNum<=0) return OmegaNum.NaN.clone();
+    if (degree.gt(OmegaNum.MAX_SAFE_INTEGER)){
+      var xNum=Number(x);
+      if (xNum<Math.E&&xNum>1/Math.E) return x.pow(x.recip());
+      if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return OmegaNum.tetr(10,x.slog(10).sub(degree));
+      return OmegaNum.NaN.clone();
+    }
+    if (x.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
+    if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
+    if (x.gt(OmegaNum.ONE)){
+      var upperBound;
+      if (degreeNum<=1) upperBound=x.root(degree);
+      else if (x.gte(OmegaNum.tetr(10,degree))) upperBound=x.iteratedlog(10,degreeNum-1);
+      else upperBound=new OmegaNum(10);
+      var lower=OmegaNum.ZERO;
+      var layer=upperBound.array[2]||0;
+      var upper=upperBound.iteratedlog(10,layer);
+      var guess=upper.div(2);
+      while (true){
+        if (OmegaNum.iteratedexp(10,layer,guess).tetr(degree).gt(x)) upper=guess;
+        else lower=guess;
+        var newguess=lower.add(upper).div(2);
+        if (newguess.eq(guess)) break;
+        guess=newguess;
+      }
+      return OmegaNum.iteratedexp(10,layer,guess);
+    }else{
+      var BIG=new OmegaNum("10^^10");
+      var stage=1;
+      var minimum=BIG;
+      var maximum=BIG;
+      var lower=BIG
+      var upper=new OmegaNum(1e-16)
+      var prevspan=OmegaNum.ZERO;
+      var difference=BIG;
+      var upperBound=OmegaNum.pow(10,upper).recip();
+      var distance=OmegaNum.ZERO;
+      var prevPoint=upperBound;
+      var nextPoint=upperBound;
+      var evenDegree=Math.ceil(degreeNum)%2==0;
+      var range=0;
+      var lastValid=BIG;
+      var infLoopDetector=false;
+      var previousUpper=OmegaNum.ZERO;
+      var decreasingFound=false;
+      while (stage<4){
+        if (stage==2){
+          if (evenDegree) break;
+          lower=BIG;
+          upper=minimum;
+          stage=3;
+          difference=BIG;
+          lastValid=BIG;
+        }
+        infLoopDetector=false;
+        while (upper.neq(lower)){
+          previousUpper=upper;
+          var up10r=OmegaNum.pow(10,upper).recip();
+          var up10rtd=up10r.tetr(degree);
+          if (up10rtd.eq(OmegaNum.ONE)&&up10r.lt(0.4)){
+            upperBound=up10r;
+            prevPoint=up10r;
+            nextPoint=up10r;
+            distance=OmegaNum.ZERO;
+            range=-1;
+            if (stage==3) lastValid=upper;
+          }else if (up10rtd.eq(up10r)&&!evenDegree&&up10r.lt(0.4)){
+            upperBound=up10r;
+            prevPoint=up10r;
+            nextPoint=up10r;
+            distance=OmegaNum.ZERO;
+            range=0;
+          }else if (up10rtd.eq(up10r.mul(2).tetr(degree))){
+            upperBound=up10r;
+            prevPoint=OmegaNum.ZERO;
+            nextPoint=upperBound.mul(2);
+            distance=upperBound;
+            if (evenDegree) range=-1;
+            else range=0;
+          }else{
+            prevspan=upper.mul(1.2e-16);
+            upperBound=up10r;
+            prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+            distance=upperBound.sub(prevPoint);
+            nextPoint=upperBound.add(distance);
+            var ubtd;
+            var pptd;
+            var nptd;
+            while ((pptd=previousUpper.tetr(degree)).eq(ubtd=upperBound.tetr(degree))||(nptd=nextPoint.tetr(degree)).eq(ubtd)){
+              prevspan=upper.mul(2);
+              prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+              distance=upperBound.sub(prevPoint);
+              nextPoint=upperBound.add(distance);
+            }
+            if (stage==1&&nptd.gt(ubtd)||stage==2&&nptd.lt(ubtd)) lastValid=upper;
+            if (nptd.lt(ubtd)) range=-1;
+            else if (evenDegree) range=1;
+            else if (stage==3&&upper.gt_tolerance(minimum,1e-8)) range=0;
+            else{
+              while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=previousUpper.tetr(degree)).eq_tolerance(ubtd=upperBound.tetr(degree),1e-8)||(nptd=nextPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)){
+                prevspan=upper.mul(2);
+                prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+                distance=upperBound.sub(prevPoint);
+                nextPoint=upperBound.add(distance);
+              }
+              if (nptd.sub(ubtd).lt(ubtd.sub(pptd))) range=0;
+              else range=1;
+            }
+          }
+          if (range==-1) decreasingFound=true;
+          if (stage==1&&range==1||stage==3&&range!=0){
+            if (lower.eq(BIG)) upper=upper.mul(2);
+            else{
+              upper=upper.add(lower).div(2);
+              if (infLoopDetector&&(range==1&&stage==1||range==-1&&stage==3)) break;
+            }
+          }else{
+            if (lower.eq(BIG)){
+              lower=upper;
+              upper=upper.div(2);
+            }else{
+              lower=lower.sub(difference);
+              upper=upper.sub(difference);
+              if (infLoopDetector&&(range==1&&stage==1||range==-1&&stage==3)) break;
+            }
+          }
+          var newDifference=lower.sub(upper).div(2).abs();
+          if (newDifference.gt(difference.mul(1.5))) infLoopDetector=true;
+          difference=newDifference;
+          if (upper.gt(1e18)||upper.eq(previousUpper)) break;
+        }
+        if (upper.gt(1e18)) break;
+        if (!decreasingFound) break;
+        if (lastValid.eq(BIG)) break;
+        if (stage==1) minimum=lastValid;
+        else if (stage==3) maximum=lastValid;
+        stage++;
+      }
+      lower=minimum;
+      upper=new OmegaNum(1e-18);
+      var previous=upper;
+      var guess=OmegaNum.ZERO;
+      var loopGoing=true;
+      while (loopGoing){
+        if (lower.eq(BIG)) guess=upper.mul(2);
+        else guess=lower.add(upper).div(2);
+        if (OmegaNum.pow(10,guess).recip().tetr(degree).gt(x)) upper=guess;
+        else lower=guess;
+        if (guess.eq(previous)) loopGoing=false;
+        else previous=guess;
+        if (upper.gt(1e18)) return OmegaNum.NaN.clone();
+      }
+      if (guess.neq_tolerance(minimum,1e-15)) return OmegaNum.pow(10,guess).recip();
+      else{
+        if (maximum.eq(BIG)) return OmegaNum.NaN.clone();
+        lower=BIG;
+        upper=maximum;
+        previous=upper;
+        guess=OmegaNum.ZERO;
+        var loopGoing=true;
+        while (loopGoing){
+          if (lower.eq(BIG)) guess=upper.mul(2);
+          else guess=lower.add(upper).div(2);
+          if (OmegaNum.pow(10,guess).recip().tetr(degree).gt(x)) upper=guess;
+          else lower=guess;
+          if (guess.eq(previous)) loopGoing=false;
+          else previous=guess;
+          if (upper.gt(1e18)) return OmegaNum.NaN.clone();
+        }
+        return OmegaNum.pow(10,guess).recip();
+      }
+    }
+  };
+  Q.linear_sroot=function (x,y){
+    return new OmegaNum(x).linear_sroot(y);
+  };
   //Super-logarithm, one of tetration's inverses, tells you what size power tower you'd have to tetrate base to to get number. By definition, will never be higher than 1.8e308 in break_eternity.js, since a power tower 1.8e308 numbers tall is the largest representable number.
   //Uses linear approximation
   //https://en.wikipedia.org/wiki/Super-logarithm
