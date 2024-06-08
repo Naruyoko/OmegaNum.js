@@ -5,116 +5,52 @@
 
 
   // --  EDITABLE DEFAULTS  -- //
-    var OmegaNum = {
+  var OmegaNum = {
 
-      // The maximum number of arrows accepted in operation.
-      // It will warn and then return Infinity if exceeded.
-      // This is to prevent loops to not be breaking, and also to prevent memory leaks.
-      // 1000 means operation above {1000} is disallowed.
-      // It is not recommended to make this number too big.
-      // `OmegaNum.maxArrow = 1000;`
-      maxArrow: 1e3,
+    // The maximum number of arrows accepted in operation.
+    // It will warn and then return Infinity if exceeded.
+    // This is to prevent loops to not be breaking, and also to prevent memory leaks.
+    // 1000 means operation above {1000} is disallowed.
+    // It is not recommended to make this number too big.
+    // `OmegaNum.maxArrow = 1000;`
+    maxArrow: 1e3,
 
-      // Specify what format is used when serializing for JSON.stringify
-      //
-      // JSON   0 JSON object
-      // STRING 1 String
-      serializeMode: 0,
+    // Specify what format is used when serializing for JSON.stringify
+    //
+    // JSON   0 JSON object
+    // STRING 1 String
+    serializeMode: 0,
 
-      // Deprecated
-      // Level of debug information printed in console
-      //
-      // NONE   0 Show no information.
-      // NORMAL 1 Show operations.
-      // ALL    2 Show everything.
-      debug: 0
-    },
+    // Deprecated
+    // Level of debug information printed in console
+    //
+    // NONE   0 Show no information.
+    // NORMAL 1 Show operations.
+    // ALL    2 Show everything.
+    debug: 0
+  },
 
 
   // -- END OF EDITABLE DEFAULTS -- //
 
 
-    external = true,
+  external = true,
 
-    omegaNumError = "[OmegaNumError] ",
-    invalidArgument = omegaNumError + "Invalid argument: ",
+  omegaNumError = "[OmegaNumError] ",
+  invalidArgument = omegaNumError + "Invalid argument: ",
 
-    isOmegaNum = /^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*((\d+(\.\d*)?|\d*\.\d+)?([Ee][-\+]*))*(0|\d+(\.\d*)?|\d*\.\d+))$/,
+  isOmegaNum = /^[-\+]*(Infinity|NaN|(10(\^+|\{[1-9]\d*\})|\(10(\^+|\{[1-9]\d*\})\)\^[1-9]\d* )*((\d+(\.\d*)?|\d*\.\d+)?([Ee][-\+]*))*(0|\d+(\.\d*)?|\d*\.\d+))$/,
 
-    MAX_SAFE_INTEGER = 9007199254740991,
-    MAX_E = Math.log10(MAX_SAFE_INTEGER), //15.954589770191003
+  MAX_SAFE_INTEGER = 9007199254740991,
+  MAX_E = Math.log10(MAX_SAFE_INTEGER), //15.954589770191003
 
-    // OmegaNum.prototype object
-    P={},
-    // OmegaNum static object
-    Q={},
-    // OmegaNum constants
-    R={};
+  // OmegaNum.prototype object
+  P={},
+  // OmegaNum static object
+  Q={},
+  // OmegaNum constants
+  R={};
 
-  // OmegaNum prototype methods
-
-  /*
-   *  absoluteValue             abs
-   *  affordArithmeticSeries
-   *  affordGeometricSeries
-   *  arrow
-   *  ceiling                   ceil
-   *  chain
-   *  choose
-   *  comparedTo                cmp
-   *  cubeRoot                  cbrt
-   *  divide                    div
-   *  equals                    eq
-   *  exponential               exp
-   *  factorial                 fact
-   *  floor
-   *  gamma
-   *  generalLogarithm          log10
-   *  greaterThan               gt
-   *  greaterThanOrEqualTo      gte
-   *  hyper
-   *  isFinite
-   *  isInfinite
-   *  isInteger                 isint
-   *  isNaN
-   *  isNegative                isneg
-   *  isPositive                ispos
-   *  iteratedexp
-   *  iteratedlog
-   *  lambertw
-   *  layeradd
-   *  layeradd10
-   *  lessThan                  lt
-   *  lessThanOrEqualTo         lte
-   *  logarithm                 logBase
-   *  minus                     sub
-   *  modulo                    mod
-   *  naturalLogarithm          ln        log
-   *  negated                   neg
-   *  notEquals                 neq
-   *  pentate                   pent
-   *  plus                      add
-   *  reciprocate               rec
-   *  root
-   *  round
-   *  slog
-   *  squareRoot                sqrt
-   *  ssqrt                     ssrt
-   *  sumArithmeticSeries
-   *  sumGeometricSeries
-   *  times                     mul
-   *  tetrate                   tetr
-   *  toExponential
-   *  toFixed
-   *  toHyperE
-   *  toJSON
-   *  toNumber
-   *  toPower                   pow
-   *  toPrecision
-   *  toString
-   *  toStringWithDecimalPlaces
-   *  valueOf
-   */
   R.ZERO=0;
   R.ONE=1;
   R.E=Math.E;
@@ -133,6 +69,10 @@
   R.E_MAX_SAFE_INTEGER="e"+MAX_SAFE_INTEGER;
   R.EE_MAX_SAFE_INTEGER="ee"+MAX_SAFE_INTEGER;
   R.TETRATED_MAX_SAFE_INTEGER="10^^"+MAX_SAFE_INTEGER;
+
+
+  // OmegaNum prototype methods
+
   P.absoluteValue=P.abs=function(){
     var x=this.clone();
     x.sign=1;
