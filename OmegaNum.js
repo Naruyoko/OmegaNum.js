@@ -431,19 +431,19 @@
     var np=n;
     l+=1/(12*np);
     np*=n2;
-    l+=1/(360*np);
+    l-=1/(360*np);
     np*=np*n2;
     l+=1/(1260*np);
     np*=n2;
-    l+=1/(1680*np);
+    l-=1/(1680*np);
     np*=n2;
     l+=1/(1188*np);
     np*=n2;
-    l+=691/(360360*np);
+    l-=691/(360360*np);
     np*=n2;
     l+=7/(1092*np);
     np*=n2;
-    l+=3617/(122400*np);
+    l-=3617/(122400*np);
     return Math.exp(l)/scal1;
   };
   //from HyperCalc source code
