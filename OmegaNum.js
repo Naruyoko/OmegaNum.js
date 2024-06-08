@@ -745,17 +745,17 @@
     return this.tetr(other,payload);
   };
   Q.iteratedexp=function (x,y,payload){
-    return new OmegaNum(x).iteratedexp(other,payload);
+    return new OmegaNum(x).iteratedexp(y,payload);
   };
   //This implementation is highly inaccurate and slow, and probably be given custom code
   P.iteratedlog=function (base,other){
     if (base===undefined) base=10;
     if (other===undefined) other=OmegaNum.ONE.clone();
     var t=this.clone();
-    if (other.eq(ExpantaNum.ZERO)) return t;
-    if (other.eq(ExpantaNum.ONE)) return t.logBase(base);
     base=new OmegaNum(base);
     other=new OmegaNum(other);
+    if (other.eq(OmegaNum.ZERO)) return t;
+    if (other.eq(OmegaNum.ONE)) return t.logBase(base);
     return base.tetr(t.slog(base).sub(other));
   };
   Q.iteratedlog=function (x,y,z){
