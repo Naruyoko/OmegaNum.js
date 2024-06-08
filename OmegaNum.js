@@ -601,68 +601,82 @@
   var OMEGA=0.56714329040978387299997;  //W(1,0)
   //from https://math.stackexchange.com/a/465183
   //The evaluation can become inaccurate very close to the branch point
-  var f_lambertw=function (z,tol){
+  var f_lambertw=function (z,tol,principal){
     if (tol===undefined) tol=1e-10;
+    if (principal===undefined) principal=true;
     var w;
     var wn;
     if (!Number.isFinite(z)) return z;
-    if (z===0) return z;
-    if (z===1) return OMEGA;
-    if (z<10) w=0;
-    else w=Math.log(z)-Math.log(Math.log(z));
+    if (principal){
+      if (z===0) return z;
+      if (z===1) return OMEGA;
+      if (z<10) w=0;
+      else w=Math.log(z)-Math.log(Math.log(z));
+    }else{
+      if (z===0) return -Infinity;
+      if (z<=-0.1) w=-2;
+      else w=Math.log(-z)-Math.log(-Math.log(-z));
+    }
     for (var i=0;i<100;++i){
       wn=(z*Math.exp(-w)+w*w)/(w+1);
       if (Math.abs(wn-w)<tol*Math.abs(wn)) return wn;
       w=wn;
     }
     throw Error("Iteration failed to converge: "+z);
-    //return Number.NaN;
   };
   //from https://github.com/scipy/scipy/blob/8dba340293fe20e62e173bdf2c10ae208286692f/scipy/special/lambertw.pxd
   //The evaluation can become inaccurate very close to the branch point
   //at ``-1/e``. In some corner cases, `lambertw` might currently
   //fail to converge, or can end up on the wrong branch.
-  var d_lambertw=function (z,tol){
+  var d_lambertw=function (z,tol,principal){
     if (tol===undefined) tol=1e-10;
+    if (principal===undefined) principal=true;
     z=new OmegaNum(z);
     var w;
     var ew, wewz, wn;
     if (!z.isFinite()) return z;
-    if (z===0) return z;
-    if (z===1){
-      //Split out this case because the asymptotic series blows up
-      return OMEGA;
+    if (principal){
+      if (z.eq(OmegaNum.ZERO)) return z;
+      if (z.eq(OmegaNum.ONE)) return new OmegaNum(OMEGA);
+      w=OmegaNum.ln(z);
+    }else{
+      if (z.eq(OmegaNum.ZERO)) return OmegaNum.NEGATIVE_INFINITY.clone();
+      w=OmegaNum.ln(z.neg());
     }
-    //Get an initial guess for Halley's method
-    w=OmegaNum.ln(z);
-    //Halley's method; see 5.9 in [1]
     for (var i=0;i<100;++i){
-      ew=OmegaNum.exp(-w);
+      ew=w.neg().exp();
       wewz=w.sub(z.mul(ew));
-      wn=w.sub(wewz.div(w.add(OmegaNum.ONE).sub((w.add(2)).mul(wewz).div((OmegaNum.mul(2,w).add(2))))));
+      wn=w.sub(wewz.div(w.add(OmegaNum.ONE).sub(w.add(2).mul(wewz).div(OmegaNum.mul(2,w).add(2)))));
       if (OmegaNum.abs(wn.sub(w)).lt(OmegaNum.abs(wn).mul(tol))) return wn;
       w = wn;
     }
     throw Error("Iteration failed to converge: "+z);
-    //return Decimal.dNaN;
   };
   //The Lambert W function, also called the omega function or product logarithm, is the solution W(x) === x*e^x.
   //https://en.wikipedia.org/wiki/Lambert_W_function
   //Some special values, for testing: https://en.wikipedia.org/wiki/Lambert_W_function#Special_values
-  P.lambertw=function (){
+  P.lambertw=function (principal){
+    if (principal===undefined) principal=true;
     var x=this.clone();
     if (x.isNaN()) return x;
-    if (x.lt(-0.3678794411710499)) throw Error("lambertw is unimplemented for results less than -1, sorry!");
-    if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return x;
-    if (x.gt(OmegaNum.EE_MAX_SAFE_INTEGER)){
-      x.array[1]--;
-      return x;
+    if (x.lt(-0.3678794411710499)) return OmegaNum.NaN.clone();
+    if (principal){
+      if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return x;
+      if (x.gt(OmegaNum.EE_MAX_SAFE_INTEGER)){
+        x.array[1]--;
+        return x;
+      }
+      if (x.gt(OmegaNum.MAX_SAFE_INTEGER)) return d_lambertw(x);
+      else return new OmegaNum(f_lambertw(x.sign*x.array[0]));
+    }else{
+      if (x.ispos()) return OmegaNum.NaN.clone();
+      if (x.abs().gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.neg().recip().lambertw().neg();
+      if (x.abs().gt(OmegaNum.MAX_SAFE_INTEGER)) return d_lambertw(x,1e-10,false);
+      else return new OmegaNum(f_lambertw(x.sign*x.array[0],1e-10,false));
     }
-    if (x.gt(OmegaNum.MAX_SAFE_INTEGER)) return d_lambertw(x);
-    else return new OmegaNum(f_lambertw(x.sign*x.array[0]));
   };
-  Q.lambertw=function (x){
-    return new OmegaNum(x).lambertw();
+  Q.lambertw=function (x,principal){
+    return new OmegaNum(x).lambertw(principal);
   };
   //end break_eternity.js excerpt
   //Uses linear approximations for real height
