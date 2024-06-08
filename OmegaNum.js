@@ -225,6 +225,68 @@
   Q.maximum=Q.max=function (x,y){
     return new OmegaNum(x).max(y);
   };
+  P.compareTo_tolerance=P.cmp_tolerance=function (other,tolerance){
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
+    return this.eq_tolerance(other,tolerance)?0:this.cmp(other);
+  };
+  Q.compare_tolerance=Q.cmp_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).cmp_tolerance(y,tolerance);
+  };
+  P.greaterThan_tolerance=P.gt_tolerance=function (other,tolerance){
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
+    return !this.eq_tolerance(other,tolerance)&&this.gt(other);
+  };
+  Q.greaterThan_tolerance=Q.gt_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).gt_tolerance(y,tolerance);
+  };
+  P.greaterThanOrEqualTo_tolerance=P.gte_tolerance=function (other,tolerance){
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
+    return this.eq_tolerance(other,tolerance)||this.gt(other);
+  };
+  Q.greaterThanOrEqualTo_tolerance=Q.gte_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).gte_tolerance(y,tolerance);
+  };
+  P.lessThan_tolerance=P.lt_tolerance=function (other,tolerance){
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
+    return !this.eq_tolerance(other,tolerance)&&this.lt(other);
+  };
+  Q.lessThan_tolerance=Q.lt_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).lt_tolerance(y,tolerance);
+  };
+  P.lessThanOrEqualTo_tolerance=P.lte_tolerance=function (other,tolerance){
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
+    return this.eq_tolerance(other,tolerance)||this.lt(other);
+  };
+  Q.lessThanOrEqualTo_tolerance=Q.lte_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).lte_tolerance(y,tolerance);
+  };
+  //From break_eternity.js
+  //https://github.com/Patashu/break_eternity.js/blob/96901974c175cb28f66c7164a5a205cdda783872/src/index.ts#L2802
+  P.equalsTo_tolerance=P.equal_tolerance=P.eq_tolerance=function (other,tolerance){
+    if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
+    if (tolerance==null) tolerance=1e-7;
+    if (isNaN(this.array[0])||isNaN(other.array[0])) return false;
+    if (this.sign!=other.sign) return false;
+    if (this.array.length!=other.array.length) return false;
+    if (this.array.length>=2&&Math.abs(this.array[1]-other.array[1])>1) return false;
+    for (var i=2;i<this.array.length;++i){
+      if (this.array[i]!=other.array[i]) return false;
+    }
+    var a=this.array[0];
+    var b=other.array[0];
+    if (this.array[1]>other.array[1]) b=Math.log10(b);
+    else if (this.array[1]<other.array[1]) a=Math.log10(a);
+    return Math.abs(a-b)<=tolerance*Math.max(Math.abs(a),Math.abs(b));
+  };
+  Q.equalsTo_tolerance=Q.equal_tolerance=Q.eq_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).eq_tolerance(y,tolerance);
+  };
+  P.notEqualsTo_tolerance=P.notEqual_tolerance=P.neq_tolerance=function (other,tolerance){
+    return !this.eq_tolerance(other,tolerance);
+  };
+  Q.notEqualsTo_tolerance=Q.notEqual_tolerance=Q.neq_tolerance=function (x,y,tolerance){
+    return new OmegaNum(x).neq_tolerance(y,tolerance);
+  };
   P.isPositive=P.ispos=function (){
     return this.gt(OmegaNum.ZERO);
   };
