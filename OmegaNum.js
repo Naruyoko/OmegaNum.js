@@ -659,7 +659,7 @@
       var ew=w.neg().exp();
       var wewz=w.sub(z.mul(ew));
       var dd=w.add(OmegaNum.ONE).sub(w.add(2).mul(wewz).div(OmegaNum.mul(2,w).add(2)));
-      if (dd.eq(OmegaNum.ZERO)) return wn; //Escape to fix https://github.com/Naruyoko/ExpantaNum.js/issues/25
+      if (dd.eq(OmegaNum.ZERO)) return w; //Escape to fix https://github.com/Naruyoko/ExpantaNum.js/issues/25
       var wn=w.sub(wewz.div(dd));
       if (OmegaNum.abs(wn.sub(w)).lt(OmegaNum.abs(wn).mul(tol))) return wn;
       w = wn;
