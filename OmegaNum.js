@@ -205,17 +205,31 @@
   P.equalsTo_tolerance=P.equal_tolerance=P.eq_tolerance=function (other,tolerance){
     if (!(other instanceof OmegaNum)) other=new OmegaNum(other);
     if (tolerance==null) tolerance=1e-7;
-    if (isNaN(this.array[0])||isNaN(other.array[0])) return false;
+    if (isNaN(this.array[0])||isNaN(other.array[0])||this.isFinite()!=other.isFinite()) return false;
     if (this.sign!=other.sign) return false;
-    if (this.array.length!=other.array.length) return false;
-    if (this.array.length>=2&&Math.abs(this.array[1]-other.array[1])>1) return false;
-    for (var i=2;i<this.array.length;++i){
-      if (this.array[i]!=other.array[i]) return false;
+    if (Math.abs(this.array.length-other.array.length)>1) return false;
+    var a,b;
+    for (var i=Math.max(this.array.length,other.array.length)-1;i>=1;--i){
+      var e=this.array[i]||0;
+      var f=other.array[i]||0;
+      if (Math.abs(e-f)>1) return false;
+      else if (e!=f){
+        var x,y;
+        if (e>f) x=this,y=other;
+        else x=other,y=this;
+        for (var j=i;--j>1;) if (x.array[j]>0) return false;
+        if (x.array[1]>1) return false;
+        a=x.array[0];
+        if (i==1) b=Math.log10(y.array[0]);
+        else if (i==2&&y.array[0]>=1e10) b=Math.log10(y.array[1]+2);
+        else if (y.array[i-2]>=10) b=Math.log10(y.array[i-1]+1);
+        else b=Math.log10(y.array[i-1]);
+        break;
+      }else if (i==1){
+        a=this.array[0];
+        b=other.array[0];
+      }
     }
-    var a=this.array[0];
-    var b=other.array[0];
-    if (this.array[1]>other.array[1]) b=Math.log10(b);
-    else if (this.array[1]<other.array[1]) a=Math.log10(a);
     return Math.abs(a-b)<=tolerance*Math.max(Math.abs(a),Math.abs(b));
   };
   Q.equalsTo_tolerance=Q.equal_tolerance=Q.eq_tolerance=function (x,y,tolerance){
