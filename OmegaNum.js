@@ -218,7 +218,7 @@
         if (e>f) x=this,y=other;
         else x=other,y=this;
         for (var j=i;--j>1;) if (x.array[j]>0) return false;
-        if (x.array[1]>1) return false;
+        if (i>1&&x.array[1]>1) return false;
         a=x.array[0];
         if (i==1) b=Math.log10(y.array[0]);
         else if (i==2&&y.array[0]>=1e10) b=Math.log10(y.array[1]+2);
