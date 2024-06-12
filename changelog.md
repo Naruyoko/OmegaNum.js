@@ -1,5 +1,15 @@
 # OmegaNum.js changelog
 
+## 0.7.0 - 2024/06/12
+
+* Added `linear_sroot`, straight lifted from break_eternity.js.
+* Added non-principal branch to `lambertw`, straight lifted from break_eternity.js.
+* Added comparisons with tolerance: `eq_tolerance` etc.
+* Fixed nonfunctioning `iteratedexp`/`iteratedlog`.
+* Fixed inaccurage `gamma`.
+* Fixed a crash parsing a string with a big operation ([#39](https://github.com/Naruyoko/OmegaNum.js/issues/39)).
+* Fixed `lambertw` failing to converge on certain values  ([ExpantaNum.js#25](https://github.com/Naruyoko/ExpantaNum.js/issues/25)).
+
 ## 0.6.0 - 2023/01/22
 
 * Added support for conversion from BigInt ([#37](https://github.com/Naruyoko/OmegaNum.js/issues/37)).
