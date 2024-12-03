@@ -1027,7 +1027,7 @@
     if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return OmegaNum.NaN.clone();
     if (x.isInfinite()) return x;
     if (base.isInfinite()) return OmegaNum.ZERO.clone();
-    if (x.lt(OmegaNum.ZERO)) return OmegaNum.ONE.neg();
+    if (x.eq(OmegaNum.ZERO)) return OmegaNum.ONE.neg();
     if (x.eq(OmegaNum.ONE)) return OmegaNum.ZERO.clone();
     if (x.eq(base)) return OmegaNum.ONE.clone();
     if (base.lt(Math.exp(1/Math.E))){
@@ -1065,7 +1065,6 @@
         x=OmegaNum.logBase(x,base);
       }
     }
-    if (x.gt(10))
     return new OmegaNum(r);
   };
   Q.slog=function (x,y){
