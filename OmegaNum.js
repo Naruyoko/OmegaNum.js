@@ -1098,6 +1098,11 @@
       if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
       if (payload.neq(OmegaNum.ONE)) other=other.add(payload.arrow_height_inverse(arrows)(t));
       if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"{"+arrows+"}"+other);
+      if (t.eq(OmegaNum.ZERO)){
+        if (other.eq(OmegaNum.ONE)) return OmegaNum.ZERO.clone();
+        return OmegaNum.NaN.clone();
+      }
+      if (t.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
       if (other.eq(OmegaNum.ZERO)) return OmegaNum.ONE.clone();
       if (other.eq(OmegaNum.ONE)) return t.clone();
       if (arrows.gte(OmegaNum.maxArrow)){
