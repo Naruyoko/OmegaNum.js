@@ -1090,7 +1090,7 @@
     if (!arrows.isint()||arrows.lt(OmegaNum.ZERO)) return function(other){return OmegaNum.NaN.clone();};
     if (arrows.eq(OmegaNum.ZERO)) return function(other){return t.mul(other);};
     if (arrows.eq(OmegaNum.ONE)) return function(other){return t.pow(other);};
-    if (arrows.eq(2)) return function(other){return t.tetr(other);};
+    if (arrows.eq(2)) return function(other,payload){return t.tetr(other,payload);};
     return function (other,payload){
       if (payload===undefined) payload=OmegaNum.ONE;
       other=new OmegaNum(other);
