@@ -699,10 +699,10 @@
     var t=this.clone();
     other=new OmegaNum(other);
     payload=new OmegaNum(payload);
+    if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
     if (payload.neq(OmegaNum.ONE)) other=other.add(payload.slog(t));
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"^^"+other);
     var negln;
-    if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
     if (other.isInfinite()&&other.sign>0){
       if (t.gte(Math.exp(1/Math.E))) return OmegaNum.POSITIVE_INFINITY.clone();
       //Formula for infinite height power tower.
@@ -1022,7 +1022,7 @@
   //https://en.wikipedia.org/wiki/Super-logarithm
   P.slog=function (base){
     if (base===undefined) base=10;
-    var x=new OmegaNum(this);
+    var x=this.clone();
     base=new OmegaNum(base);
     if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return OmegaNum.NaN.clone();
     if (x.isInfinite()) return x;
@@ -1058,14 +1058,14 @@
       if (x.lt(OmegaNum.ZERO)){
         x=OmegaNum.pow(base,x);
         --r;
-      }else if (x.lte(1)){
+      }else if (x.lte(OmegaNum.ONE)){
         return new OmegaNum(r+x.toNumber()-1);
       }else{
         ++r;
         x=OmegaNum.logBase(x,base);
       }
     }
-    return new OmegaNum(r);
+    return OmegaNum.NaN.clone(); //Failed to converge
   };
   Q.slog=function (x,y){
     return new OmegaNum(x).slog(y);
@@ -1077,6 +1077,12 @@
   Q.pentate=Q.pent=function (x,y){
     return OmegaNum.arrow(x,3,y);
   };
+  P.penta_log=function (other){
+    return this.arrow_height_inverse(3)(other);
+  };
+  Q.penta_log=function (x,y){
+    return OmegaNum.arrow_height_inverse(x,3,y);
+  };
   //Uses linear approximations for real height
   P.arrow=function (arrows){
     var t=this.clone();
@@ -1085,10 +1091,13 @@
     if (arrows.eq(OmegaNum.ZERO)) return function(other){return t.mul(other);};
     if (arrows.eq(OmegaNum.ONE)) return function(other){return t.pow(other);};
     if (arrows.eq(2)) return function(other){return t.tetr(other);};
-    return function (other){
+    return function (other,payload){
+      if (payload===undefined) payload=OmegaNum.ONE;
       other=new OmegaNum(other);
+      payload=new OmegaNum(payload);
+      if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
+      if (payload.neq(OmegaNum.ONE)) other=other.add(payload.arrow_height_inverse(arrows)(t));
       if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"{"+arrows+"}"+other);
-      if (other.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
       if (other.eq(OmegaNum.ZERO)) return OmegaNum.ONE.clone();
       if (other.eq(OmegaNum.ONE)) return t.clone();
       if (arrows.gte(OmegaNum.maxArrow)){
@@ -1117,11 +1126,25 @@
       var y=other.toNumber();
       var f=Math.floor(y);
       var arrows_m1=arrows.sub(OmegaNum.ONE);
-      r=t.arrow(arrows_m1)(y-f);
+      var r=t.arrow(arrows_m1)(y-f);
+      var l=OmegaNum.NaN;
       for (var i=0,m=new OmegaNum("10{"+(arrowsNum-1)+"}"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
         if (f>0){
           r=t.arrow(arrows_m1)(r);
+          if (l.eq(r)){
+            f=0;
+            break;
+          }
+          l=r;
           --f;
+        }else{
+          r=r.arrow_height_inverse(arrows_m1)(t);
+          if (l.eq(r)){
+            f=0;
+            break;
+          }
+          l=r;
+          ++f;
         }
       }
       if (i==100) f=0;
@@ -1133,8 +1156,8 @@
   P.chain=function (other,arrows){
     return this.arrow(arrows)(other);
   };
-  Q.arrow=function (x,z,y){
-    return new OmegaNum(x).arrow(z)(y);
+  Q.arrow=function (x,z,y,payload){
+    return new OmegaNum(x).arrow(z)(y,payload);
   };
   Q.chain=function (x,y,z){
     return new OmegaNum(x).arrow(z)(y);
@@ -1143,8 +1166,69 @@
     z=new OmegaNum(z);
     if (z.eq(OmegaNum.ZERO)) return function(x,y){return new OmegaNum(y).eq(OmegaNum.ZERO)?new OmegaNum(x):new OmegaNum(x).add(OmegaNum.ONE);};
     if (z.eq(OmegaNum.ONE)) return function(x,y){return OmegaNum.add(x,y);};
-    return function(x,y){return new OmegaNum(x).arrow(z.sub(2))(y);};
+    return function(x,y,payload){return new OmegaNum(x).arrow(z.sub(2))(y,payload);};
   };
+  //arrow_height_inverse{z}_x(x{z}y)=y
+  //See also: https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4647
+  P.arrow_height_inverse=function (arrows){
+    var x=this.clone();
+    arrows=new OmegaNum(arrows);
+    if (!arrows.isint()||arrows.lt(OmegaNum.ONE)) return function(other){return OmegaNum.NaN.clone();};
+    if (arrows.eq(OmegaNum.ONE)) return function(base){return x.logBase(base);};
+    if (arrows.eq(2)) return function(base){return x.slog(base);};
+    return function (base){
+      base=new OmegaNum(base);
+      if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return OmegaNum.NaN.clone();
+      if (base.lte(OmegaNum.ONE)) return OmegaNum.NaN.clone();
+      if (x.isInfinite()) return x;
+      if (base.isInfinite()) return OmegaNum.ZERO.clone();
+      if (x.eq(OmegaNum.ZERO)) return OmegaNum.ONE.neg();
+      if (x.eq(OmegaNum.ONE)) return OmegaNum.ZERO.clone();
+      if (x.eq(base)) return OmegaNum.ONE.clone();
+      var arrowsNum=arrows.toNumber();
+      if (arrowsNum==2&&x.lt(OmegaNum.ONE.neg())){
+        if (x.lt(-2)) return OmegaNum.NaN.clone();
+        var infrcmp=x.cmp(base.arrow(arrows.sub(OmegaNum.ONE))(x));
+        if (infrcmp==0) return OmegaNum.NEGATIVE_INFINITY.clone();
+        if (infrcmp>0) return OmegaNum.NaN.clone();
+      }
+      if (x.max(base).gt("10{"+(arrowsNum+1)+"}"+MAX_SAFE_INTEGER)){
+        if (x.gt(base)) return x;
+        return OmegaNum.ZERO.clone();
+      }
+      if (x.max(base).gt("10{"+arrowsNum+"}"+MAX_SAFE_INTEGER)){
+        if (x.gt(base)){
+          x.array[arrowsNum]--;
+          x.normalize();
+          return x.sub((x.array[arrowsNum-1]||0)+1);
+        }
+        return OmegaNum.ZERO.clone();
+      }
+      var r=0;
+      var t=(x.array[arrowsNum-1]||0)-(base.array[arrowsNum-1]||0);
+      if (t>3){
+        var l=t-3;
+        r+=l;
+        x.array[arrowsNum-1]=x.array[arrowsNum-1]-l;
+      }
+      var arrows_m1=arrows.sub(OmegaNum.ONE);
+      for (var i=0;i<100;++i){
+        if (x.lt(OmegaNum.ZERO)){
+          x=base.arrow(arrows_m1)(x);
+          --r;
+        }else if (x.lte(OmegaNum.ONE)){
+          return new OmegaNum(r+x.toNumber()-1);
+        }else{
+          ++r;
+          x=x.arrow_height_inverse(arrows_m1)(base);
+        }
+      }
+      return OmegaNum.NaN.clone(); //Failed to converge
+    };
+  };
+  Q.arrow_height_inverse=function (x,z,y){
+    return new OmegaNum(x).arrow_height_inverse(z)(y);
+  }
   // All of these are from Patashu's break_eternity.js
   Q.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
     /*
