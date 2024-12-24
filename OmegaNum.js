@@ -839,13 +839,17 @@
     if (degreeNum==1) return x;
     if (x.eq(OmegaNum.POSITIVE_INFINITY)) return OmegaNum.POSITIVE_INFINITY.clone();
     if (!x.isFinite()) return OmegaNum.NaN.clone();
-    if (degreeNum>0&&degreeNum<1) return x.root(degreeNum);
+    if (degreeNum>0&&degreeNum<1) return x.root(degree);
     if (degreeNum>-2&&degreeNum<-1) return degree.add(2).pow(x.recip());
     if (degreeNum<=0) return OmegaNum.NaN.clone();
     if (degree.gt(OmegaNum.MAX_SAFE_INTEGER)){
       var xNum=Number(x);
       if (xNum<Math.E&&xNum>1/Math.E) return x.pow(x.recip());
-      if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return OmegaNum.tetr(10,x.slog(10).sub(degree));
+      if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)){
+        var nh=x.slog(10).sub(degree);
+        if (nh.lte(OmegaNum.ZERO)) return new OmegaNum(Math.exp(1/Math.E));
+        return OmegaNum.tetr(10,nh);
+      }
       return OmegaNum.NaN.clone();
     }
     if (x.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
