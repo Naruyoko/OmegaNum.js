@@ -1081,6 +1081,12 @@
   Q.pentate=Q.pent=function (x,y){
     return OmegaNum.arrow(x,3,y);
   };
+  P.linear_penta_root=function (degree){
+    return this.arrow_base_inverse(3)(degree);
+  };
+  Q.linear_penta_root=function (x,y){
+    return OmegaNum.arrow_base_inverse(x,3,y);
+  };
   P.penta_log=function (other){
     return this.arrow_height_inverse(3)(other);
   };
@@ -1177,6 +1183,81 @@
     if (z.eq(OmegaNum.ONE)) return function(x,y){return OmegaNum.add(x,y);};
     return function(x,y,payload){return new OmegaNum(x).arrow(z.sub(2))(y,payload);};
   };
+  //_^y\arrow_base_inverse{z}(x{z}y)=x
+  //See also: https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4703
+  P.arrow_base_inverse=function (arrows){
+    var x=this.clone();
+    arrows=new OmegaNum(arrows);
+    if (!arrows.isint()||arrows.lt(OmegaNum.ONE)) return function(other){return OmegaNum.NaN.clone();};
+    if (arrows.eq(OmegaNum.ONE)) return function(base){return x.root(base);};
+    if (arrows.eq(2)) return function(base){return x.linear_sroot(base);};
+    return function (degree){
+      degree=new OmegaNum(degree);
+      if (x.isNaN()||degree.isNaN()||x.isInfinite()&&degree.isInfinite()) return OmegaNum.NaN.clone();
+      var degreeNum=Number(degree);
+      if (degreeNum==1) return x;
+      if (x.eq(OmegaNum.POSITIVE_INFINITY)) return OmegaNum.POSITIVE_INFINITY.clone();
+      if (!x.isFinite()) return OmegaNum.NaN.clone();
+      if (degreeNum>0&&degreeNum<1) return x.root(degree);
+      if (degreeNum<=0) return OmegaNum.NaN.clone();
+      var arrowsNum=arrows.toNumber();
+      if (degree.gt(OmegaNum.MAX_SAFE_INTEGER)){
+        if (x.gt("10{"+arrowsNum+"}"+MAX_SAFE_INTEGER)) return OmegaNum.arrow(10,arrows,x.arrow_height_inverse(arrows)(10).sub(degree));
+        return OmegaNum.NaN.clone();
+      }
+      if (x.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
+      if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
+      if (x.lt(OmegaNum.ONE)) return x.linear_sroot(degree);
+      if (x.max(degree).gt("10{"+(arrowsNum+1)+"}"+MAX_SAFE_INTEGER)){
+        if (x.gt(degree)) return x;
+        return OmegaNum.ZERO.clone();
+      }
+      if (x.arrow(arrows)(degree).lte(x)) return x;
+      var mina=OmegaNum.ONE.array;
+      var maxa=x.array.slice();
+      while (true){
+        if (maxa.length>=2&&maxa[0]<=MAX_E){
+          maxa[0]=MAX_SAFE_INTEGER+1;
+          maxa[1]--;
+          if (!maxa[1]){
+            var i=1;
+            if (maxa.length>2){
+              while (!maxa[i]) maxa[i++]=MAX_SAFE_INTEGER;
+              maxa[i]--;
+            }
+            if (!maxa[i]&&i==maxa.length-1) maxa.pop();
+          }
+        }
+        var mida;
+        if (mina.length>maxa.length) break;
+        if (mina.length<maxa.length){
+          mida=Array(Math.ceil((mina.length+maxa.length)/2)).fill(0);
+          mida[0]=MAX_E;
+          mida[1]=1;
+          mida[mida.length-1]=1;
+        }else{
+          var i=maxa.length-1;
+          while (i>=0&&mina[i]==maxa[i]) i--;
+          if (i<0||mina[i]>maxa[i]) break;
+          var mide;
+          if (i>0) mide=Math.floor((mina[i]+maxa[i])/2);
+          else{
+            mide=(mina[i]+maxa[i])/2;
+            if (mide==mina[i]||mide==maxa[i]) break;
+          }
+          mida=maxa.slice();
+          mida[i]=mide;
+        }
+        var mid=OmegaNum.fromArray(mida);
+        if (mid.arrow(arrows)(degree).lte(x)) mina=mid.array;
+        else maxa=mida;
+      }
+      return OmegaNum.fromArray(mina);
+    };
+  };
+  Q.arrow_base_inverse=function (x,z,y){
+    return new OmegaNum(x).arrow_base_inverse(z)(y);
+  }
   //arrow_height_inverse{z}_x(x{z}y)=y
   //See also: https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4647
   P.arrow_height_inverse=function (arrows){
