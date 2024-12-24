@@ -1430,8 +1430,8 @@
       }
       if (x.array.length>2&&!x.array[1]){
         for (i=2;!x.array[i];++i) continue;
-        x.array[i-1]=x.array[0];
-        x.array[0]=1;
+        x.array[i-1]=Math.floor(x.array[0]);
+        x.array[0]=Math.pow(10,x.array[0]-Math.floor(x.array[0]));
         x.array[i]--;
         b=true;
       }
