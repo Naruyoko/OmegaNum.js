@@ -686,7 +686,7 @@
       else return new OmegaNum(f_lambertw(x.sign*x.array[0]));
     }else{
       if (x.ispos()) return OmegaNum.NaN.clone();
-      if (x.abs().gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.neg().recip().lambertw().neg();
+      if (x.abs().gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.neg().rec().lambertw().neg();
       if (x.abs().gt(OmegaNum.MAX_SAFE_INTEGER)) return d_lambertw(x,1e-10,false);
       else return new OmegaNum(f_lambertw(x.sign*x.array[0],1e-10,false));
     }
@@ -832,7 +832,7 @@
   };
   //Uses linear approximation
   //For more information, please see the break_eternity.js source:
-  //https://github.com/Patashu/break_eternity.js/blob/96901974c175cb28f66c7164a5a205cdda783872/src/index.ts#L3901
+  //https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4008
   P.linear_sroot=function (degree){
     var x=new OmegaNum(this);
     degree=new OmegaNum(degree);
@@ -842,11 +842,11 @@
     if (x.eq(OmegaNum.POSITIVE_INFINITY)) return OmegaNum.POSITIVE_INFINITY.clone();
     if (!x.isFinite()) return OmegaNum.NaN.clone();
     if (degreeNum>0&&degreeNum<1) return x.root(degree);
-    if (degreeNum>-2&&degreeNum<-1) return degree.add(2).pow(x.recip());
+    if (degreeNum>-2&&degreeNum<-1) return degree.add(2).pow(x.rec());
     if (degreeNum<=0) return OmegaNum.NaN.clone();
     if (degree.gt(OmegaNum.MAX_SAFE_INTEGER)){
       var xNum=Number(x);
-      if (xNum<Math.E&&xNum>1/Math.E) return x.pow(x.recip());
+      if (xNum<Math.E&&xNum>1/Math.E) return x.pow(x.rec());
       if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)){
         var nh=x.slog(10).sub(degree);
         if (nh.lte(OmegaNum.ZERO)) return new OmegaNum(Math.exp(1/Math.E));
@@ -856,6 +856,7 @@
     }
     if (x.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
     if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
+    if (x.eq(OmegaNum.ZERO)) return OmegaNum.ZERO.clone();
     if (x.gt(OmegaNum.ONE)){
       var upperBound;
       if (degreeNum<=1) upperBound=x.root(degree);
@@ -882,7 +883,7 @@
       var upper=new OmegaNum(1e-16)
       var prevspan=OmegaNum.ZERO;
       var difference=BIG;
-      var upperBound=OmegaNum.pow(10,upper).recip();
+      var upperBound=OmegaNum.pow(10,upper).rec();
       var distance=OmegaNum.ZERO;
       var prevPoint=upperBound;
       var nextPoint=upperBound;
@@ -904,7 +905,7 @@
         infLoopDetector=false;
         while (upper.neq(lower)){
           previousUpper=upper;
-          var up10r=OmegaNum.pow(10,upper).recip();
+          var up10r=OmegaNum.pow(10,upper).rec();
           var up10rtd=up10r.tetr(degree);
           if (up10rtd.eq(OmegaNum.ONE)&&up10r.lt(0.4)){
             upperBound=up10r;
@@ -929,29 +930,31 @@
           }else{
             prevspan=upper.mul(1.2e-16);
             upperBound=up10r;
-            prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+            prevPoint=OmegaNum.pow(10,upper.add(prevspan)).rec();
             distance=upperBound.sub(prevPoint);
             nextPoint=upperBound.add(distance);
-            var ubtd;
+            var ubtd=upperBound.tetr(degree); //upperBound does not change during lifetime
             var pptd;
             var nptd;
-            while ((pptd=previousUpper.tetr(degree)).eq(ubtd=upperBound.tetr(degree))||(nptd=nextPoint.tetr(degree)).eq(ubtd)){
-              prevspan=upper.mul(2);
-              prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+            while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=prevPoint.tetr(degree)).eq(ubtd)||(nptd=nextPoint.tetr(degree)).eq(ubtd)){
+              prevspan=prevspan.mul(2);
+              prevPoint=OmegaNum.pow(10,upper.add(prevspan)).rec();
               distance=upperBound.sub(prevPoint);
               nextPoint=upperBound.add(distance);
             }
-            if (stage==1&&nptd.gt(ubtd)||stage==2&&nptd.lt(ubtd)) lastValid=upper;
+            //pptd and nptd are up-to-date
+            if (stage==1&&nptd.gt(ubtd)&&pptd.gt(ubtd)||stage==3&&nptd.lt(ubtd)&&pptd.lt(ubtd)) lastValid=upper;
             if (nptd.lt(ubtd)) range=-1;
             else if (evenDegree) range=1;
             else if (stage==3&&upper.gt_tolerance(minimum,1e-8)) range=0;
             else{
-              while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=previousUpper.tetr(degree)).eq_tolerance(ubtd=upperBound.tetr(degree),1e-8)||(nptd=nextPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)){
-                prevspan=upper.mul(2);
-                prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+              while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=prevPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)||(nptd=nextPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)){
+                prevspan=prevspan.mul(2);
+                prevPoint=OmegaNum.pow(10,upper.add(prevspan)).rec();
                 distance=upperBound.sub(prevPoint);
                 nextPoint=upperBound.add(distance);
               }
+              //pptd and nptd are up-to-date
               if (nptd.sub(ubtd).lt(ubtd.sub(pptd))) range=0;
               else range=1;
             }
@@ -993,13 +996,13 @@
       while (loopGoing){
         if (lower.eq(BIG)) guess=upper.mul(2);
         else guess=lower.add(upper).div(2);
-        if (OmegaNum.pow(10,guess).recip().tetr(degree).gt(x)) upper=guess;
+        if (OmegaNum.pow(10,guess).rec().tetr(degree).gt(x)) upper=guess;
         else lower=guess;
         if (guess.eq(previous)) loopGoing=false;
         else previous=guess;
         if (upper.gt(1e18)) return OmegaNum.NaN.clone();
       }
-      if (guess.neq_tolerance(minimum,1e-15)) return OmegaNum.pow(10,guess).recip();
+      if (guess.neq_tolerance(minimum,1e-15)) return OmegaNum.pow(10,guess).rec();
       else{
         if (maximum.eq(BIG)) return OmegaNum.NaN.clone();
         lower=BIG;
@@ -1010,13 +1013,13 @@
         while (loopGoing){
           if (lower.eq(BIG)) guess=upper.mul(2);
           else guess=lower.add(upper).div(2);
-          if (OmegaNum.pow(10,guess).recip().tetr(degree).gt(x)) upper=guess;
+          if (OmegaNum.pow(10,guess).rec().tetr(degree).gt(x)) upper=guess;
           else lower=guess;
           if (guess.eq(previous)) loopGoing=false;
           else previous=guess;
           if (upper.gt(1e18)) return OmegaNum.NaN.clone();
         }
-        return OmegaNum.pow(10,guess).recip();
+        return OmegaNum.pow(10,guess).rec();
       }
     }
   };
