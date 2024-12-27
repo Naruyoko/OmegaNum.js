@@ -209,11 +209,16 @@
     if (this.sign!=other.sign) return false;
     if (Math.abs(this.array.length-other.array.length)>1) return false;
     var a,b;
-    for (var i=Math.max(this.array.length,other.array.length)-1;i>=1;--i){
+    for (var i=Math.max(this.array.length,other.array.length)-1;i>=0;--i){
       var e=this.array[i]||0;
       var f=other.array[i]||0;
+      if (i==0){
+        a=e;
+        b=f;
+        break;
+      }
       if (Math.abs(e-f)>1) return false;
-      else if (e!=f){
+      if (e!=f){
         var x,y;
         if (e>f) x=this,y=other;
         else x=other,y=this;
@@ -225,9 +230,6 @@
         else if (y.array[i-2]>=10) b=Math.log10(y.array[i-1]+1);
         else b=Math.log10(y.array[i-1]);
         break;
-      }else if (i==1){
-        a=this.array[0];
-        b=other.array[0];
       }
     }
     return Math.abs(a-b)<=tolerance*Math.max(Math.abs(a),Math.abs(b));
