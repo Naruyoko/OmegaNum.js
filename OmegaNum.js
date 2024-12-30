@@ -1300,26 +1300,44 @@
         }
         return OmegaNum.ZERO.clone();
       }
-      var r=0;
-      var t=(x.array[arrowsNum-1]||0)-(base.array[arrowsNum-1]||0);
-      if (t>3){
-        var l=t-3;
-        r+=l;
-        x.array[arrowsNum-1]=x.array[arrowsNum-1]-l;
-      }
-      var arrows_m1=arrows.sub(OmegaNum.ONE);
-      for (var i=0;i<100;++i){
-        if (x.lt(OmegaNum.ZERO)){
-          x=base.arrow(arrows_m1)(x);
-          --r;
-        }else if (x.lte(OmegaNum.ONE)){
-          return new OmegaNum(r+x.toNumber()-1);
-        }else{
-          ++r;
-          x=x.arrow_height_inverse(arrows_m1)(base);
+      if (x.gt(OmegaNum.ONE)){
+        var r=0;
+        var t=(x.array[arrowsNum-1]||0)-(base.array[arrowsNum-1]||0);
+        if (t>3){
+          var l=t-3;
+          r+=l;
+          x.array[arrowsNum-1]=x.array[arrowsNum-1]-l;
         }
+        var arrows_m1=arrows.sub(OmegaNum.ONE);
+        for (var i=0;i<100;++i){
+          if (x.lte(OmegaNum.ONE)){
+            return new OmegaNum(r+x.toNumber()-1);
+          }else{
+            ++r;
+            x=x.arrow_height_inverse(arrows_m1)(base);
+          }
+        }
+        return OmegaNum.NaN.clone(); //Failed to converge
+      }else{
+        var r=0;
+        var y=OmegaNum.ONE;
+        while (y.gt(x)){
+          r--;
+          y=y.slog(base);
+          if (r<-100) return OmegaNum.NaN.clone(); //No solution or too close to the fixed point
+        }
+        var s=1;
+        for (var i=0;i<100;++i){
+          if (r==r+s) break;
+          var w=base.arrow(arrows)(r+s);
+          if (!w.gt(x)){
+            r+=s;
+            if (w.eq(x)) break;
+          }
+          s/=2;
+        }
+        return new OmegaNum(r);
       }
-      return OmegaNum.NaN.clone(); //Failed to converge
     };
   };
   Q.arrow_height_inverse=function (x,z,y){
