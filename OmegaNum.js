@@ -1272,6 +1272,7 @@
     if (arrows.eq(OmegaNum.ONE)) return function(base){return x.logBase(base);};
     if (arrows.eq(2)) return function(base){return x.slog(base);};
     return function (base){
+      if (base===undefined) base=10;
       base=new OmegaNum(base);
       if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return OmegaNum.NaN.clone();
       if (base.lte(OmegaNum.ONE)) return OmegaNum.NaN.clone();
