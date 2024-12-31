@@ -1056,6 +1056,7 @@
       }
       return OmegaNum.ZERO.clone();
     }
+    if (x.lt(OmegaNum.ZERO)) return base.pow(x).sub(2); //Inversion of x^^y=log_x(2+y) for -2<y<=-1
     var r=0;
     var t=(x.array[1]||0)-(base.array[1]||0);
     if (t>3){
@@ -1064,15 +1065,9 @@
       x.array[1]=x.array[1]-l;
     }
     for (var i=0;i<100;++i){
-      if (x.lt(OmegaNum.ZERO)){
-        x=OmegaNum.pow(base,x);
-        --r;
-      }else if (x.lte(OmegaNum.ONE)){
-        return new OmegaNum(r+x.toNumber()-1);
-      }else{
-        ++r;
-        x=OmegaNum.logBase(x,base);
-      }
+      if (x.lte(OmegaNum.ONE)) return new OmegaNum(r+x.toNumber()-1);
+      ++r;
+      x=OmegaNum.logBase(x,base);
     }
     return OmegaNum.NaN.clone(); //Failed to converge
   };
