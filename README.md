@@ -1,4 +1,4 @@
-# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![7](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/7.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png)
+# ![OmegaNum.js](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/OmegaNumJS.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![8](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/8.png) ![.](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/dot.png) ![0](https://raw.githubusercontent.com/Naruyoko/OmegaNum.js/non-code/0.png)
 
 [![NPM](https://img.shields.io/npm/v/omega_num.js.svg)](https://www.npmjs.com/package/omega_num.js)
 A huge number library holding up to 10{1000}9e15.
@@ -9,7 +9,7 @@ Internally, it is represented as an sign and array. Sign is 1 or -1. Array is \[
 
 For detailed explanation and documentation, [see here](https://naruyoko.github.io/OmegaNum.js/index.html).
 
-Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, neq, cmp_tolerance, gt_tolerance, gte_tolerance, lt_tolerance, lte_tolerance, eq_tolerance, neq_tolerance, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, gamma, fact, pow, exp, sqrt, cbrt, root, log10, logBase, log(alias ln), lambertw, tetr, iteratedexp, iteratedlog, layeradd, layeradd10, ssrt, linear_sroot, slog, pent, arrow, chain, hyper, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()` (`toValue`, `toStringWithDecimalPlaces`, `toExponential`, `toFixed`, `toPrecision`), and `toJSON()`. Add one of a kind `toHyperE()`.
+Functions are as follows: `abs, neg, cmp, gt, gte, lt, lte, eq, neq, cmp_tolerance, gt_tolerance, gte_tolerance, lt_tolerance, lte_tolerance, eq_tolerance, neq_tolerance, min, max, ispos, isneg, isNaN, isFinite, isint, floor, ceiling, round, add, sub, mul, div, rec, mod, gamma, fact, pow, exp, sqrt, cbrt, root, log10, logBase, log(alias ln), lambertw, tetr, iteratedexp, iteratedlog, layeradd, layeradd10, ssrt, linear_sroot, slog, pent, penta_log, arrow, chain, hyper, arrow_height_inverse, affordGeometricSeries, affordArithmeticSeries, sumGeometricSeries, sumArithmeticSeries, choose`. Of course, there are `toNumber()`, `toString()` (`toValue`, `toStringWithDecimalPlaces`, `toExponential`, `toFixed`, `toPrecision`), and `toJSON()`. Add one of a kind `toHyperE()`.
 
 If you are using built-in constants: Constants can not be replaced directly, however **the properties of it can. As the constants are also used inside OmegaNum.js, modifying them could CAUSE SERIOUS ISSUES AND POTENTIALLY RENDER THE LIBRARY UNUSABLE.**
 
@@ -22,9 +22,14 @@ If you are not planning to make something to the scale of [Incremental Unlimited
 * [magna_numerus.js](https://github.com/aarextiaokhiao/magna_numerus.js/blob/master/magna_numerus.js) by Aarex Tiaokhiao - ?
 * [break_eternity.js](https://github.com/Patashu/break_eternity.js) by Patashu - 10^^1.8e308
 
+If you want even larger numbers, check out the following:
+
+* [ExpantaNum.js](https://github.com/Naruyoko/ExpantaNum.js) by Naruyoko (me) - {10,9e15,1,2}
+* [MegotaNum.js](https://github.com/sonic3XE/MegotaNum.js) by sonic3XE - {10,9e15,1,1,2}
+* [PowiainaNum.js](https://github.com/VeryrrDefine/PowiainaNum.js) by VeryrrDefine - {10,9e15,1,1,1,2}
+
 Future ideas:
 
-* [ExpantaNum.js](https://github.com/Naruyoko/ExpantaNum.js) - f<sub>ω+1</sub>, array of value-index pair with separate counter.
 * OmegaExpantaNum.js - f<sub>ω2</sub>
 * MegotaNum.js - f<sub>ω<sup>2</sup></sub>
 * PowiainaNum.js - f<sub>ω<sup>3</sup></sub>
