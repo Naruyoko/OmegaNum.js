@@ -1,5 +1,16 @@
 # OmegaNum.js changelog
 
+## 0.8.0 - 2026/10/09
+
+* Add `linear_sroot`, `penta_log` ([ExpantaNum.js#28](https://github.com/Naruyoko/ExpantaNum.js/issues/28)), and `arrow_height_inverse` ([ExpantaNum.js#28](https://github.com/Naruyoko/ExpantaNum.js/issues/28))
+* Add `payload` argument to hyperoperations
+* Fix `slog` of negative inputs always being 1
+* Fix normalization of numbers ending with 0 or non-integer and 0 op 1, such as `10^^0` and `10^^3.8`
+* Fix comparisons with tolerance for values less than MSI
+* Fix nonfunctional `lambertw` for abs(input)>eeMSI
+* Fix inaccurate small non-integer factorials ([ExpantaNum.js#33](https://github.com/Naruyoko/ExpantaNum.js/issues/33))
+* Mention bigger libraries
+
 ## 0.7.0 - 2024/06/12
 
 * Added `linear_sroot`, straight lifted from break_eternity.js.

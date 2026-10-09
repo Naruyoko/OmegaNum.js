@@ -209,11 +209,16 @@
     if (this.sign!=other.sign) return false;
     if (Math.abs(this.array.length-other.array.length)>1) return false;
     var a,b;
-    for (var i=Math.max(this.array.length,other.array.length)-1;i>=1;--i){
+    for (var i=Math.max(this.array.length,other.array.length)-1;i>=0;--i){
       var e=this.array[i]||0;
       var f=other.array[i]||0;
+      if (i==0){
+        a=e;
+        b=f;
+        break;
+      }
       if (Math.abs(e-f)>1) return false;
-      else if (e!=f){
+      if (e!=f){
         var x,y;
         if (e>f) x=this,y=other;
         else x=other,y=this;
@@ -225,9 +230,6 @@
         else if (y.array[i-2]>=10) b=Math.log10(y.array[i-1]+1);
         else b=Math.log10(y.array[i-1]);
         break;
-      }else if (i==1){
-        a=this.array[0];
-        b=other.array[0];
       }
     }
     return Math.abs(a-b)<=tolerance*Math.max(Math.abs(a),Math.abs(b));
@@ -446,7 +448,7 @@
     l+=1/(12*np);
     np*=n2;
     l-=1/(360*np);
-    np*=np*n2;
+    np*=n2;
     l+=1/(1260*np);
     np*=n2;
     l-=1/(1680*np);
@@ -684,7 +686,7 @@
       else return new OmegaNum(f_lambertw(x.sign*x.array[0]));
     }else{
       if (x.ispos()) return OmegaNum.NaN.clone();
-      if (x.abs().gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.neg().recip().lambertw().neg();
+      if (x.abs().gt(OmegaNum.EE_MAX_SAFE_INTEGER)) return x.neg().rec().lambertw().neg();
       if (x.abs().gt(OmegaNum.MAX_SAFE_INTEGER)) return d_lambertw(x,1e-10,false);
       else return new OmegaNum(f_lambertw(x.sign*x.array[0],1e-10,false));
     }
@@ -699,10 +701,10 @@
     var t=this.clone();
     other=new OmegaNum(other);
     payload=new OmegaNum(payload);
+    if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
     if (payload.neq(OmegaNum.ONE)) other=other.add(payload.slog(t));
     if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"^^"+other);
     var negln;
-    if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
     if (other.isInfinite()&&other.sign>0){
       if (t.gte(Math.exp(1/Math.E))) return OmegaNum.POSITIVE_INFINITY.clone();
       //Formula for infinite height power tower.
@@ -830,7 +832,7 @@
   };
   //Uses linear approximation
   //For more information, please see the break_eternity.js source:
-  //https://github.com/Patashu/break_eternity.js/blob/96901974c175cb28f66c7164a5a205cdda783872/src/index.ts#L3901
+  //https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4008
   P.linear_sroot=function (degree){
     var x=new OmegaNum(this);
     degree=new OmegaNum(degree);
@@ -839,17 +841,22 @@
     if (degreeNum==1) return x;
     if (x.eq(OmegaNum.POSITIVE_INFINITY)) return OmegaNum.POSITIVE_INFINITY.clone();
     if (!x.isFinite()) return OmegaNum.NaN.clone();
-    if (degreeNum>0&&degreeNum<1) return x.root(degreeNum);
-    if (degreeNum>-2&&degreeNum<-1) return degree.add(2).pow(x.recip());
+    if (degreeNum>0&&degreeNum<1) return x.root(degree);
+    if (degreeNum>-2&&degreeNum<-1) return degree.add(2).pow(x.rec());
     if (degreeNum<=0) return OmegaNum.NaN.clone();
     if (degree.gt(OmegaNum.MAX_SAFE_INTEGER)){
       var xNum=Number(x);
-      if (xNum<Math.E&&xNum>1/Math.E) return x.pow(x.recip());
-      if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return OmegaNum.tetr(10,x.slog(10).sub(degree));
+      if (xNum<Math.E&&xNum>1/Math.E) return x.pow(x.rec());
+      if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)){
+        var nh=x.slog(10).sub(degree);
+        if (nh.lte(OmegaNum.ZERO)) return new OmegaNum(Math.exp(1/Math.E));
+        return OmegaNum.tetr(10,nh);
+      }
       return OmegaNum.NaN.clone();
     }
     if (x.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
     if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
+    if (x.eq(OmegaNum.ZERO)) return OmegaNum.ZERO.clone();
     if (x.gt(OmegaNum.ONE)){
       var upperBound;
       if (degreeNum<=1) upperBound=x.root(degree);
@@ -876,7 +883,7 @@
       var upper=new OmegaNum(1e-16)
       var prevspan=OmegaNum.ZERO;
       var difference=BIG;
-      var upperBound=OmegaNum.pow(10,upper).recip();
+      var upperBound=OmegaNum.pow(10,upper).rec();
       var distance=OmegaNum.ZERO;
       var prevPoint=upperBound;
       var nextPoint=upperBound;
@@ -898,7 +905,7 @@
         infLoopDetector=false;
         while (upper.neq(lower)){
           previousUpper=upper;
-          var up10r=OmegaNum.pow(10,upper).recip();
+          var up10r=OmegaNum.pow(10,upper).rec();
           var up10rtd=up10r.tetr(degree);
           if (up10rtd.eq(OmegaNum.ONE)&&up10r.lt(0.4)){
             upperBound=up10r;
@@ -923,29 +930,31 @@
           }else{
             prevspan=upper.mul(1.2e-16);
             upperBound=up10r;
-            prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+            prevPoint=OmegaNum.pow(10,upper.add(prevspan)).rec();
             distance=upperBound.sub(prevPoint);
             nextPoint=upperBound.add(distance);
-            var ubtd;
+            var ubtd=upperBound.tetr(degree); //upperBound does not change during lifetime
             var pptd;
             var nptd;
-            while ((pptd=previousUpper.tetr(degree)).eq(ubtd=upperBound.tetr(degree))||(nptd=nextPoint.tetr(degree)).eq(ubtd)){
-              prevspan=upper.mul(2);
-              prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+            while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=prevPoint.tetr(degree)).eq(ubtd)||(nptd=nextPoint.tetr(degree)).eq(ubtd)){
+              prevspan=prevspan.mul(2);
+              prevPoint=OmegaNum.pow(10,upper.add(prevspan)).rec();
               distance=upperBound.sub(prevPoint);
               nextPoint=upperBound.add(distance);
             }
-            if (stage==1&&nptd.gt(ubtd)||stage==2&&nptd.lt(ubtd)) lastValid=upper;
+            //pptd and nptd are up-to-date
+            if (stage==1&&nptd.gt(ubtd)&&pptd.gt(ubtd)||stage==3&&nptd.lt(ubtd)&&pptd.lt(ubtd)) lastValid=upper;
             if (nptd.lt(ubtd)) range=-1;
             else if (evenDegree) range=1;
             else if (stage==3&&upper.gt_tolerance(minimum,1e-8)) range=0;
             else{
-              while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=previousUpper.tetr(degree)).eq_tolerance(ubtd=upperBound.tetr(degree),1e-8)||(nptd=nextPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)){
-                prevspan=upper.mul(2);
-                prevPoint=OmegaNum.pow(10,upper.add(prevspan)).recip();
+              while (prevPoint.gte(upperBound)||nextPoint.lte(upperBound)||(pptd=prevPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)||(nptd=nextPoint.tetr(degree)).eq_tolerance(ubtd,1e-8)){
+                prevspan=prevspan.mul(2);
+                prevPoint=OmegaNum.pow(10,upper.add(prevspan)).rec();
                 distance=upperBound.sub(prevPoint);
                 nextPoint=upperBound.add(distance);
               }
+              //pptd and nptd are up-to-date
               if (nptd.sub(ubtd).lt(ubtd.sub(pptd))) range=0;
               else range=1;
             }
@@ -987,13 +996,13 @@
       while (loopGoing){
         if (lower.eq(BIG)) guess=upper.mul(2);
         else guess=lower.add(upper).div(2);
-        if (OmegaNum.pow(10,guess).recip().tetr(degree).gt(x)) upper=guess;
+        if (OmegaNum.pow(10,guess).rec().tetr(degree).gt(x)) upper=guess;
         else lower=guess;
         if (guess.eq(previous)) loopGoing=false;
         else previous=guess;
         if (upper.gt(1e18)) return OmegaNum.NaN.clone();
       }
-      if (guess.neq_tolerance(minimum,1e-15)) return OmegaNum.pow(10,guess).recip();
+      if (guess.neq_tolerance(minimum,1e-15)) return OmegaNum.pow(10,guess).rec();
       else{
         if (maximum.eq(BIG)) return OmegaNum.NaN.clone();
         lower=BIG;
@@ -1004,13 +1013,13 @@
         while (loopGoing){
           if (lower.eq(BIG)) guess=upper.mul(2);
           else guess=lower.add(upper).div(2);
-          if (OmegaNum.pow(10,guess).recip().tetr(degree).gt(x)) upper=guess;
+          if (OmegaNum.pow(10,guess).rec().tetr(degree).gt(x)) upper=guess;
           else lower=guess;
           if (guess.eq(previous)) loopGoing=false;
           else previous=guess;
           if (upper.gt(1e18)) return OmegaNum.NaN.clone();
         }
-        return OmegaNum.pow(10,guess).recip();
+        return OmegaNum.pow(10,guess).rec();
       }
     }
   };
@@ -1022,12 +1031,12 @@
   //https://en.wikipedia.org/wiki/Super-logarithm
   P.slog=function (base){
     if (base===undefined) base=10;
-    var x=new OmegaNum(this);
+    var x=this.clone();
     base=new OmegaNum(base);
     if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return OmegaNum.NaN.clone();
     if (x.isInfinite()) return x;
     if (base.isInfinite()) return OmegaNum.ZERO.clone();
-    if (x.lt(OmegaNum.ZERO)) return OmegaNum.ONE.neg();
+    if (x.eq(OmegaNum.ZERO)) return OmegaNum.ONE.neg();
     if (x.eq(OmegaNum.ONE)) return OmegaNum.ZERO.clone();
     if (x.eq(base)) return OmegaNum.ONE.clone();
     if (base.lt(Math.exp(1/Math.E))){
@@ -1047,6 +1056,7 @@
       }
       return OmegaNum.ZERO.clone();
     }
+    if (x.lt(OmegaNum.ZERO)) return base.pow(x).sub(2); //Inversion of x^^y=log_x(2+y) for -2<y<=-1
     var r=0;
     var t=(x.array[1]||0)-(base.array[1]||0);
     if (t>3){
@@ -1055,18 +1065,11 @@
       x.array[1]=x.array[1]-l;
     }
     for (var i=0;i<100;++i){
-      if (x.lt(OmegaNum.ZERO)){
-        x=OmegaNum.pow(base,x);
-        --r;
-      }else if (x.lte(1)){
-        return new OmegaNum(r+x.toNumber()-1);
-      }else{
-        ++r;
-        x=OmegaNum.logBase(x,base);
-      }
+      if (x.lte(OmegaNum.ONE)) return new OmegaNum(r+x.toNumber()-1);
+      ++r;
+      x=OmegaNum.logBase(x,base);
     }
-    if (x.gt(10))
-    return new OmegaNum(r);
+    return OmegaNum.NaN.clone(); //Failed to converge
   };
   Q.slog=function (x,y){
     return new OmegaNum(x).slog(y);
@@ -1078,6 +1081,18 @@
   Q.pentate=Q.pent=function (x,y){
     return OmegaNum.arrow(x,3,y);
   };
+  P.linear_penta_root=function (degree){
+    return this.arrow_base_inverse(3)(degree);
+  };
+  Q.linear_penta_root=function (x,y){
+    return OmegaNum.arrow_base_inverse(x,3,y);
+  };
+  P.penta_log=function (other){
+    return this.arrow_height_inverse(3)(other);
+  };
+  Q.penta_log=function (x,y){
+    return OmegaNum.arrow_height_inverse(x,3,y);
+  };
   //Uses linear approximations for real height
   P.arrow=function (arrows){
     var t=this.clone();
@@ -1085,11 +1100,19 @@
     if (!arrows.isint()||arrows.lt(OmegaNum.ZERO)) return function(other){return OmegaNum.NaN.clone();};
     if (arrows.eq(OmegaNum.ZERO)) return function(other){return t.mul(other);};
     if (arrows.eq(OmegaNum.ONE)) return function(other){return t.pow(other);};
-    if (arrows.eq(2)) return function(other){return t.tetr(other);};
-    return function (other){
+    if (arrows.eq(2)) return function(other,payload){return t.tetr(other,payload);};
+    return function (other,payload){
+      if (payload===undefined) payload=OmegaNum.ONE;
       other=new OmegaNum(other);
+      payload=new OmegaNum(payload);
+      if (t.isNaN()||other.isNaN()||payload.isNaN()) return OmegaNum.NaN.clone();
+      if (payload.neq(OmegaNum.ONE)) other=other.add(payload.arrow_height_inverse(arrows)(t));
       if (OmegaNum.debug>=OmegaNum.NORMAL) console.log(t+"{"+arrows+"}"+other);
-      if (other.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
+      if (t.eq(OmegaNum.ZERO)){
+        if (other.eq(OmegaNum.ONE)) return OmegaNum.ZERO.clone();
+        return OmegaNum.NaN.clone();
+      }
+      if (t.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
       if (other.eq(OmegaNum.ZERO)) return OmegaNum.ONE.clone();
       if (other.eq(OmegaNum.ONE)) return t.clone();
       if (arrows.gte(OmegaNum.maxArrow)){
@@ -1118,11 +1141,25 @@
       var y=other.toNumber();
       var f=Math.floor(y);
       var arrows_m1=arrows.sub(OmegaNum.ONE);
-      r=t.arrow(arrows_m1)(y-f);
+      var r=t.arrow(arrows_m1)(y-f);
+      var l=OmegaNum.NaN;
       for (var i=0,m=new OmegaNum("10{"+(arrowsNum-1)+"}"+MAX_SAFE_INTEGER);f!==0&&r.lt(m)&&i<100;++i){
         if (f>0){
           r=t.arrow(arrows_m1)(r);
+          if (l.eq(r)){
+            f=0;
+            break;
+          }
+          l=r;
           --f;
+        }else{
+          r=r.arrow_height_inverse(arrows_m1)(t);
+          if (l.eq(r)){
+            f=0;
+            break;
+          }
+          l=r;
+          ++f;
         }
       }
       if (i==100) f=0;
@@ -1134,8 +1171,8 @@
   P.chain=function (other,arrows){
     return this.arrow(arrows)(other);
   };
-  Q.arrow=function (x,z,y){
-    return new OmegaNum(x).arrow(z)(y);
+  Q.arrow=function (x,z,y,payload){
+    return new OmegaNum(x).arrow(z)(y,payload);
   };
   Q.chain=function (x,y,z){
     return new OmegaNum(x).arrow(z)(y);
@@ -1144,8 +1181,163 @@
     z=new OmegaNum(z);
     if (z.eq(OmegaNum.ZERO)) return function(x,y){return new OmegaNum(y).eq(OmegaNum.ZERO)?new OmegaNum(x):new OmegaNum(x).add(OmegaNum.ONE);};
     if (z.eq(OmegaNum.ONE)) return function(x,y){return OmegaNum.add(x,y);};
-    return function(x,y){return new OmegaNum(x).arrow(z.sub(2))(y);};
+    return function(x,y,payload){return new OmegaNum(x).arrow(z.sub(2))(y,payload);};
   };
+  //_^y\arrow_base_inverse{z}(x{z}y)=x
+  //See also: https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4703
+  P.arrow_base_inverse=function (arrows){
+    var x=this.clone();
+    arrows=new OmegaNum(arrows);
+    if (!arrows.isint()||arrows.lt(OmegaNum.ONE)) return function(other){return OmegaNum.NaN.clone();};
+    if (arrows.eq(OmegaNum.ONE)) return function(base){return x.root(base);};
+    if (arrows.eq(2)) return function(base){return x.linear_sroot(base);};
+    return function (degree){
+      degree=new OmegaNum(degree);
+      if (x.isNaN()||degree.isNaN()||x.isInfinite()&&degree.isInfinite()) return OmegaNum.NaN.clone();
+      var degreeNum=Number(degree);
+      if (degreeNum==1) return x;
+      if (x.eq(OmegaNum.POSITIVE_INFINITY)) return OmegaNum.POSITIVE_INFINITY.clone();
+      if (!x.isFinite()) return OmegaNum.NaN.clone();
+      if (degreeNum>0&&degreeNum<1) return x.root(degree);
+      if (degreeNum<=0) return OmegaNum.NaN.clone();
+      var arrowsNum=arrows.toNumber();
+      if (degree.gt(OmegaNum.MAX_SAFE_INTEGER)){
+        if (x.gt("10{"+arrowsNum+"}"+MAX_SAFE_INTEGER)) return OmegaNum.arrow(10,arrows,x.arrow_height_inverse(arrows)(10).sub(degree));
+        return OmegaNum.NaN.clone();
+      }
+      if (x.eq(OmegaNum.ONE)) return OmegaNum.ONE.clone();
+      if (x.lt(OmegaNum.ZERO)) return OmegaNum.NaN.clone();
+      if (x.lt(OmegaNum.ONE)) return x.linear_sroot(degree);
+      if (x.max(degree).gt("10{"+(arrowsNum+1)+"}"+MAX_SAFE_INTEGER)){
+        if (x.gt(degree)) return x;
+        return OmegaNum.ZERO.clone();
+      }
+      if (x.arrow(arrows)(degree).lte(x)) return x;
+      var mina=OmegaNum.ONE.array;
+      var maxa=x.array.slice();
+      while (true){
+        if (maxa.length>=2&&maxa[0]<=MAX_E){
+          maxa[0]=MAX_SAFE_INTEGER+1;
+          maxa[1]--;
+          if (!maxa[1]){
+            var i=1;
+            if (maxa.length>2){
+              while (!maxa[i]) maxa[i++]=MAX_SAFE_INTEGER;
+              maxa[i]--;
+            }
+            if (!maxa[i]&&i==maxa.length-1) maxa.pop();
+          }
+        }
+        var mida;
+        if (mina.length>maxa.length) break;
+        if (mina.length<maxa.length){
+          mida=Array(Math.ceil((mina.length+maxa.length)/2)).fill(0);
+          mida[0]=MAX_E;
+          mida[1]=1;
+          mida[mida.length-1]=1;
+        }else{
+          var i=maxa.length-1;
+          while (i>=0&&mina[i]==maxa[i]) i--;
+          if (i<0||mina[i]>maxa[i]) break;
+          var mide;
+          if (i>0) mide=Math.floor((mina[i]+maxa[i])/2);
+          else{
+            mide=(mina[i]+maxa[i])/2;
+            if (mide==mina[i]||mide==maxa[i]) break;
+          }
+          mida=maxa.slice();
+          mida[i]=mide;
+        }
+        var mid=OmegaNum.fromArray(mida);
+        if (mid.arrow(arrows)(degree).lte(x)) mina=mid.array;
+        else maxa=mida;
+      }
+      return OmegaNum.fromArray(mina);
+    };
+  };
+  Q.arrow_base_inverse=function (x,z,y){
+    return new OmegaNum(x).arrow_base_inverse(z)(y);
+  }
+  //arrow_height_inverse{z}_x(x{z}y)=y
+  //See also: https://github.com/Patashu/break_eternity.js/blob/848736e3dc37d8e7b5cc238f46e3ddb277d0dce2/src/index.ts#L4647
+  P.arrow_height_inverse=function (arrows){
+    var x=this.clone();
+    arrows=new OmegaNum(arrows);
+    if (!arrows.isint()||arrows.lt(OmegaNum.ONE)) return function(other){return OmegaNum.NaN.clone();};
+    if (arrows.eq(OmegaNum.ONE)) return function(base){return x.logBase(base);};
+    if (arrows.eq(2)) return function(base){return x.slog(base);};
+    return function (base){
+      if (base===undefined) base=10;
+      base=new OmegaNum(base);
+      if (x.isNaN()||base.isNaN()||x.isInfinite()&&base.isInfinite()) return OmegaNum.NaN.clone();
+      if (base.lte(OmegaNum.ONE)) return OmegaNum.NaN.clone();
+      if (x.isInfinite()) return x;
+      if (base.isInfinite()) return OmegaNum.ZERO.clone();
+      if (x.eq(OmegaNum.ZERO)) return OmegaNum.ONE.neg();
+      if (x.eq(OmegaNum.ONE)) return OmegaNum.ZERO.clone();
+      if (x.eq(base)) return OmegaNum.ONE.clone();
+      var arrowsNum=arrows.toNumber();
+      if (arrowsNum==2&&x.lt(OmegaNum.ONE.neg())){
+        if (x.lt(-2)) return OmegaNum.NaN.clone();
+        var infrcmp=x.cmp(base.arrow(arrows.sub(OmegaNum.ONE))(x));
+        if (infrcmp==0) return OmegaNum.NEGATIVE_INFINITY.clone();
+        if (infrcmp>0) return OmegaNum.NaN.clone();
+      }
+      if (x.max(base).gt("10{"+(arrowsNum+1)+"}"+MAX_SAFE_INTEGER)){
+        if (x.gt(base)) return x;
+        return OmegaNum.ZERO.clone();
+      }
+      if (x.max(base).gt("10{"+arrowsNum+"}"+MAX_SAFE_INTEGER)){
+        if (x.gt(base)){
+          x.array[arrowsNum]--;
+          x.normalize();
+          return x.sub((x.array[arrowsNum-1]||0)+1);
+        }
+        return OmegaNum.ZERO.clone();
+      }
+      if (x.gt(OmegaNum.ONE)){
+        var r=0;
+        var t=(x.array[arrowsNum-1]||0)-(base.array[arrowsNum-1]||0);
+        if (t>3){
+          var l=t-3;
+          r+=l;
+          x.array[arrowsNum-1]=x.array[arrowsNum-1]-l;
+        }
+        var arrows_m1=arrows.sub(OmegaNum.ONE);
+        for (var i=0;i<100;++i){
+          if (x.lte(OmegaNum.ONE)){
+            return new OmegaNum(r+x.toNumber()-1);
+          }else{
+            ++r;
+            x=x.arrow_height_inverse(arrows_m1)(base);
+          }
+        }
+        return OmegaNum.NaN.clone(); //Failed to converge
+      }else{
+        var r=0;
+        var y=OmegaNum.ONE;
+        while (y.gt(x)){
+          r--;
+          y=y.slog(base);
+          if (r<-100) return OmegaNum.NaN.clone(); //No solution or too close to the fixed point
+        }
+        var s=1;
+        for (var i=0;i<100;++i){
+          if (r==r+s) break;
+          var w=base.arrow(arrows)(r+s);
+          if (!w.gt(x)){
+            r+=s;
+            if (w.eq(x)) break;
+          }
+          s/=2;
+        }
+        return new OmegaNum(r);
+      }
+    };
+  };
+  Q.arrow_height_inverse=function (x,z,y){
+    return new OmegaNum(x).arrow_height_inverse(z)(y);
+  }
   // All of these are from Patashu's break_eternity.js
   Q.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
     /*
@@ -1257,8 +1449,8 @@
       }
       if (x.array.length>2&&!x.array[1]){
         for (i=2;!x.array[i];++i) continue;
-        x.array[i-1]=x.array[0];
-        x.array[0]=1;
+        x.array[i-1]=Math.floor(x.array[0]);
+        x.array[0]=Math.pow(10,x.array[0]-Math.floor(x.array[0]));
         x.array[i]--;
         b=true;
       }
